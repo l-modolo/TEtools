@@ -1,26 +1,26 @@
 <tool id="PingPong" name="PingPong" version="1.0.0" hidden="false">
-    <description>fastq quality trimming</description>
-    <version_command interpreter="R">diffTE.R -version=TRUE</version_command>
-    <command interpreter="R">${__root_dir__}/tools/pi_galaxy/diffTE.R
-        --FDR_level=$FDR_level
-        --count_column=$count_column
-        --count_file=\\\"$count_file\\\"
-        --experiment_formula=\\\"$experiment_formula\\\"
-        --sample_names=\\\"$sample_names\\\"
+    <description>PingPong signal analysis</description>
+    <version_command interpreter="python3">PingPong.py -v</version_command>
+    <command interpreter="python3">${__root_dir__}/tools/pi_galaxy/PingPong.py
+        -fastq=$fastq_files
+        -fasta=
+        #for $fastq_file in $fastq_files:
+            $fastq_file
+        #end for
+        -TE_names=$TE_names
     </command>
 
     <inputs>
-        <param name="count_file" type="data" format="tabular" label="count file computed with the countTE file" />
-        <param name="count_column" type="integer" value="2" label="first count column in the count file"/>
-        <param name="samples_names" size="30x10" type="text" value="population_1:method_2,population_1:method_2,...,population_n:method_1,population_n:method_2" label="comma separated list of names of the differents sample in the same order as the count file columns (example for n samples with 2 methods:
-            population_1:method_2,population_1:method_2,...,population_n:method_1,population_n:method_2)"/>
-        <param name="experiment_formula" size="30" type="text" value="population:method" label="formula corresponding to the name (name_of_variable_1:name_of_variable_2:...:name_of_variable_N"/>
-        <param name="FDR_level" type="float" value="0.05" min="0.0" max="1.0" label="FDR threshold for the analysis"/>
+        <param name="fasta_file" type="data" format="fasta" label="fasta file that contain the sequence(s) of the transposable element(s) to analyse" />
+        <param name="TE_names" size="30x10" type="text" value="" label="space sperated list of TE sequences names to analyse"/>
+        <repeat name="fastq_files" title="fastq file">
+             <param name="fastq_file" type="data" format="fastq" label="fastq file"/>
+        </repeat>
     </inputs>
 
     <outputs>
-        <data format="tabular" name="output_file" label="${tool.name} on ${on_string}: reads count table">
-            <discover_datasets pattern="__designation_and_ext__" directory="alignment" visible="true" />
+        <data label="${tool.name} on ${on_string}">
+            <discover_datasets pattern="__designation_and_ext__" directory="pingpong_working_directory" visible="true" />
         </data>
     </outputs>
 
@@ -29,8 +29,8 @@
     </requirements>
 
     <help>
-diffTE documentation:
-======================
+PingPong documentation:
+=======================
 
 
     </help>

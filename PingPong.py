@@ -49,7 +49,6 @@ parser = argparse.ArgumentParser(prog='PingPong.py')
 parser.add_argument('-fastqs', action='store', dest='fastq_files', help='RNA sam file(s)', nargs='*')
 parser.add_argument('-fasta', action='store', dest='fasta_file', default = None, help='TE sequence fasta file')
 parser.add_argument('-TE_names', action='store', dest='TE_names', default=500, help='names of the TE family to check', nargs='*')
-parser.add_argument('-TE_copy_name', action='store', dest='TE_copy_name', default = None, help='name of the TE copy to check')
 parser.add_argument('-version', action='store_true', default=False, dest='version', help='print version')
 args = parser.parse_args()
 
