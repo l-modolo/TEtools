@@ -1,0 +1,149 @@
+<tool id="urqt" name="UrQt" version="1.0.18" hidden="false">
+    <description>fastq quality trimming</description>
+    <!-- <version_command>UrQt</version_command> -->
+    <command>UrQt
+        --in ${input1}
+        --out ${out_file1}
+        --t ${threshold}
+        --pos ${pos}
+        ${polyN}
+        ${empty_reads}
+        --min_read_size ${min_read_size}
+        --v
+        #if $fastq.type=="paired_end"
+             --inpair ${input2}
+             --outpair ${out_file2}
+        #end if
+    </command>
+
+    <inputs>
+        <conditional name="fastq">
+            <param name="fastq" type="select" label="Data type" value="single_end">
+                <option value="single_end">single-end</option>
+                <option value="paired_end">paired-end</option>
+            </param>
+            <when value="single_end">
+                <param name="input1" type="data" format="fastq" label="input fastq file" />
+            </when>
+            <when value="paired_end">
+                <param name="input1" type="data" format="fastq" label="input fastq file" />
+                <param name="input2" type="data" format="fastq" label="input fastq file for paired end data" />
+            </when>
+        </conditional>
+        <param name="threshold" type="integer" value="20" min="0" max="45" label="minimum phred score for a ``informative quality'' (default: 20)"/>
+        <param name="pos" type="select" label="expected position of trimmed sequence in the read (default: both)" value="both">
+            <option value="both">trim at head and tail</option>
+            <option value="head">trim at head</option>
+            <option value="tail">trim at tail</option>
+        </param>
+        <param name="polyN" type="select" label="expected position of trimmed sequence in the read (default: both)" value="both">
+            <option value="">quality trimming</option>
+            <option value="--N A">polyA trimming</option>
+            <option value="--N G">polyT trimming</option>
+            <option value="--N G">polyG trimming</option>
+            <option value="--N C">polyC trimming</option>
+        </param>
+        <param name="empty_reads" type="boolean" checked="true" truevalue="" falsevalue="--r" label="removing of empty reads (100% of bases trimmed) (default: the empty reads are removed from the output)"/>
+        <param name="min_read_size" type="integer" value="0" min="0" label="remove all reads smaller than this size after the trimming step (default: 0)"/>
+    </inputs>
+
+    <output>
+        <data format_source="fastq" name="out_file1" file="outputfile1.fastq" metadata_source="input1" label="UrQt on ${input1} with a threshold of ${threshold}"/>
+        <data format_source="fastq" name="out_file2" file="outputfile2.fastq" metadata_source="input2" label="UrQt on ${input2} with a threshold of ${threshold}">
+             <filter>fastq.type == "paired_end"</filter>
+        </data>
+    </output>
+
+    <help>
+    .. class:: warningmark
+    '''TIP''' This tool requires *fastq* format.
+    ----
+    **UrQt.1.0.18**
+    Trimming option:
+       --t minimum phred score for a ``good quality'' (default: 20)
+       --N polyN to trim (default: QC trimming)
+       --max_head_trim maximum number of nucleotide trimmed at the head of the reads (default: read length)
+       --max_tail_trim maximum number of nucleotide trimmed at the tail of the reads (default: read length)
+       --min_read_size remove all reads smaller than this size after the trimming step (default: 0)
+       --pos (expected position of trimmed sequence in the read) (default: both)
+       --r no removing of empty reads (100% of bases trimmed) (default: the empty reads are removed from the output)
+       --min_QC_length if present with --min_QC_phred the minimum percentage of base with min_QC_phred necessary to keep a read (default: without QC percentage for a length)
+       --min_QC_phred if present with --min_QC_length, the minimum phred score on min_QC_length percent of the base necessary to keep a read (default: without QC percentage for a length)
+    </help>
+</tool>
+
+
+<tool id="urqt" name="UrQt" version="1.0.18" hidden="false">
+    <description>fastq quality trimming</description>
+    <version_command>UrQt.py -version</version_command>
+
+    <command interpreter="python3">UrQt.py
+        -in $input_file
+        -out $ouput_file
+        -t $threshold
+        -pos $pos
+        $empty_reads
+        -min_read_size $min_read_size
+        #if $experiment_type.type=="paired_end"
+             -inpair $experiment_type.input_file_pair
+             -outpair $output_file_pair
+        #end if
+        #if $trimming_type.type=="polyN"
+          $polyN
+        #end if
+    </command>
+
+    <inputs>
+        <param name="input_file" type="data" format="fastq" label="input fastq file" />
+        <conditional name="experiment_type">
+            <param name="type" type="boolean" checked="false" truevalue="paired_end" falsevalue="single_end" label="paired-end data"/>
+            <when value="paired_end">
+                <param name="input_file_pair" type="data" format="fastq" label="input fastq file for paired end data" />
+            </when>
+        </conditional>
+        <param name="threshold" type="integer" value="20" min="0" max="45" label="minimum phred score for a ``informative quality'' (default: 20)"/>
+        <param name="pos" type="select" label="expected position of trimmed sequence in the read (default: both)" value="both">
+            <option value="both">trim at head and tail</option>
+            <option value="head">trim at head</option>
+            <option value="tail">trim at tail</option>
+        </param>
+        <conditional name="trimming_type">
+            <param name="type" type="boolean" checked="true" truevalue="quality" falsevalue="polyN" label="quality trimming"/>
+            <when value="polyN">
+              <param name="polyN" type="select" label="polyN to trim">
+                <option value="-N A">polyA trimming</option>
+                <option value="-N G">polyT trimming</option>
+                <option value="-N G">polyG trimming</option>
+                <option value="-N C">polyC trimming</option>
+            </param>
+            </when>
+        </conditional>
+        
+        <param name="empty_reads" type="boolean" checked="true" truevalue="" falsevalue="-r" label="removing of empty reads (100% of bases trimmed) (default: the empty reads are removed from the output)"/>
+        <param name="min_read_size" type="integer" value="0" min="0" label="remove all reads smaller than this size after the trimming step (default: 0)"/>
+    </inputs>
+
+    <outputs>
+        <data format_source="fastq" name="ouput_file" label="UrQt on ${input_file} with a threshold of ${threshold}"/>
+        <data format_source="fastq" name="output_file_pair" label="UrQt with a threshold of ${threshold}">
+             <filter>$experiment_type.type == "paired_end"</filter>
+        </data>
+    </outputs>
+
+    <help>
+    .. class:: warningmark
+    '''TIP''' This tool requires *fastq* format.
+    ----
+    **UrQt.1.0.18**
+    Trimming option:
+       --t minimum phred score for a ``good quality'' (default: 20)
+       --N polyN to trim (default: QC trimming)
+       --max_head_trim maximum number of nucleotide trimmed at the head of the reads (default: read length)
+       --max_tail_trim maximum number of nucleotide trimmed at the tail of the reads (default: read length)
+       --min_read_size remove all reads smaller than this size after the trimming step (default: 0)
+       --pos (expected position of trimmed sequence in the read) (default: both)
+       --r no removing of empty reads (100% of bases trimmed) (default: the empty reads are removed from the output)
+       --min_QC_length if present with --min_QC_phred the minimum percentage of base with min_QC_phred necessary to keep a read (default: without QC percentage for a length)
+       --min_QC_phred if present with --min_QC_length, the minimum phred score on min_QC_length percent of the base necessary to keep a read (default: without QC percentage for a length)
+    </help>
+</tool>
