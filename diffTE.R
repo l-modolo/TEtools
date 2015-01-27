@@ -1,5 +1,11 @@
 #!/usr/bin/Rscript
 
+# source("http://bioconductor.org/biocLite.R")
+# biocLite("DESeq2")
+# biocLite("gplots")
+# biocLite("ggplot2")
+# biocLite("RColorBrewer")
+
 # --args --FDR_level=0.05 --count_column=3 --count_file=\"count.txt\" --experiment_formula=\"population:extraction\" --sample_names=\"makindu:prot,makindu:size,chicharo:prot,chicharo:size\"
 args = commandArgs(trailingOnly=TRUE)
 for(i in 2:length(args))
@@ -61,12 +67,6 @@ print(head(counts))
 print(variables)
 
 # we run DeSeq
-source("http://bioconductor.org/biocLite.R")
-require(DESeq2) || biocLite("DESeq2") 
-require(gplots) || install.packages(gplots) 
-require(ggplot2) || install.packages(ggplot2) 
-require(RColorBrewer) || install.packages(RColorBrewer) 
-
 suppressMessages(require(DESeq2, quietly = TRUE))
 suppressMessages(require(gplots, quietly = TRUE))
 suppressMessages(require(ggplot2, quietly = TRUE))
