@@ -12,9 +12,9 @@
     <inputs>
         <param name="count_file" type="data" format="tabular" label="count file computed with the countTE file" />
         <param name="count_column" type="integer" value="2" label="first count column in the count file"/>
-        <param name="samples_names" area="True" size="30x10" type="text" value="population_1:method_2,population_1:method_2,...,population_n:method_1,population_n:method_2" label="comma separated list of names of the differents sample in the same order as the count file columns (example for n samples with 2 methods:
+        <param name="sample_names" area="True" size="180x5" type="text" value="population_1:method_2,population_1:method_2,...,population_n:method_1,population_n:method_2" label="comma separated list of names of the differents sample in the same order as the count file columns (example for n samples with 2 methods:
             population_1:method_2,population_1:method_2,...,population_n:method_1,population_n:method_2)"/>
-        <param name="experiment_formula" size="30" type="text" value="population:method" label="formula corresponding to the name (name_of_variable_1:name_of_variable_2:...:name_of_variable_N"/>
+        <param name="experiment_formula" size="180" type="text" value="population:method" label="formula corresponding to the name (name_of_variable_1:name_of_variable_2:...:name_of_variable_N"/>
         <param name="FDR_level" type="float" value="0.05" min="0.0" max="1.0" label="FDR threshold for the analysis"/>
     </inputs>
 
