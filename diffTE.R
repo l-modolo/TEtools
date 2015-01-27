@@ -61,7 +61,8 @@ print(head(counts))
 print(variables)
 
 # we run DeSeq
-require(DESeq2) || install.packages(DESeq2) 
+source("http://bioconductor.org/biocLite.R")
+require(DESeq2) || biocLite("DESeq2") 
 require(gplots) || install.packages(gplots) 
 require(ggplot2) || install.packages(ggplot2) 
 require(RColorBrewer) || install.packages(RColorBrewer) 
