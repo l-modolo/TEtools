@@ -6,7 +6,7 @@
 
     <inputs>
         <param name="count_file" type="data" format="tabular" label="count file computed with the countTE file" />
-        <param name="count_column" type="integer" value="2" label="first count column in the count file"/>
+        <param name="count_column" type="integer" value="1" label="first count column in the count file"/>
         <param name="sample_names" area="True" size="5x180" type="text" value="population_1:method_2,population_1:method_2,...,population_n:method_1,population_n:method_2" label="comma separated list of names of the differents sample in the same order as the count file columns (example for n samples with 2 methods:
             population_1:method_2,population_1:method_2,...,population_n:method_1,population_n:method_2)"/>
         <param name="experiment_formula" area="True" size="1x180" type="text" value="population:method" label="formula corresponding to the name (name_of_variable_1:name_of_variable_2:...:name_of_variable_N"/>

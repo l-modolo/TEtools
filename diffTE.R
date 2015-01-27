@@ -61,6 +61,11 @@ print(head(counts))
 print(variables)
 
 # we run DeSeq
+require(DESeq2) || install.packages(DESeq2) 
+require(gplots) || install.packages(gplots) 
+require(ggplot2) || install.packages(ggplot2) 
+require(RColorBrewer) || install.packages(RColorBrewer) 
+
 suppressMessages(require(DESeq2, quietly = TRUE))
 suppressMessages(require(gplots, quietly = TRUE))
 suppressMessages(require(ggplot2, quietly = TRUE))
