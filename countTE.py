@@ -543,7 +543,6 @@ rosette = Rosette(args.rosette_file, args.count_column, args.count_file, sample_
 count = Count(config['programs'], rosette, args.mapq, args.bowtie2, args.fasta_file, args.index_file)
 
 for i in range(sample_number):
-    print(args.sam_files[i])
     if args.sam_files is not None and path.isfile(args.sam_files[i]):
         count.from_sam(args.sam_files[i])
     else:
