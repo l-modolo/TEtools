@@ -12,6 +12,7 @@
 # --args --FDR_level=0.05 --count_column=3 --count_file=\"count.txt\" --experiment_formula=\"population:extraction\" --sample_names=\"makindu:prot,makindu:size,chicharo:prot,chicharo:size\"
 args = commandArgs(trailingOnly=TRUE)
 scriptPath <- dirname(sub("--file=","",args[grep("--file",args)]))
+print(scriptPath)
 .libPaths( c( paste0(scriptPath,"/diffTE"), .libPaths()) )
 
 for(i in 2:length(args))
