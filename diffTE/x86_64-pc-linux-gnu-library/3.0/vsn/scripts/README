@@ -1,0 +1,19 @@
+convergence2.Rnw is the most comprehensive test suite. It assesses the
+accuracy of fitted transformations versus the known true ones, using
+simulated data.
+
+Then there are some more basic tests and debugging platforms for the
+ML estimators:
+
+testmlest.R is a script that checks whether the ML estimate of the
+parameters a and b, if mu_k and sigma are known, is correct, based on
+simulated data. It also plots the likelihood landscape around the 
+true parameters.
+
+testderiv.R tests whether the explicit gradient of the neg
+loglikelihood that is used by in the vsn code accords with the
+numerical differentation of the neg loglikelihood.
+
+testprofiling.R tests whether the ML estimate of the parameters a and
+b, if mu_k and sigma are known, is correct, based on a previous
+profile LL fit.

@@ -1,0 +1,15 @@
+citHeader("Please cite the paper below for the limma software itself.  Please also try to cite the appropriate methodology articles that describe the statistical methods implemented in limma, depending on which limma functions you are using.  The methodology articles are listed in Section 2.1 of the limma User's Guide.")
+
+citEntry(entry="incollection",
+	title = "Limma: linear models for microarray data",
+	author = "Gordon K Smyth",
+	booktitle="Bioinformatics and Computational Biology Solutions Using {R} and Bioconductor",
+	editor="R. Gentleman and V. Carey and S. Dudoit and R. Irizarry, W. Huber",
+	publisher="Springer",
+	address="New York",
+	year = 2005,
+	pages = "397--420",
+
+	textVersion = 
+	"Smyth, GK (2005). Limma: linear models for microarray data. In: 'Bioinformatics and Computational Biology Solutions using R and Bioconductor'. R. Gentleman, V. Carey, S. Dudoit, R. Irizarry, W. Huber (eds), Springer, New York, pages 397-420."
+)

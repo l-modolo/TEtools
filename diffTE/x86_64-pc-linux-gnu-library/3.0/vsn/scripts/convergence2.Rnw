@@ -1,0 +1,361 @@
+%\VignetteIndexEntry{vsn - verifying and assessing the performance with simulated data}
+%\VignetteDepends{Biobase,vsn}
+%\VignetteKeywords{Expression Analysis}
+%\VignettePackage{vsn}
+
+\documentclass[11pt]{article}
+\usepackage[margin=2cm,noheadfoot]{geometry}
+
+%------------------------------------------------------------
+% newcommand
+%------------------------------------------------------------
+\newcommand{\Rfunction}[1]{\texttt{#1}}
+\newcommand{\Robject}[1]{\texttt{#1}}
+\newcommand{\Rpackage}[1]{\textit{#1}}
+\newcommand{\Rclass}[1]{\textit{#1}}
+
+\SweaveOpts{keep.source=TRUE} 
+
+\begin{document}
+%------------------------------------------------------------------------
+\title{Performance assessment of \Rpackage{vsn} with simulated data}
+%------------------------------------------------------------------------
+\author{Wolfgang Huber}
+\maketitle
+\tableofcontents
+
+\section{Overview}
+The purpose of this vignette is to assess that the software in
+\Rpackage{vsn} does what it is intended do, and in particular, 
+to assess the performance of the parameter estimation on simulated 
+data where the true parameters are known.
+
+There are two functions \Rfunction{sagmbSimulateData} and
+\Rfunction{sagmbAssess} that can be used to generate simulated data and assess
+the difference between the 'true' and 'estimated' data calibration and
+transformation by \Rpackage{vsn}. This vignette demonstrates some examples. 
+Please refer to reference~\cite{HuberSAGMB2003} for more detail on the
+simulation model,  the assessment strategy and a comprehensive
+suite of assessments with respect to the number of features \Robject{n}, the
+number of arrays \Robject{d}, the fraction of differentially expressed genes
+\Robject{de}, and the fraction of up-regulated genes \Robject{up}.
+%
+
+\section{Helper functions used in this document}
+This section is given just for completeness -- for the results, you can skip this and 
+go to Section~\ref{sec:n}.
+
+<<setup, results=hide>>=
+library("vsn")
+set.seed(0xabcd)
+## options(error=recover, warn=2)
+@ 
+
+The function \Rfunction{sim} computes simulated data using the
+function \Rfunction{sagmbSimulateData} from the \Rpackage{vsn}
+package, calls \Rfunction{vsn2} to fit the VSN model, and assesses
+model fit using the function \Rfunction{sagmbSimulateData}.
+
+<<sim, results=hide>>=
+sim = function(..., lts.quantile=1, nrrep=30L) {
+  callpar = list(...)
+  ll      = listLen(callpar)
+  stopifnot(ll[1]>=1, all(ll[-1]==1))
+  res  = matrix(1, nrow=nrrep, ncol=ll[1])
+ 
+  ## default parameters
+  simpar = append(callpar, 
+           list(n=4096L, d=2L, de=0, up=0.5, nrstrata=1L, miss=0, log2scale=TRUE)) 
+  simpar = simpar[!duplicated(names(simpar))]
+
+  for (i in 1:ll[1]) {
+    simpar[[1]] = callpar[[1]][i]
+    for (r in 1:nrrep) {
+      sim = do.call("sagmbSimulateData", simpar)
+      ny  = vsn2(sim$y, strata=factor(sim$strata), lts.quantile=lts.quantile, verbose=!TRUE)
+      res[r, i] = sagmbAssess(exprs(ny), sim)  
+      if(!TRUE){
+        cat(paste(sprintf("%6g", signif(sim$coefficients, 3), collapse=" ")), "")
+        cat(sprintf("i=%d, r=%d: %g\n", i, r, signif(res[r,i], 3)))
+        plot(sim$y, pch="."); abline(a=0, b=1, col="orange", main=paste(i,r))
+        if(res[r, i]>0.02) browser()
+      }
+   } ## for r
+  } ## for i
+  return(res)
+} 
+@ 
+
+Here some functions to automate the formating of the plots that are used in 
+the following.
+
+<<onePlot>>=
+onePlot = function(n, res, log="xy", ...) {
+  matplot(n, t(res), pch=20, log=log, ylab='r.m.s. error', col="orange", 
+          xlab=deparse(substitute(n)), ...)
+  lines(n, colMeans(res), col="blue")
+}
+
+twoPlot = function(n, rl) {
+  par(mfrow=c(1,2))
+  ylim=range(unlist(rl))
+  for(i in seq(along=rl)) {
+    x = if(is.list(n)) n[[i]] else n
+    matplot(x, t(rl[[i]]), pch=20, ylab='r.m.s. error', xlab=deparse(substitute(n)),
+            log="y", ylim=ylim, col="orange", main=names(rl)[i])
+    lines(x, colMeans(rl[[i]]), col="blue")
+  }
+}
+
+makeFig = function(name, width, height, expr) {
+  pdfname = paste(name, "pdf", sep=".")
+  pdf(file=pdfname, width=4*width, height=4*height)
+  expr
+  dev.off()
+  invisible(pdfname)
+}
+@
+
+%--------------------------------------------------
+\section{Number of features $n$}\label{sec:n}
+%--------------------------------------------------
+Fig.~\ref{fign} shows the estimation error for the transformation (i.\,e.\
+the root mean squared difference between true and estimated transformed data)
+as a function of the number of features $n$. If \Rfunction{vsn} works correctly,
+the estimation error should decrease roughly as $n^{-1/2}$.
+%
+<<fign1, results=hide>>=
+n = 1000*2^seq(-2, 5)
+makeFig("fign1", 1, 1, {
+  res = sim(n=n)
+  onePlot(n, res, main="n: one stratum")
+})
+@
+<<fign2, results=hide>>=
+n = 1000*2^seq(0, 5)
+makeFig("fign2", 1, 1, {
+  res = sim(n=n, nrstrata=8)
+  onePlot(n, res, main="n: 8 strata")
+})
+@
+%
+\begin{figure}[tbp]
+\begin{center}
+\includegraphics[width=0.49\textwidth]{fign1}
+\includegraphics[width=0.49\textwidth]{fign2}
+\caption{\label{fign}%
+Estimation error as a function of the number of features $n$. 
+If \Rfunction{vsn} works correctly,
+the estimation error should decrease roughly as $n^{-1/2}$.}
+\end{center}
+\end{figure}
+
+%--------------------------------------------------
+\section{Number of samples $d$}\label{sec:d}
+%--------------------------------------------------
+Fig.~\ref{figds}a shows the estimation error as a function of the number of
+samples $d$. This curve is essentially flat. This is because the number of parameters that need to be
+estimated is proportional to $d$, so the "number of data points per parameter"
+is constant in this plot (in contrast to Fig.~\ref{fign}).
+%
+<<figd, results=hide>>=
+makeFig("figd", 1, 1, {
+  d = 2^seq(1, 5)
+  res = sim(d=d)
+  onePlot(d, res, main="a) d")
+})
+@
+%--------------------------------------------------
+\section{Number of strata}\label{sec:nrstrata}
+%--------------------------------------------------
+In Fig.~\ref{figds}b, we see the estimation error as a function of the number of strata. It
+should increase, since for each stratum, we need to estimate separate
+parameters, and if the overall number of features does not change, more strata
+means less data per parameter.
+%
+<<fignrstrata, results=hide>>=
+makeFig("fignrstrata", 1, 1, {
+nrstrata = 2^seq(0, 4)
+res = sim(nrstrata=nrstrata)
+onePlot(nrstrata, res, main="b) nrstrata")
+})
+@
+%
+\begin{figure}[tbp]
+\begin{center}
+\includegraphics[width=0.49\textwidth]{figd}
+\includegraphics[width=0.49\textwidth]{fignrstrata}
+\caption{\label{figds}%
+Estimation error as a function of (a) the number of samples
+and (b) the number of strata. See Sections~\ref{sec:d} and \ref{sec:nrstrata}.}
+\end{center}
+\end{figure}
+
+%-----------------------------------------------------
+\section{Differentially expressed genes}\label{sec:de}
+%------------------------------------------------------
+In the following code, \Robject{de} is the fraction of differentially expressed genes.
+We run the simulation both with \Rfunction{vsn2}'s default setting \Robject{lts.quantile=0.9} and 
+the more robust \Robject{lts.quantile=0.5}.
+The reason why \Robject{lts.quantile=0.5} is not the default is that 
+the estimator with \Robject{lts.quantile=0.9} 
+is more efficient (more precise with less data) \textit{if} the fraction of 
+differentially expressed genes is not that large. See Figure~\ref{figdiff}.
+%
+<<figdiff, results=hide>>=
+makeFig("figdiff", 2, 1, {
+de  = (0:6)/10
+res1 = sim(de=de, nrstrata=2, lts.quantile=0.9)
+res2 = sim(de=de, nrstrata=2, lts.quantile=0.5)
+twoPlot(de, list("de, lts.quantile=0.9"=res1, "de, lts.quantile=0.5"=res2))
+})
+@
+%
+In the next code chunk, \Robject{up} is the fraction of up-regulated
+genes among the differentially expressed genes.
+%
+<<figup, results=hide>>=
+makeFig("figup", 2, 1, {
+up  = (0:8)/8
+res1 = sim(up=up, nrstrata=2, de=0.2)
+res2 = sim(up=up, nrstrata=2, de=0.2, lts.quantile=0.5)
+twoPlot(up, list("a) up, lts.quantile=0.9"=res1, "b) up, lts.quantile=0.5"=res2))
+})
+@
+%
+\begin{figure}[tbp]
+\begin{center}
+\includegraphics[width=\textwidth]{figdiff}
+\caption{\label{figdiff}%
+Estimation error as a function of the number of differentially expressed genes,
+for two different settings of \Robject{lts.quantile}. Note how a) is better
+for small values auf \Robject{de}, but becomes worse for larger
+values of \Robject{de}. See Section~\ref{sec:de}.}
+\end{center}
+\end{figure}
+
+\begin{figure}[tbp]
+\begin{center}
+\includegraphics[width=\textwidth]{figup}
+\caption{\label{figup}%
+Estimation error as a function of the fraction of up-regulated genes, 
+for two different settings of \Robject{lts.quantile};
+see Section~\ref{sec:de}.}
+\end{center}
+\end{figure}
+
+%-----------------------------------------------------
+\section{Missing values}\label{sec:miss}
+%------------------------------------------------------
+In this Section, we check the impact of missing values on the performance 
+of the estimator. \Robject{miss} is the fraction of missing values in
+the overall 
+%
+<<figmiss, results=hide>>=
+makeFig("figmiss", 2, 1, {
+miss1 = seq(0, 0.5, length=6)
+res1 = sim(miss=miss1, d=8)
+miss2 = seq(0, 0.1, length=6)
+res2 = sim(miss=miss2, d=2)
+twoPlot(list(miss1, miss2), list("fraction NA (d=8)"=res1, "b) fraction NA (d=2)"=res2))
+})
+@ 
+%
+\begin{figure}[tbp]
+\begin{center}
+\includegraphics[width=\textwidth]{figmiss}
+\caption{\label{figmiss}%
+Estimation error as a function of the fraction of missing data points,
+see Section~\ref{sec:miss}.}
+\end{center}
+\end{figure}
+
+%-----------------------------------------------------
+\section{Incremental normalization}\label{sec:inc}
+%------------------------------------------------------
+First, let's simulate a dataset with 10000 features, 12 arrays, 
+and no differentially expressed genes (in order to be able to look
+at the ML estimates rather than their robustified modifications).
+%
+<<incr1>>=
+dat = sagmbSimulateData(n=10000, d=12, de=0, nrstrata=1, miss=0, log2scale=TRUE)
+v  = new("vsn", mu=dat$mu, sigsq=dat$sigsq)
+fit = vsn2(dat$y, lts.quantile=1, verbose=FALSE)
+@ 
+%
+\Robject{fit} contains the maximum profile likelihood estimate of 
+the \Rpackage{vsn} model.
+Then we use the \emph{incremental mode} of \Rpackage{vsn} to estimate,
+in turn for each array individually, the parameters. 
+The results are shown in Figure~\ref{figincr}.
+%
+<<incr2>>=
+parRef = array(as.numeric(NA), dim=dim(coef(fit)))
+for(j in seq_len(ncol(dat$y))) {
+  vj = vsn2(dat$y[,j], reference=v, lts.quantile=1, verbose=FALSE)
+  parRef[,j,] = coef(vj)
+}
+@ 
+%
+<<figincr, results=hide>>=
+makeFig("figincr", 2, 2, {
+par(mfcol=c(2,2))
+for(k in 1:2) {
+  plot(dat$coefficients[1,,k], parRef[1,,k], pch=16, xlab="True", ylab="Reference fit", 
+    main=c("offset", "factor")[k])
+  abline(a=0, b=1, col="orange")
+  plot(coefficients(fit)[1,,k], parRef[1,,k], pch=16, xlab="Profile Likelihood fit", ylab="Reference fit", 
+    main=c("offset", "factor")[k])
+  abline(a=0, b=1, col="orange")
+}
+})
+@ 
+%
+\begin{figure}[tbp]
+\begin{center}
+\includegraphics[width=\textwidth]{figincr}
+\caption{\label{figincr}%
+Comparison of parameters fitted from incremental normalisation ($y$-axis) with
+true parameters ($x$-axis, upper row) and with
+parameters fitted from joint profile-likelihood normalisation ($x$-axis, lower row);
+see Section~\ref{sec:inc}.}
+\end{center}
+\end{figure}
+
+%-----------------------------------------------------
+%\section{Negligible additive background}\label{sec:multionly}
+%------------------------------------------------------
+%Datasets in which the multiplicative noise component dominated over the additive component, 
+%and hence in which the usual logarithmic transformation is appropriate, were problematic 
+%for previous versions of \Rpackage{vsn}.
+
+%---------------------------------------------------------
+% SessionInfo
+%---------------------------------------------------------
+\begin{table*}[tbp]
+\begin{minipage}{\textwidth}
+<<sessionInfo, results=tex, print=TRUE>>=
+toLatex(sessionInfo())
+@ 
+\end{minipage}
+\caption{\label{tab:sessioninfo}%
+The output of \Rfunction{sessionInfo} on the build system 
+after running this vignette.}
+\end{table*}
+
+
+\begin{thebibliography}{10}
+%-----------------------------------------------------
+
+\bibitem{HuberSAGMB2003}
+W. Huber, A. von Heydebreck, H. {S\"ultmann}, A. Poustka, and M. Vingron.
+\newblock Parameter estimation for the calibration and variance stabilization 
+of microarray data.
+\newblock \textit{Statistical Applications in Genetics and Molecular Biology}, 
+Vol. 2: No. 1, Article 3, 2003. 
+http://www.bepress.com/sagmb/vol2/iss1/art3
+
+\end{thebibliography}
+
+\end{document}
+

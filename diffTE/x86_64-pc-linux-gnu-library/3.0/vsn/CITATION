@@ -1,0 +1,20 @@
+citHeader("To cite the vsn package in publications use:")
+
+citEntry(entry="article",  
+  title  = "Variance Stabilization Applied to Microarray Data Calibration and to the Quantification of Differential Expression",
+  author = personList(person(given="Wolfgang", family="Huber"),
+                      person(given="Anja", family="von Heydebreck"),
+                      person(given="Holger", family="Sueltmann"),
+                      person(given="Annemarie", family="Poustka"),
+                      person(given="Martin", family="Vingron")),
+  journal = "Bioinformatics",
+  year = "2002",
+  volume = "18 Suppl. 1",
+  pages = "S96-S104",
+  textVersion = paste("Wolfgang Huber, Anja von Heydebreck, Holger Sueltmann, Annemarie Poustka and Martin Vingron.",
+    "Variance Stabilization Applied to Microarray Data",
+    "Calibration and to the Quantification of Differential Expression.",
+    "Bioinformatics 18, S96-S104 (2002)."))
+
+
+

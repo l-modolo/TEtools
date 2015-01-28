@@ -1,0 +1,71 @@
+Annotated-class         Annotated class
+AtomicList              Lists of Atomic Vectors in Natural and Rle Form
+DataFrame-class         External Data Frame
+DataFrameList-class     List of DataFrames
+DataTable-API           The DataTable API
+DataTable-stats         Statistical modeling with DataTable
+FilterMatrix-class      Matrix for Filter Results
+FilterRules-class       Collection of Filter Rules
+GappedRanges-class      GappedRanges objects
+Grouping-class          Grouping objects
+Hits-class              Set of hits between 2 vector-like objects
+HitsList-class          List of Hits objects
+IRanges-class           IRanges and NormalIRanges objects
+IRanges-constructor     The IRanges constructor and supporting
+                        functions
+IRanges-utils           IRanges utility functions
+IRangesList-class       List of IRanges and NormalIRanges
+IntervalForest-class    Interval Search Forests
+IntervalTree-class      Interval Search Trees
+List-class              List objects
+MaskCollection-class    MaskCollection objects
+OverlapEncodings-class
+                        OverlapEncodings objects
+RangedData-class        Data on ranges
+RangedDataList-class    Lists of RangedData
+RangedSelection-class   Selection of ranges and columns
+Ranges-class            Ranges objects
+Ranges-comparison       Comparing and ordering ranges
+RangesList-class        List of Ranges
+RangesMapping-class     Mapping of ranges to another sequence
+Rle-class               Rle objects
+RleViews-class          The RleViews class
+RleViewsList-class      List of RleViews
+SimpleList-class        Simple and Compressed List Classes
+Vector-class            Vector objects
+Vector-comparison       Compare, order, tabulate vector-like objects
+Views-class             Views objects
+ViewsList-class         List of Views
+classNameForDisplay     Provide a class name for displaying to users
+coverage-methods        Coverage across a set of ranges
+encodeOverlaps          Compute overlap encodings
+endoapply               Endomorphisms via application of a function
+                        over an object's elements
+expand                  The expand method for uncompressing compressed
+                        data columns
+findOverlaps-methods    Finding overlapping ranges
+funprog-methods         Functional programming methods for List objects
+inter-range-methods     Inter range transformations of a Ranges, Views,
+                        RangesList, MaskCollection, or RangedData
+                        object
+intra-range-methods     Intra range transformations of a Ranges, Views,
+                        RangesList, or MaskCollection object
+isConstant              Test if an atomic vector or array is constant
+multisplit              Split elements belonging to multiple groups
+nearest-methods         Finding the nearest range neighbor
+rdapply                 Applying over spaces
+read.Mask               Read a mask from a file
+reverse                 reverse
+runstat                 Fixed width running window summaries across
+                        vector-like objects
+safeExplode             Low-level string utilities
+score                   Score accessor and setter
+seqapply                Apply function and cast to Vector
+setops-methods          Set operations on IRanges, RangesList, and Hits
+                        objects
+slice-methods           Slice a vector-like or list-like object
+updateObject-methods    Update an object of a class defined in the
+                        IRanges package to its current class definition
+view-summarization-methods
+                        Summarize views on a vector-like object with
+                        numeric values

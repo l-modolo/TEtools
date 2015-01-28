@@ -1,0 +1,17 @@
+%\VignetteIndexEntry{Verifying and assessing the performance with simulated data}
+%\VignetteDepends{Biobase,vsn}
+%\VignetteKeywords{Expression Analysis}
+%\VignettePackage{vsn}
+
+% ---- This is just a stub. -----
+% The real .Rnw source for this vignette is in inst/scripts/convergence2.Rnw
+% It cannot be put here (inst/doc/) since it takes several hours to run.
+% So it needs to be run manually, and the resulting PDF is checked into the 
+% Bioconductor SVN repository. See the 'Makefile' in this directory, which will 
+% copy the PDF from ../scripts/ to here.
+
+
+\documentclass[11pt]{article}
+\begin{document}
+\end{document}
+

@@ -1,0 +1,765 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Linear Models for Microarray Data</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="R.css">
+</head><body>
+<h1> Linear Models for Microarray Data
+<img class="toplogo" src="../../../doc/html/logo.jpg" alt="[R logo]">
+</h1>
+<hr>
+<div align="center">
+<a href="../../../doc/html/packages.html"><img src="../../../doc/html/left.jpg" alt="[Up]" width="30" height="30" border="0"></a>
+<a href="../../../doc/html/index.html"><img src="../../../doc/html/up.jpg" alt="[Top]" width="30" height="30" border="0"></a>
+</div><h2>Documentation for package &lsquo;limma&rsquo; version 3.18.13</h2>
+
+<ul><li><a href="../DESCRIPTION">DESCRIPTION file</a>.</li>
+<li><a href="../doc/index.html">User guides, package vignettes and other documentation.</a></li>
+<li><a href="../NEWS">Package NEWS</a>.</li>
+</ul>
+
+<h2>Help Pages</h2>
+
+
+<p align="center">
+<a href="# "> </a>
+<a href="#A">A</a>
+<a href="#B">B</a>
+<a href="#C">C</a>
+<a href="#D">D</a>
+<a href="#E">E</a>
+<a href="#F">F</a>
+<a href="#G">G</a>
+<a href="#H">H</a>
+<a href="#I">I</a>
+<a href="#K">K</a>
+<a href="#L">L</a>
+<a href="#M">M</a>
+<a href="#N">N</a>
+<a href="#P">P</a>
+<a href="#Q">Q</a>
+<a href="#R">R</a>
+<a href="#S">S</a>
+<a href="#T">T</a>
+<a href="#U">U</a>
+<a href="#V">V</a>
+<a href="#W">W</a>
+<a href="#Z">Z</a>
+<a href="#misc">misc</a>
+</p>
+
+<table width="100%">
+<tr><td width="25%"><a href="01Introduction.html">limma-package</a></td>
+<td>Introduction to the LIMMA Package</td></tr>
+</table>
+
+<h2><a name="A">-- A --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="alias2Symbol.html">alias2Symbol</a></td>
+<td>Convert Gene Alias to Official Gene Symbols</td></tr>
+<tr><td width="25%"><a href="alias2Symbol.html">alias2SymbolTable</a></td>
+<td>Convert Gene Alias to Official Gene Symbols</td></tr>
+<tr><td width="25%"><a href="anova-method.html">anova.MAList</a></td>
+<td>ANOVA Table - method</td></tr>
+<tr><td width="25%"><a href="targetsA2C.html">array2channel</a></td>
+<td>Convert Two-Color Targets Dataframe from One-Row-Per-Array to One-Row-Per-Channel</td></tr>
+<tr><td width="25%"><a href="arrayWeights.html">arrayWeights</a></td>
+<td>Array Quality Weights</td></tr>
+<tr><td width="25%"><a href="arrayWeightsQuick.html">arrayWeightsQuick</a></td>
+<td>Array Quality Weights</td></tr>
+<tr><td width="25%"><a href="arrayWeights.html">arrayWeightsSimple</a></td>
+<td>Array Quality Weights</td></tr>
+<tr><td width="25%"><a href="asdataframe.html">as.data.frame.EList</a></td>
+<td>Turn a Microarray Linear Model Object into a Dataframe</td></tr>
+<tr><td width="25%"><a href="asdataframe.html">as.data.frame.EListRaw</a></td>
+<td>Turn a Microarray Linear Model Object into a Dataframe</td></tr>
+<tr><td width="25%"><a href="asdataframe.html">as.data.frame.MAList</a></td>
+<td>Turn a Microarray Linear Model Object into a Dataframe</td></tr>
+<tr><td width="25%"><a href="asdataframe.html">as.data.frame.MArrayLM</a></td>
+<td>Turn a Microarray Linear Model Object into a Dataframe</td></tr>
+<tr><td width="25%"><a href="asmalist.html">as.MAList</a></td>
+<td>Convert marrayNorm Object to an MAList Object</td></tr>
+<tr><td width="25%"><a href="asmatrix.html">as.matrix.EList</a></td>
+<td>Turn a Microarray Data Object into a Matrix</td></tr>
+<tr><td width="25%"><a href="asmatrix.html">as.matrix.EListRaw</a></td>
+<td>Turn a Microarray Data Object into a Matrix</td></tr>
+<tr><td width="25%"><a href="asmatrix.html">as.matrix.ExpressionSet</a></td>
+<td>Turn a Microarray Data Object into a Matrix</td></tr>
+<tr><td width="25%"><a href="asmatrix.html">as.matrix.LumiBatch</a></td>
+<td>Turn a Microarray Data Object into a Matrix</td></tr>
+<tr><td width="25%"><a href="asmatrix.html">as.matrix.MAList</a></td>
+<td>Turn a Microarray Data Object into a Matrix</td></tr>
+<tr><td width="25%"><a href="asmatrix.html">as.matrix.MArrayLM</a></td>
+<td>Turn a Microarray Data Object into a Matrix</td></tr>
+<tr><td width="25%"><a href="asmatrix.html">as.matrix.marrayNorm</a></td>
+<td>Turn a Microarray Data Object into a Matrix</td></tr>
+<tr><td width="25%"><a href="asmatrix.html">as.matrix.PLMset</a></td>
+<td>Turn a Microarray Data Object into a Matrix</td></tr>
+<tr><td width="25%"><a href="asmatrix.html">as.matrix.RGList</a></td>
+<td>Turn a Microarray Data Object into a Matrix</td></tr>
+<tr><td width="25%"><a href="asmatrix.html">as.matrix.vsn</a></td>
+<td>Turn a Microarray Data Object into a Matrix</td></tr>
+<tr><td width="25%"><a href="asMatrixWeights.html">asMatrixWeights</a></td>
+<td>asMatrixWeights</td></tr>
+<tr><td width="25%"><a href="auROC.html">auROC</a></td>
+<td>Area Under Receiver Operating Curve</td></tr>
+<tr><td width="25%"><a href="avearrays.html">avearrays</a></td>
+<td>Average Over Replicate Arrays</td></tr>
+<tr><td width="25%"><a href="avearrays.html">avearrays.default</a></td>
+<td>Average Over Replicate Arrays</td></tr>
+<tr><td width="25%"><a href="avearrays.html">avearrays.EList</a></td>
+<td>Average Over Replicate Arrays</td></tr>
+<tr><td width="25%"><a href="avearrays.html">avearrays.MAList</a></td>
+<td>Average Over Replicate Arrays</td></tr>
+<tr><td width="25%"><a href="avedups.html">avedups</a></td>
+<td>Average Over Duplicate Spots</td></tr>
+<tr><td width="25%"><a href="avedups.html">avedups.default</a></td>
+<td>Average Over Duplicate Spots</td></tr>
+<tr><td width="25%"><a href="avedups.html">avedups.EList</a></td>
+<td>Average Over Duplicate Spots</td></tr>
+<tr><td width="25%"><a href="avedups.html">avedups.MAList</a></td>
+<td>Average Over Duplicate Spots</td></tr>
+<tr><td width="25%"><a href="avereps.html">avereps</a></td>
+<td>Average Over Irregular Replicate Probes</td></tr>
+<tr><td width="25%"><a href="avereps.html">avereps.default</a></td>
+<td>Average Over Irregular Replicate Probes</td></tr>
+<tr><td width="25%"><a href="avereps.html">avereps.EList</a></td>
+<td>Average Over Irregular Replicate Probes</td></tr>
+<tr><td width="25%"><a href="avereps.html">avereps.EListRaw</a></td>
+<td>Average Over Irregular Replicate Probes</td></tr>
+<tr><td width="25%"><a href="avereps.html">avereps.MAList</a></td>
+<td>Average Over Irregular Replicate Probes</td></tr>
+<tr><td width="25%"><a href="avereps.html">avereps.RGList</a></td>
+<td>Average Over Irregular Replicate Probes</td></tr>
+</table>
+
+<h2><a name="B">-- B --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="backgroundcorrect.html">backgroundCorrect</a></td>
+<td>Correct Intensities for Background</td></tr>
+<tr><td width="25%"><a href="backgroundcorrect.html">backgroundCorrect.matrix</a></td>
+<td>Correct Intensities for Background</td></tr>
+<tr><td width="25%"><a href="barcodeplot.html">barcodeplot</a></td>
+<td>Barcode Plot</td></tr>
+<tr><td width="25%"><a href="beadCountWeights.html">beadCountWeights</a></td>
+<td>Bead Count Weights for Illumina BeadChips</td></tr>
+<tr><td width="25%"><a href="blockDiag.html">blockDiag</a></td>
+<td>Block Diagonal Matrix</td></tr>
+<tr><td width="25%"><a href="bwss.html">bwss</a></td>
+<td>Between and within sums of squares</td></tr>
+<tr><td width="25%"><a href="bwss.matrix.html">bwss.matrix</a></td>
+<td>Between and within sums of squares for matrix</td></tr>
+</table>
+
+<h2><a name="C">-- C --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="camera.html">camera</a></td>
+<td>Competitive Gene Set Test Accounting for Inter-gene Correlation</td></tr>
+<tr><td width="25%"><a href="camera.html">camera.default</a></td>
+<td>Competitive Gene Set Test Accounting for Inter-gene Correlation</td></tr>
+<tr><td width="25%"><a href="camera.html">camera.EList</a></td>
+<td>Competitive Gene Set Test Accounting for Inter-gene Correlation</td></tr>
+<tr><td width="25%"><a href="camera.html">camera.MAList</a></td>
+<td>Competitive Gene Set Test Accounting for Inter-gene Correlation</td></tr>
+<tr><td width="25%"><a href="cbind.html">cbind</a></td>
+<td>Combine RGList, MAList, EList or EListRaw Objects</td></tr>
+<tr><td width="25%"><a href="cbind.html">cbind.EList</a></td>
+<td>Combine RGList, MAList, EList or EListRaw Objects</td></tr>
+<tr><td width="25%"><a href="cbind.html">cbind.EListRaw</a></td>
+<td>Combine RGList, MAList, EList or EListRaw Objects</td></tr>
+<tr><td width="25%"><a href="cbind.html">cbind.MAList</a></td>
+<td>Combine RGList, MAList, EList or EListRaw Objects</td></tr>
+<tr><td width="25%"><a href="cbind.html">cbind.RGList</a></td>
+<td>Combine RGList, MAList, EList or EListRaw Objects</td></tr>
+<tr><td width="25%"><a href="changelog.html">changeLog</a></td>
+<td>Limma Change Log</td></tr>
+<tr><td width="25%"><a href="classifytests.html">classifyTestsF</a></td>
+<td>Multiple Testing Genewise Across Contrasts</td></tr>
+<tr><td width="25%"><a href="classifytests.html">classifyTestsP</a></td>
+<td>Multiple Testing Genewise Across Contrasts</td></tr>
+<tr><td width="25%"><a href="classifytests.html">classifyTestsT</a></td>
+<td>Multiple Testing Genewise Across Contrasts</td></tr>
+<tr><td width="25%"><a href="rglist.html">coerce-method</a></td>
+<td>Red, Green Intensity List - class</td></tr>
+<tr><td width="25%"><a href="contrastAsCoef.html">contrastAsCoef</a></td>
+<td>Reform a Design Matrix to that Contrasts Become Coefficients</td></tr>
+<tr><td width="25%"><a href="contrasts.fit.html">contrasts.fit</a></td>
+<td>Compute Contrasts from Linear Model Fit</td></tr>
+<tr><td width="25%"><a href="controlStatus.html">controlStatus</a></td>
+<td>Set Status of each Spot from List of Spot Types</td></tr>
+<tr><td width="25%"><a href="propTrueNull.html">convest</a></td>
+<td>Estimate Proportion of True Null Hypotheses</td></tr>
+</table>
+
+<h2><a name="D">-- D --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="decideTests.html">decideTests</a></td>
+<td>Multiple Testing Across Genes and Contrasts</td></tr>
+<tr><td width="25%"><a href="channel2M.html">designI2A</a></td>
+<td>Convert Individual Channel Design Matrix to M-A Format</td></tr>
+<tr><td width="25%"><a href="channel2M.html">designI2M</a></td>
+<td>Convert Individual Channel Design Matrix to M-A Format</td></tr>
+<tr><td width="25%"><a href="dim.html">dim.EList</a></td>
+<td>Retrieve the Dimensions of an RGList, MAList or MArrayLM Object</td></tr>
+<tr><td width="25%"><a href="dim.html">dim.EListRaw</a></td>
+<td>Retrieve the Dimensions of an RGList, MAList or MArrayLM Object</td></tr>
+<tr><td width="25%"><a href="dim.html">dim.MAList</a></td>
+<td>Retrieve the Dimensions of an RGList, MAList or MArrayLM Object</td></tr>
+<tr><td width="25%"><a href="dim.html">dim.MArrayLM</a></td>
+<td>Retrieve the Dimensions of an RGList, MAList or MArrayLM Object</td></tr>
+<tr><td width="25%"><a href="dim.html">dim.RGList</a></td>
+<td>Retrieve the Dimensions of an RGList, MAList or MArrayLM Object</td></tr>
+<tr><td width="25%"><a href="dimnames.html">dimnames.EList</a></td>
+<td>Retrieve the Dimension Names of an RGList, MAList, EList, EListRaw or MArrayLM Object</td></tr>
+<tr><td width="25%"><a href="dimnames.html">dimnames.EListRaw</a></td>
+<td>Retrieve the Dimension Names of an RGList, MAList, EList, EListRaw or MArrayLM Object</td></tr>
+<tr><td width="25%"><a href="dimnames.html">dimnames.MAList</a></td>
+<td>Retrieve the Dimension Names of an RGList, MAList, EList, EListRaw or MArrayLM Object</td></tr>
+<tr><td width="25%"><a href="dimnames.html">dimnames.MArrayLM</a></td>
+<td>Retrieve the Dimension Names of an RGList, MAList, EList, EListRaw or MArrayLM Object</td></tr>
+<tr><td width="25%"><a href="dimnames.html">dimnames.RGList</a></td>
+<td>Retrieve the Dimension Names of an RGList, MAList, EList, EListRaw or MArrayLM Object</td></tr>
+<tr><td width="25%"><a href="dimnames.html">dimnames&lt;-.EList</a></td>
+<td>Retrieve the Dimension Names of an RGList, MAList, EList, EListRaw or MArrayLM Object</td></tr>
+<tr><td width="25%"><a href="dimnames.html">dimnames&lt;-.EListRaw</a></td>
+<td>Retrieve the Dimension Names of an RGList, MAList, EList, EListRaw or MArrayLM Object</td></tr>
+<tr><td width="25%"><a href="dimnames.html">dimnames&lt;-.MAList</a></td>
+<td>Retrieve the Dimension Names of an RGList, MAList, EList, EListRaw or MArrayLM Object</td></tr>
+<tr><td width="25%"><a href="dimnames.html">dimnames&lt;-.RGList</a></td>
+<td>Retrieve the Dimension Names of an RGList, MAList, EList, EListRaw or MArrayLM Object</td></tr>
+<tr><td width="25%"><a href="dupcor.html">duplicateCorrelation</a></td>
+<td>Correlation Between Duplicates</td></tr>
+</table>
+
+<h2><a name="E">-- E --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="ebayes.html">eBayes</a></td>
+<td>Empirical Bayes Statistics for Differential Expression</td></tr>
+<tr><td width="25%"><a href="ebayes.html">ebayes</a></td>
+<td>Empirical Bayes Statistics for Differential Expression</td></tr>
+<tr><td width="25%"><a href="EList.html">EList-class</a></td>
+<td>Expression List - class</td></tr>
+<tr><td width="25%"><a href="EList.html">EListRaw-class</a></td>
+<td>Expression List - class</td></tr>
+<tr><td width="25%"><a href="propTrueNull.html">estimate.m0</a></td>
+<td>Estimate Proportion of True Null Hypotheses</td></tr>
+<tr><td width="25%"><a href="exprsMA.html">exprs.MA</a></td>
+<td>Extract Log-Expression Matrix from MAList</td></tr>
+</table>
+
+<h2><a name="F">-- F --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="fitfdist.html">fitFDist</a></td>
+<td>Moment Estimation of Scaled F-Distribution</td></tr>
+<tr><td width="25%"><a href="fitfdist.html">fitFDistRobustly</a></td>
+<td>Moment Estimation of Scaled F-Distribution</td></tr>
+<tr><td width="25%"><a href="fitGammaIntercept.html">fitGammaIntercept</a></td>
+<td>Fit Intercept to Vector of Gamma Distributed Variates</td></tr>
+<tr><td width="25%"><a href="fitted.MArrayLM.html">fitted.MArrayLM</a></td>
+<td>Fitted Values Method for MArrayLM Fits</td></tr>
+<tr><td width="25%"><a href="classifytests.html">FStat</a></td>
+<td>Multiple Testing Genewise Across Contrasts</td></tr>
+</table>
+
+<h2><a name="G">-- G --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="genas.html">genas</a></td>
+<td>Genuine Association of Gene Expression Profiles</td></tr>
+<tr><td width="25%"><a href="geneSetTest.html">geneSetTest</a></td>
+<td>Mean-rank Gene Set Test</td></tr>
+<tr><td width="25%"><a href="getlayout.html">getDupSpacing</a></td>
+<td>Extract the Print Layout of an Array from the GAL File</td></tr>
+<tr><td width="25%"><a href="getEAWP.html">getEAWP</a></td>
+<td>Extract Basic Data from Microarray Data Objects</td></tr>
+<tr><td width="25%"><a href="getlayout.html">getLayout</a></td>
+<td>Extract the Print Layout of an Array from the GAL File</td></tr>
+<tr><td width="25%"><a href="getlayout.html">getLayout2</a></td>
+<td>Extract the Print Layout of an Array from the GAL File</td></tr>
+<tr><td width="25%"><a href="getSpacing.html">getSpacing</a></td>
+<td>Get Numerical Spacing</td></tr>
+<tr><td width="25%"><a href="gls.series.html">gls.series</a></td>
+<td>Fit Linear Model to Microarray Data by Generalized Least Squares</td></tr>
+<tr><td width="25%"><a href="gridspotrc.html">gridc</a></td>
+<td>Row and Column Positions on Microarray</td></tr>
+<tr><td width="25%"><a href="gridspotrc.html">gridr</a></td>
+<td>Row and Column Positions on Microarray</td></tr>
+</table>
+
+<h2><a name="H">-- H --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="heatdiagram.html">heatDiagram</a></td>
+<td>Stemmed Heat Diagram</td></tr>
+<tr><td width="25%"><a href="heatdiagram.html">heatdiagram</a></td>
+<td>Stemmed Heat Diagram</td></tr>
+<tr><td width="25%"><a href="helpMethods.html">helpMethods</a></td>
+<td>Prompt for Method Help Topics</td></tr>
+</table>
+
+<h2><a name="I">-- I --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="imageplot.html">imageplot</a></td>
+<td>Image Plot of Microarray Statistics</td></tr>
+<tr><td width="25%"><a href="imageplot3by2.html">imageplot3by2</a></td>
+<td>Write Imageplots to Files</td></tr>
+<tr><td width="25%"><a href="camera.html">interGeneCorrelation</a></td>
+<td>Competitive Gene Set Test Accounting for Inter-gene Correlation</td></tr>
+<tr><td width="25%"><a href="intraspotCorrelation.html">intraspotCorrelation</a></td>
+<td>Intra-Spot Correlation for Two Color Data</td></tr>
+<tr><td width="25%"><a href="isfullrank.html">is.fullrank</a></td>
+<td>Check for Full Column Rank</td></tr>
+<tr><td width="25%"><a href="isnumeric.html">isNumeric</a></td>
+<td>Test for Numeric Argument</td></tr>
+</table>
+
+<h2><a name="K">-- K --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="kooperberg.html">kooperberg</a></td>
+<td>Kooperberg Model-Based Background Correction for GenePix data</td></tr>
+</table>
+
+<h2><a name="L">-- L --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="LargeDataObject.html">LargeDataObject-class</a></td>
+<td>Large Data Object - class</td></tr>
+<tr><td width="25%"><a href="dim.html">length.EList</a></td>
+<td>Retrieve the Dimensions of an RGList, MAList or MArrayLM Object</td></tr>
+<tr><td width="25%"><a href="dim.html">length.EListRaw</a></td>
+<td>Retrieve the Dimensions of an RGList, MAList or MArrayLM Object</td></tr>
+<tr><td width="25%"><a href="dim.html">length.MAList</a></td>
+<td>Retrieve the Dimensions of an RGList, MAList or MArrayLM Object</td></tr>
+<tr><td width="25%"><a href="dim.html">length.MArrayLM</a></td>
+<td>Retrieve the Dimensions of an RGList, MAList or MArrayLM Object</td></tr>
+<tr><td width="25%"><a href="dim.html">length.RGList</a></td>
+<td>Retrieve the Dimensions of an RGList, MAList or MArrayLM Object</td></tr>
+<tr><td width="25%"><a href="01Introduction.html">limma</a></td>
+<td>Introduction to the LIMMA Package</td></tr>
+<tr><td width="25%"><a href="limmaUsersGuide.html">limmaUsersGuide</a></td>
+<td>View Limma User's Guide</td></tr>
+<tr><td width="25%"><a href="lm.series.html">lm.series</a></td>
+<td>Fit Linear Model to Microrray Data by Ordinary Least Squares</td></tr>
+<tr><td width="25%"><a href="lmFit.html">lmFit</a></td>
+<td>Linear Model for Series of Arrays</td></tr>
+<tr><td width="25%"><a href="lmscFit.html">lmscFit</a></td>
+<td>Fit Linear Model to Individual Channels of Two-Color Data</td></tr>
+<tr><td width="25%"><a href="loessfit.html">loessFit</a></td>
+<td>Univariate Lowess With Prior Weights</td></tr>
+</table>
+
+<h2><a name="M">-- M --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="normalizeWithinArrays.html">MA.RG</a></td>
+<td>Normalize Within Arrays</td></tr>
+<tr><td width="25%"><a href="ma3x3.html">ma3x3.matrix</a></td>
+<td>Two dimensional Moving Averages with 3x3 Window</td></tr>
+<tr><td width="25%"><a href="ma3x3.html">ma3x3.spottedarray</a></td>
+<td>Two dimensional Moving Averages with 3x3 Window</td></tr>
+<tr><td width="25%"><a href="makeContrasts.html">makeContrasts</a></td>
+<td>Construct Matrix of Custom Contrasts</td></tr>
+<tr><td width="25%"><a href="makeunique.html">makeUnique</a></td>
+<td>Make Values of Character Vector Unique</td></tr>
+<tr><td width="25%"><a href="malist.html">MAList-class</a></td>
+<td>M-value, A-value Expression List - class</td></tr>
+<tr><td width="25%"><a href="marraylm.html">MArrayLM-class</a></td>
+<td>Microarray Linear Model Fit - class</td></tr>
+<tr><td width="25%"><a href="mdplot.html">mdplot</a></td>
+<td>mdplot</td></tr>
+<tr><td width="25%"><a href="plotMDS.html">MDS-class</a></td>
+<td>Multidimensional scaling plot of microarray data</td></tr>
+<tr><td width="25%"><a href="merge.html">merge.EList</a></td>
+<td>Merge RGList or MAList Data Objects</td></tr>
+<tr><td width="25%"><a href="merge.html">merge.EListRaw</a></td>
+<td>Merge RGList or MAList Data Objects</td></tr>
+<tr><td width="25%"><a href="merge.html">merge.MAList</a></td>
+<td>Merge RGList or MAList Data Objects</td></tr>
+<tr><td width="25%"><a href="merge.html">merge.RGList</a></td>
+<td>Merge RGList or MAList Data Objects</td></tr>
+<tr><td width="25%"><a href="mergeScansRG.html">mergeScans</a></td>
+<td>Merge two scans of two-color arrays</td></tr>
+<tr><td width="25%"><a href="mergeScansRG.html">mergeScansRG</a></td>
+<td>Merge two scans of two-color arrays</td></tr>
+<tr><td width="25%"><a href="modelMatrix.html">modelMatrix</a></td>
+<td>Construct Design Matrix</td></tr>
+<tr><td width="25%"><a href="modifyWeights.html">modifyWeights</a></td>
+<td>modifyWeights</td></tr>
+<tr><td width="25%"><a href="mrlm.html">mrlm</a></td>
+<td>Fit Linear Model to Microrray Data by Robust Regression</td></tr>
+<tr><td width="25%"><a href="roast.html">mroast</a></td>
+<td>Rotation Gene Set Tests</td></tr>
+<tr><td width="25%"><a href="roast.html">mroast.default</a></td>
+<td>Rotation Gene Set Tests</td></tr>
+<tr><td width="25%"><a href="roast.html">mroast.EList</a></td>
+<td>Rotation Gene Set Tests</td></tr>
+<tr><td width="25%"><a href="roast.html">mroast.MAList</a></td>
+<td>Rotation Gene Set Tests</td></tr>
+</table>
+
+<h2><a name="N">-- N --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="nec.html">nec</a></td>
+<td>NormExp Background Correction and Normalization Using Control Probes</td></tr>
+<tr><td width="25%"><a href="nec.html">neqc</a></td>
+<td>NormExp Background Correction and Normalization Using Control Probes</td></tr>
+<tr><td width="25%"><a href="isfullrank.html">nonEstimable</a></td>
+<td>Check for Full Column Rank</td></tr>
+<tr><td width="25%"><a href="normalizebetweenarrays.html">normalizeBetweenArrays</a></td>
+<td>Normalize Between Arrays</td></tr>
+<tr><td width="25%"><a href="normalizeCyclicLoess.html">normalizeCyclicLoess</a></td>
+<td>Normalize Columns of a Matrix by Cyclic Loess</td></tr>
+<tr><td width="25%"><a href="normalizeprintorder.html">normalizeForPrintorder</a></td>
+<td>Print-Order Normalization</td></tr>
+<tr><td width="25%"><a href="normalizeprintorder.html">normalizeForPrintorder.rg</a></td>
+<td>Print-Order Normalization</td></tr>
+<tr><td width="25%"><a href="normalizeMedianAbsValues.html">normalizeMedianAbsValues</a></td>
+<td>Normalize Columns of a Matrix to have the Median Absolute Value</td></tr>
+<tr><td width="25%"><a href="normalizeMedianAbsValues.html">normalizeMedianValues</a></td>
+<td>Normalize Columns of a Matrix to have the Median Absolute Value</td></tr>
+<tr><td width="25%"><a href="normalizequantiles.html">normalizeQuantiles</a></td>
+<td>Normalize Columns of a Matrix to have the same Quantiles</td></tr>
+<tr><td width="25%"><a href="normalizeRobustSpline.html">normalizeRobustSpline</a></td>
+<td>Normalize Single Microarray Using Shrunk Robust Splines</td></tr>
+<tr><td width="25%"><a href="normalizeVSN.html">normalizeVSN</a></td>
+<td>Variance Stabilizing Normalization (vsn)</td></tr>
+<tr><td width="25%"><a href="normalizeVSN.html">normalizeVSN.default</a></td>
+<td>Variance Stabilizing Normalization (vsn)</td></tr>
+<tr><td width="25%"><a href="normalizeVSN.html">normalizeVSN.EListRaw</a></td>
+<td>Variance Stabilizing Normalization (vsn)</td></tr>
+<tr><td width="25%"><a href="normalizeVSN.html">normalizeVSN.RGList</a></td>
+<td>Variance Stabilizing Normalization (vsn)</td></tr>
+<tr><td width="25%"><a href="normalizeWithinArrays.html">normalizeWithinArrays</a></td>
+<td>Normalize Within Arrays</td></tr>
+<tr><td width="25%"><a href="normexpfit.html">normexp.fit</a></td>
+<td>Fit Normal+Exp Convolution Model to Observed Intensities</td></tr>
+<tr><td width="25%"><a href="normexpfitcontrol.html">normexp.fit.control</a></td>
+<td>Normexp Model Parameter Estimation Aided by Negative Controls</td></tr>
+<tr><td width="25%"><a href="normexpfitdetectionp.html">normexp.fit.detection.p</a></td>
+<td>Estimate Normexp Model Parameter Using Negative Controls Inferred from Regular Probes</td></tr>
+<tr><td width="25%"><a href="normexpsignal.html">normexp.signal</a></td>
+<td>Expected Signal Given Observed Foreground Under Normal+Exp Model</td></tr>
+</table>
+
+<h2><a name="P">-- P --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="plotDensities.html">plotDensities</a></td>
+<td>Plot Expression Densities</td></tr>
+<tr><td width="25%"><a href="plotDensities.html">plotDensities.default</a></td>
+<td>Plot Expression Densities</td></tr>
+<tr><td width="25%"><a href="plotDensities.html">plotDensities.EList</a></td>
+<td>Plot Expression Densities</td></tr>
+<tr><td width="25%"><a href="plotDensities.html">plotDensities.EListRaw</a></td>
+<td>Plot Expression Densities</td></tr>
+<tr><td width="25%"><a href="plotDensities.html">plotDensities.MAList</a></td>
+<td>Plot Expression Densities</td></tr>
+<tr><td width="25%"><a href="plotDensities.html">plotDensities.RGList</a></td>
+<td>Plot Expression Densities</td></tr>
+<tr><td width="25%"><a href="plotFB.html">plotFB</a></td>
+<td>FB-Plot</td></tr>
+<tr><td width="25%"><a href="plotFB.html">plotFB.default</a></td>
+<td>FB-Plot</td></tr>
+<tr><td width="25%"><a href="plotFB.html">plotFB.EListRaw</a></td>
+<td>FB-Plot</td></tr>
+<tr><td width="25%"><a href="plotFB.html">plotFB.RGList</a></td>
+<td>FB-Plot</td></tr>
+<tr><td width="25%"><a href="plotlines.html">plotlines</a></td>
+<td>plotlines</td></tr>
+<tr><td width="25%"><a href="plotma.html">plotMA</a></td>
+<td>MA-Plot</td></tr>
+<tr><td width="25%"><a href="plotma.html">plotMA.default</a></td>
+<td>MA-Plot</td></tr>
+<tr><td width="25%"><a href="plotma.html">plotMA.EList</a></td>
+<td>MA-Plot</td></tr>
+<tr><td width="25%"><a href="plotma.html">plotMA.MAList</a></td>
+<td>MA-Plot</td></tr>
+<tr><td width="25%"><a href="plotma.html">plotMA.MArrayLM</a></td>
+<td>MA-Plot</td></tr>
+<tr><td width="25%"><a href="plotma.html">plotMA.RGList</a></td>
+<td>MA-Plot</td></tr>
+<tr><td width="25%"><a href="plotma3by2.html">plotMA3by2</a></td>
+<td>Write MA-Plots to Files</td></tr>
+<tr><td width="25%"><a href="plotMDS.html">plotMDS</a></td>
+<td>Multidimensional scaling plot of microarray data</td></tr>
+<tr><td width="25%"><a href="plotMDS.html">plotMDS.default</a></td>
+<td>Multidimensional scaling plot of microarray data</td></tr>
+<tr><td width="25%"><a href="plotMDS.html">plotMDS.MDS</a></td>
+<td>Multidimensional scaling plot of microarray data</td></tr>
+<tr><td width="25%"><a href="normalizeprintorder.html">plotPrintorder</a></td>
+<td>Print-Order Normalization</td></tr>
+<tr><td width="25%"><a href="plotprinttiploess.html">plotPrintTipLoess</a></td>
+<td>MA Plots by Print-Tip Group</td></tr>
+<tr><td width="25%"><a href="plotRLDF.html">plotRLDF</a></td>
+<td>Plot of regularized linear discriminant functions for microarray data</td></tr>
+<tr><td width="25%"><a href="plotSA.html">plotSA</a></td>
+<td>Sigma vs A plot for microarray linear model</td></tr>
+<tr><td width="25%"><a href="poolvar.html">poolVar</a></td>
+<td>Pool Sample Variances with Unequal Variances</td></tr>
+<tr><td width="25%"><a href="predFCm.html">predFCm</a></td>
+<td>Predictive log fold change for microarrays</td></tr>
+<tr><td width="25%"><a href="printHead.html">printHead</a></td>
+<td>Print Leading Rows of Large Objects</td></tr>
+<tr><td width="25%"><a href="PrintLayout.html">PrintLayout-class</a></td>
+<td>Print Layout - class</td></tr>
+<tr><td width="25%"><a href="printorder.html">printorder</a></td>
+<td>Identify Order in which Spots were Printed</td></tr>
+<tr><td width="25%"><a href="printtipWeights.html">printtipWeights</a></td>
+<td>Sub-array Quality Weights</td></tr>
+<tr><td width="25%"><a href="printtipWeights.html">printtipWeightsSimple</a></td>
+<td>Sub-array Quality Weights</td></tr>
+<tr><td width="25%"><a href="propexpr.html">propexpr</a></td>
+<td>Estimate Proportion of Expressed Probes</td></tr>
+<tr><td width="25%"><a href="propTrueNull.html">propTrueNull</a></td>
+<td>Estimate Proportion of True Null Hypotheses</td></tr>
+<tr><td width="25%"><a href="protectMetachar.html">protectMetachar</a></td>
+<td>Protect Metacharacters</td></tr>
+</table>
+
+<h2><a name="Q">-- Q --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="qqt.html">qqf</a></td>
+<td>Student's t Quantile-Quantile Plot</td></tr>
+<tr><td width="25%"><a href="qqt.html">qqt</a></td>
+<td>Student's t Quantile-Quantile Plot</td></tr>
+<tr><td width="25%"><a href="qualwt.html">QualityWeights</a></td>
+<td>Spot Quality Weights</td></tr>
+</table>
+
+<h2><a name="R">-- R --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="rankSumTestwithCorrelation.html">rankSumTestWithCorrelation</a></td>
+<td>Two Sample Wilcoxon-Mann-Whitney Rank Sum Test Allowing For Correlation</td></tr>
+<tr><td width="25%"><a href="cbind.html">rbind.EList</a></td>
+<td>Combine RGList, MAList, EList or EListRaw Objects</td></tr>
+<tr><td width="25%"><a href="cbind.html">rbind.EListRaw</a></td>
+<td>Combine RGList, MAList, EList or EListRaw Objects</td></tr>
+<tr><td width="25%"><a href="cbind.html">rbind.MAList</a></td>
+<td>Combine RGList, MAList, EList or EListRaw Objects</td></tr>
+<tr><td width="25%"><a href="cbind.html">rbind.RGList</a></td>
+<td>Combine RGList, MAList, EList or EListRaw Objects</td></tr>
+<tr><td width="25%"><a href="read.columns.html">read.columns</a></td>
+<td>Read specified columns from a file</td></tr>
+<tr><td width="25%"><a href="read.ilmn.html">read.ilmn</a></td>
+<td>Read Illumina Expression Data</td></tr>
+<tr><td width="25%"><a href="read.ilmn.targets.html">read.ilmn.targets</a></td>
+<td>Read Illumina Data from a Target Dataframe</td></tr>
+<tr><td width="25%"><a href="read.maimages.html">read.imagene</a></td>
+<td>Read RGList or EListRaw from Image Analysis Output Files</td></tr>
+<tr><td width="25%"><a href="read.maimages.html">read.maimages</a></td>
+<td>Read RGList or EListRaw from Image Analysis Output Files</td></tr>
+<tr><td width="25%"><a href="readgal.html">readGAL</a></td>
+<td>Read a GAL file</td></tr>
+<tr><td width="25%"><a href="readGPRHeader.html">readGenericHeader</a></td>
+<td>Read Header Information from Image Analysis Raw Data File</td></tr>
+<tr><td width="25%"><a href="readGPRHeader.html">readGPRHeader</a></td>
+<td>Read Header Information from Image Analysis Raw Data File</td></tr>
+<tr><td width="25%"><a href="readImaGeneHeader.html">readImaGeneHeader</a></td>
+<td>Read ImaGene Header Information</td></tr>
+<tr><td width="25%"><a href="readGPRHeader.html">readSMDHeader</a></td>
+<td>Read Header Information from Image Analysis Raw Data File</td></tr>
+<tr><td width="25%"><a href="readSpotTypes.html">readSpotTypes</a></td>
+<td>Read Spot Types File</td></tr>
+<tr><td width="25%"><a href="readTargets.html">readTargets</a></td>
+<td>Read Targets File</td></tr>
+<tr><td width="25%"><a href="removeBatchEffect.html">removeBatchEffect</a></td>
+<td>Remove Batch Effect</td></tr>
+<tr><td width="25%"><a href="removeext.html">removeExt</a></td>
+<td>Remove Common Extension from File Names</td></tr>
+<tr><td width="25%"><a href="residuals.MArrayLM.html">residuals.MArrayLM</a></td>
+<td>Extract Residuals from MArrayLM Fit</td></tr>
+<tr><td width="25%"><a href="normalizeWithinArrays.html">RG.MA</a></td>
+<td>Normalize Within Arrays</td></tr>
+<tr><td width="25%"><a href="rglist.html">RGList-class</a></td>
+<td>Red, Green Intensity List - class</td></tr>
+<tr><td width="25%"><a href="roast.html">roast</a></td>
+<td>Rotation Gene Set Tests</td></tr>
+<tr><td width="25%"><a href="roast.html">Roast-class</a></td>
+<td>Rotation Gene Set Tests</td></tr>
+<tr><td width="25%"><a href="roast.html">roast.default</a></td>
+<td>Rotation Gene Set Tests</td></tr>
+<tr><td width="25%"><a href="roast.html">roast.EList</a></td>
+<td>Rotation Gene Set Tests</td></tr>
+<tr><td width="25%"><a href="roast.html">roast.MAList</a></td>
+<td>Rotation Gene Set Tests</td></tr>
+<tr><td width="25%"><a href="romer.html">romer</a></td>
+<td>Rotation Gene Set Enrichment Analysis</td></tr>
+<tr><td width="25%"><a href="romer.html">romer2</a></td>
+<td>Rotation Gene Set Enrichment Analysis</td></tr>
+</table>
+
+<h2><a name="S">-- S --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="selectmodel.html">selectModel</a></td>
+<td>Select Appropriate Linear Model</td></tr>
+<tr><td width="25%"><a href="LargeDataObject.html">show-method</a></td>
+<td>Large Data Object - class</td></tr>
+<tr><td width="25%"><a href="TestResults.html">show-method</a></td>
+<td>Matrix of Test Results - class</td></tr>
+<tr><td width="25%"><a href="plotMDS.html">show-method</a></td>
+<td>Multidimensional scaling plot of microarray data</td></tr>
+<tr><td width="25%"><a href="roast.html">show-method</a></td>
+<td>Rotation Gene Set Tests</td></tr>
+<tr><td width="25%"><a href="gridspotrc.html">spotc</a></td>
+<td>Row and Column Positions on Microarray</td></tr>
+<tr><td width="25%"><a href="gridspotrc.html">spotr</a></td>
+<td>Row and Column Positions on Microarray</td></tr>
+<tr><td width="25%"><a href="squeezeVar.html">squeezeVar</a></td>
+<td>Squeeze Sample Variances</td></tr>
+<tr><td width="25%"><a href="strsplit2.html">strsplit2</a></td>
+<td>Split Composite Names</td></tr>
+<tr><td width="25%"><a href="subsetting.html">subsetListOfArrays</a></td>
+<td>Subset RGList, MAList, EListRaw, EList or MArrayLM Objects</td></tr>
+<tr><td width="25%"><a href="subsetting.html">subsetting</a></td>
+<td>Subset RGList, MAList, EListRaw, EList or MArrayLM Objects</td></tr>
+<tr><td width="25%"><a href="summary.html">summary.EList</a></td>
+<td>Summaries of Microarray Data Objects</td></tr>
+<tr><td width="25%"><a href="summary.html">summary.EListRaw</a></td>
+<td>Summaries of Microarray Data Objects</td></tr>
+<tr><td width="25%"><a href="summary.html">summary.MAList</a></td>
+<td>Summaries of Microarray Data Objects</td></tr>
+<tr><td width="25%"><a href="summary.html">summary.MArrayLM</a></td>
+<td>Summaries of Microarray Data Objects</td></tr>
+<tr><td width="25%"><a href="summary.html">summary.RGList</a></td>
+<td>Summaries of Microarray Data Objects</td></tr>
+<tr><td width="25%"><a href="TestResults.html">summary.TestResults</a></td>
+<td>Matrix of Test Results - class</td></tr>
+<tr><td width="25%"><a href="symbols2indices.html">symbols2indices</a></td>
+<td>Convert Gene Set Symbols to Indices</td></tr>
+</table>
+
+<h2><a name="T">-- T --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="targetsA2C.html">targetsA2C</a></td>
+<td>Convert Two-Color Targets Dataframe from One-Row-Per-Array to One-Row-Per-Channel</td></tr>
+<tr><td width="25%"><a href="TestResults.html">TestResults-class</a></td>
+<td>Matrix of Test Results - class</td></tr>
+<tr><td width="25%"><a href="tmixture.html">tmixture.matrix</a></td>
+<td>Estimate Scale Factor in Mixture of t-Distributions</td></tr>
+<tr><td width="25%"><a href="tmixture.html">tmixture.vector</a></td>
+<td>Estimate Scale Factor in Mixture of t-Distributions</td></tr>
+<tr><td width="25%"><a href="topRomer.html">topRomer</a></td>
+<td>Top Gene Set Testing Results from Romer</td></tr>
+<tr><td width="25%"><a href="toptable.html">topTable</a></td>
+<td>Table of Top Genes from Linear Model Fit</td></tr>
+<tr><td width="25%"><a href="toptable.html">toptable</a></td>
+<td>Table of Top Genes from Linear Model Fit</td></tr>
+<tr><td width="25%"><a href="toptable.html">topTableF</a></td>
+<td>Table of Top Genes from Linear Model Fit</td></tr>
+<tr><td width="25%"><a href="toptable.html">topTreat</a></td>
+<td>Table of Top Genes from Linear Model Fit</td></tr>
+<tr><td width="25%"><a href="ebayes.html">treat</a></td>
+<td>Empirical Bayes Statistics for Differential Expression</td></tr>
+<tr><td width="25%"><a href="trigammainverse.html">trigammaInverse</a></td>
+<td>Inverse Trigamma Function</td></tr>
+<tr><td width="25%"><a href="trimWhiteSpace.html">trimWhiteSpace</a></td>
+<td>Trim Leading and Trailing White Space</td></tr>
+<tr><td width="25%"><a href="zscore.html">tZscore</a></td>
+<td>Z-score Equivalents</td></tr>
+</table>
+
+<h2><a name="U">-- U --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="uniquegenelist.html">uniquegenelist</a></td>
+<td>Eliminate Duplicate Names from the Gene List</td></tr>
+<tr><td width="25%"><a href="modelMatrix.html">uniqueTargets</a></td>
+<td>Construct Design Matrix</td></tr>
+<tr><td width="25%"><a href="unwrapdups.html">unwrapdups</a></td>
+<td>Unwrap Duplicate Spot Values from Rows into Columns</td></tr>
+</table>
+
+<h2><a name="V">-- V --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="venn.html">vennCounts</a></td>
+<td>Venn Diagrams</td></tr>
+<tr><td width="25%"><a href="venn.html">vennDiagram</a></td>
+<td>Venn Diagrams</td></tr>
+<tr><td width="25%"><a href="volcanoplot.html">volcanoplot</a></td>
+<td>Volcano Plot</td></tr>
+<tr><td width="25%"><a href="voom.html">voom</a></td>
+<td>Transform RNA-Seq Data Ready for Linear Modelling</td></tr>
+<tr><td width="25%"><a href="vooma.html">vooma</a></td>
+<td>Convert Mean-Variance Trend to Observation-specific Precision Weights for Microarray Data</td></tr>
+<tr><td width="25%"><a href="vooma.html">voomaByGroup</a></td>
+<td>Convert Mean-Variance Trend to Observation-specific Precision Weights for Microarray Data</td></tr>
+</table>
+
+<h2><a name="W">-- W --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="weightedmedian.html">weighted.median</a></td>
+<td>Weighted Median</td></tr>
+<tr><td width="25%"><a href="geneSetTest.html">wilcoxGST</a></td>
+<td>Mean-rank Gene Set Test</td></tr>
+<tr><td width="25%"><a href="writefit.html">write.fit</a></td>
+<td>Write MArrayLM Object to a File</td></tr>
+<tr><td width="25%"><a href="qualwt.html">wtarea</a></td>
+<td>Spot Quality Weights</td></tr>
+<tr><td width="25%"><a href="qualwt.html">wtflags</a></td>
+<td>Spot Quality Weights</td></tr>
+<tr><td width="25%"><a href="qualwt.html">wtIgnore.Filter</a></td>
+<td>Spot Quality Weights</td></tr>
+</table>
+
+<h2><a name="Z">-- Z --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="zscore.html">zscore</a></td>
+<td>Z-score Equivalents</td></tr>
+<tr><td width="25%"><a href="zscore.html">zscoreGamma</a></td>
+<td>Z-score Equivalents</td></tr>
+<tr><td width="25%"><a href="zscore.html">zscoreHyper</a></td>
+<td>Z-score Equivalents</td></tr>
+<tr><td width="25%"><a href="zscore.html">zscoreT</a></td>
+<td>Z-score Equivalents</td></tr>
+</table>
+
+<h2><a name="misc">-- misc --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="01Introduction.html">01.Introduction</a></td>
+<td>Introduction to the LIMMA Package</td></tr>
+<tr><td width="25%"><a href="02classes.html">02.Classes</a></td>
+<td>Classes Defined by this Package</td></tr>
+<tr><td width="25%"><a href="03reading.html">03.ReadingData</a></td>
+<td>Reading Microarray Data from Files</td></tr>
+<tr><td width="25%"><a href="04Background.html">04.Background</a></td>
+<td>Background Correction</td></tr>
+<tr><td width="25%"><a href="05Normalization.html">05.Normalization</a></td>
+<td>Normalization of Microarray Data</td></tr>
+<tr><td width="25%"><a href="06linearmodels.html">06.LinearModels</a></td>
+<td>Linear Models for Microarrays</td></tr>
+<tr><td width="25%"><a href="07SingleChannel.html">07.SingleChannel</a></td>
+<td>Individual Channel Analysis of Two-Color Microarrays</td></tr>
+<tr><td width="25%"><a href="08Tests.html">08.Tests</a></td>
+<td>Hypothesis Testing for Linear Models</td></tr>
+<tr><td width="25%"><a href="09Diagnostics.html">09.Diagnostics</a></td>
+<td>Diagnostics and Quality Assessment</td></tr>
+<tr><td width="25%"><a href="10Other.html">10.Other</a></td>
+<td>Other Functions</td></tr>
+<tr><td width="25%"><a href="subsetting.html">[.EList</a></td>
+<td>Subset RGList, MAList, EListRaw, EList or MArrayLM Objects</td></tr>
+<tr><td width="25%"><a href="subsetting.html">[.EListRaw</a></td>
+<td>Subset RGList, MAList, EListRaw, EList or MArrayLM Objects</td></tr>
+<tr><td width="25%"><a href="subsetting.html">[.MAList</a></td>
+<td>Subset RGList, MAList, EListRaw, EList or MArrayLM Objects</td></tr>
+<tr><td width="25%"><a href="subsetting.html">[.MArrayLM</a></td>
+<td>Subset RGList, MAList, EListRaw, EList or MArrayLM Objects</td></tr>
+<tr><td width="25%"><a href="subsetting.html">[.RGList</a></td>
+<td>Subset RGList, MAList, EListRaw, EList or MArrayLM Objects</td></tr>
+</table>
+</body></html>

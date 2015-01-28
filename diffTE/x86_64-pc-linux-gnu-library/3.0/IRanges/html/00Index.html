@@ -1,0 +1,2412 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Infrastructure for manipulating intervals on sequences</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="R.css">
+</head><body>
+<h1> Infrastructure for manipulating intervals on sequences
+<img class="toplogo" src="../../../doc/html/logo.jpg" alt="[R logo]">
+</h1>
+<hr>
+<div align="center">
+<a href="../../../doc/html/packages.html"><img src="../../../doc/html/left.jpg" alt="[Up]" width="30" height="30" border="0"></a>
+<a href="../../../doc/html/index.html"><img src="../../../doc/html/up.jpg" alt="[Top]" width="30" height="30" border="0"></a>
+</div><h2>Documentation for package &lsquo;IRanges&rsquo; version 1.20.7</h2>
+
+<ul><li><a href="../DESCRIPTION">DESCRIPTION file</a>.</li>
+<li><a href="../doc/index.html">User guides, package vignettes and other documentation.</a></li>
+<li><a href="../NEWS">Package NEWS</a>.</li>
+</ul>
+
+<h2>Help Pages</h2>
+
+
+<p align="center">
+<a href="#A">A</a>
+<a href="#B">B</a>
+<a href="#C">C</a>
+<a href="#D">D</a>
+<a href="#E">E</a>
+<a href="#F">F</a>
+<a href="#G">G</a>
+<a href="#H">H</a>
+<a href="#I">I</a>
+<a href="#L">L</a>
+<a href="#M">M</a>
+<a href="#N">N</a>
+<a href="#O">O</a>
+<a href="#P">P</a>
+<a href="#Q">Q</a>
+<a href="#R">R</a>
+<a href="#S">S</a>
+<a href="#T">T</a>
+<a href="#U">U</a>
+<a href="#V">V</a>
+<a href="#W">W</a>
+<a href="#X">X</a>
+<a href="#misc">misc</a>
+</p>
+
+
+<h2><a name="A">-- A --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="MaskCollection-class.html">active</a></td>
+<td>MaskCollection objects</td></tr>
+<tr><td width="25%"><a href="FilterRules-class.html">active-method</a></td>
+<td>Collection of Filter Rules</td></tr>
+<tr><td width="25%"><a href="MaskCollection-class.html">active-method</a></td>
+<td>MaskCollection objects</td></tr>
+<tr><td width="25%"><a href="MaskCollection-class.html">active&lt;-</a></td>
+<td>MaskCollection objects</td></tr>
+<tr><td width="25%"><a href="FilterRules-class.html">active&lt;--method</a></td>
+<td>Collection of Filter Rules</td></tr>
+<tr><td width="25%"><a href="MaskCollection-class.html">active&lt;--method</a></td>
+<td>MaskCollection objects</td></tr>
+<tr><td width="25%"><a href="DataFrame-class.html">aggregate-method</a></td>
+<td>External Data Frame</td></tr>
+<tr><td width="25%"><a href="DataTable-API.html">aggregate-method</a></td>
+<td>The DataTable API</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">aggregate-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="SimpleList-class.html">aggregate-method</a></td>
+<td>Simple and Compressed List Classes</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">aggregate-method</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">aggregate.Rle</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">all-method</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="Annotated-class.html">Annotated</a></td>
+<td>Annotated class</td></tr>
+<tr><td width="25%"><a href="Annotated-class.html">Annotated-class</a></td>
+<td>Annotated class</td></tr>
+<tr><td width="25%"><a href="FilterRules-class.html">append-method</a></td>
+<td>Collection of Filter Rules</td></tr>
+<tr><td width="25%"><a href="MaskCollection-class.html">append-method</a></td>
+<td>MaskCollection objects</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">append-method</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="RDApplyParams-class.html">applyFun</a></td>
+<td>Applying over spaces</td></tr>
+<tr><td width="25%"><a href="RDApplyParams-class.html">applyFun-method</a></td>
+<td>Applying over spaces</td></tr>
+<tr><td width="25%"><a href="RDApplyParams-class.html">applyFun&lt;-</a></td>
+<td>Applying over spaces</td></tr>
+<tr><td width="25%"><a href="RDApplyParams-class.html">applyFun&lt;--method</a></td>
+<td>Applying over spaces</td></tr>
+<tr><td width="25%"><a href="RDApplyParams-class.html">applyParams</a></td>
+<td>Applying over spaces</td></tr>
+<tr><td width="25%"><a href="RDApplyParams-class.html">applyParams-method</a></td>
+<td>Applying over spaces</td></tr>
+<tr><td width="25%"><a href="RDApplyParams-class.html">applyParams&lt;-</a></td>
+<td>Applying over spaces</td></tr>
+<tr><td width="25%"><a href="RDApplyParams-class.html">applyParams&lt;--method</a></td>
+<td>Applying over spaces</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">as.character-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">as.character-method</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">as.complex-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">as.complex-method</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="DataFrame-class.html">as.data.frame-method</a></td>
+<td>External Data Frame</td></tr>
+<tr><td width="25%"><a href="DataFrameList-class.html">as.data.frame-method</a></td>
+<td>List of DataFrames</td></tr>
+<tr><td width="25%"><a href="GappedRanges-class.html">as.data.frame-method</a></td>
+<td>GappedRanges objects</td></tr>
+<tr><td width="25%"><a href="Hits-class.html">as.data.frame-method</a></td>
+<td>Set of hits between 2 vector-like objects</td></tr>
+<tr><td width="25%"><a href="OverlapEncodings-class.html">as.data.frame-method</a></td>
+<td>OverlapEncodings objects</td></tr>
+<tr><td width="25%"><a href="RangedData-class.html">as.data.frame-method</a></td>
+<td>Data on ranges</td></tr>
+<tr><td width="25%"><a href="Ranges-class.html">as.data.frame-method</a></td>
+<td>Ranges objects</td></tr>
+<tr><td width="25%"><a href="RangesList-class.html">as.data.frame-method</a></td>
+<td>List of Ranges</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">as.data.frame-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">as.data.frame-method</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="DataFrame-class.html">as.data.frame.DataFrame</a></td>
+<td>External Data Frame</td></tr>
+<tr><td width="25%"><a href="DataFrameList-class.html">as.data.frame.DataFrameList</a></td>
+<td>List of DataFrames</td></tr>
+<tr><td width="25%"><a href="GappedRanges-class.html">as.data.frame.GappedRanges</a></td>
+<td>GappedRanges objects</td></tr>
+<tr><td width="25%"><a href="Hits-class.html">as.data.frame.Hits</a></td>
+<td>Set of hits between 2 vector-like objects</td></tr>
+<tr><td width="25%"><a href="OverlapEncodings-class.html">as.data.frame.OverlapEncodings</a></td>
+<td>OverlapEncodings objects</td></tr>
+<tr><td width="25%"><a href="RangedData-class.html">as.data.frame.RangedData</a></td>
+<td>Data on ranges</td></tr>
+<tr><td width="25%"><a href="Ranges-class.html">as.data.frame.Ranges</a></td>
+<td>Ranges objects</td></tr>
+<tr><td width="25%"><a href="RangesList-class.html">as.data.frame.RangesList</a></td>
+<td>List of Ranges</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">as.data.frame.Rle</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">as.data.frame.Vector</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">as.double-method</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="List-class.html">as.env</a></td>
+<td>List objects</td></tr>
+<tr><td width="25%"><a href="DataTable-API.html">as.env-method</a></td>
+<td>The DataTable API</td></tr>
+<tr><td width="25%"><a href="List-class.html">as.env-method</a></td>
+<td>List objects</td></tr>
+<tr><td width="25%"><a href="RangedData-class.html">as.env-method</a></td>
+<td>Data on ranges</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">as.factor-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Ranges-class.html">as.integer-method</a></td>
+<td>Ranges objects</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">as.integer-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">as.integer-method</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">as.list-method</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="Hits-class.html">as.list-method</a></td>
+<td>Set of hits between 2 vector-like objects</td></tr>
+<tr><td width="25%"><a href="IRangesList-class.html">as.list-method</a></td>
+<td>List of IRanges and NormalIRanges</td></tr>
+<tr><td width="25%"><a href="List-class.html">as.list-method</a></td>
+<td>List objects</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">as.list-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="SimpleList-class.html">as.list-method</a></td>
+<td>Simple and Compressed List Classes</td></tr>
+<tr><td width="25%"><a href="SimpleList-class.html">as.list.CompressedList</a></td>
+<td>Simple and Compressed List Classes</td></tr>
+<tr><td width="25%"><a href="IRangesList-class.html">as.list.CompressedNormalIRangesList</a></td>
+<td>List of IRanges and NormalIRanges</td></tr>
+<tr><td width="25%"><a href="Hits-class.html">as.list.Hits</a></td>
+<td>Set of hits between 2 vector-like objects</td></tr>
+<tr><td width="25%"><a href="List-class.html">as.list.List</a></td>
+<td>List objects</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">as.list.Rle</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="SimpleList-class.html">as.list.SimpleList</a></td>
+<td>Simple and Compressed List Classes</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">as.logical-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">as.logical-method</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="DataFrame-class.html">as.matrix-method</a></td>
+<td>External Data Frame</td></tr>
+<tr><td width="25%"><a href="Hits-class.html">as.matrix-method</a></td>
+<td>Set of hits between 2 vector-like objects</td></tr>
+<tr><td width="25%"><a href="HitsList-class.html">as.matrix-method</a></td>
+<td>List of Hits objects</td></tr>
+<tr><td width="25%"><a href="Ranges-class.html">as.matrix-method</a></td>
+<td>Ranges objects</td></tr>
+<tr><td width="25%"><a href="Views-class.html">as.matrix-method</a></td>
+<td>Views objects</td></tr>
+<tr><td width="25%"><a href="ViewsList-class.html">as.matrix-method</a></td>
+<td>List of Views</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">as.numeric-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">as.numeric-method</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">as.raw-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">as.raw-method</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="Hits-class.html">as.table-method</a></td>
+<td>Set of hits between 2 vector-like objects</td></tr>
+<tr><td width="25%"><a href="HitsList-class.html">as.table-method</a></td>
+<td>List of Hits objects</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">as.vector-method</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">as.vector-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">as.vectorORfactor</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">as.vectorORfactor-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="IRanges-utils.html">asNormalIRanges</a></td>
+<td>IRanges utility functions</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">AtomicList</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">AtomicList-class</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+</table>
+
+<h2><a name="B">-- B --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="IRanges-utils.html">breakInChunks</a></td>
+<td>IRanges utility functions</td></tr>
+<tr><td width="25%"><a href="DataTable-API.html">by-method</a></td>
+<td>The DataTable API</td></tr>
+</table>
+
+<h2><a name="C">-- C --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="FilterRules-class.html">c-method</a></td>
+<td>Collection of Filter Rules</td></tr>
+<tr><td width="25%"><a href="GappedRanges-class.html">c-method</a></td>
+<td>GappedRanges objects</td></tr>
+<tr><td width="25%"><a href="IRanges-class.html">c-method</a></td>
+<td>IRanges and NormalIRanges objects</td></tr>
+<tr><td width="25%"><a href="RangedData-class.html">c-method</a></td>
+<td>Data on ranges</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">c-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="SimpleList-class.html">c-method</a></td>
+<td>Simple and Compressed List Classes</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">c-method</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="Views-class.html">c-method</a></td>
+<td>Views objects</td></tr>
+<tr><td width="25%"><a href="DataFrame-class.html">cbind-method</a></td>
+<td>External Data Frame</td></tr>
+<tr><td width="25%"><a href="DataFrameList-class.html">cbind-method</a></td>
+<td>List of DataFrames</td></tr>
+<tr><td width="25%"><a href="DataTable-API.html">cbind-method</a></td>
+<td>The DataTable API</td></tr>
+<tr><td width="25%"><a href="FilterMatrix-class.html">cbind-method</a></td>
+<td>Matrix for Filter Results</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">CharacterList</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">CharacterList-class</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">chartr-method</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">chartr-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">class:AtomicList</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">class:CharacterList</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">class:ComplexList</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">class:CompressedAtomicList</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">class:CompressedCharacterList</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">class:CompressedComplexList</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">class:CompressedIntegerList</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="IRangesList-class.html">class:CompressedIRangesList</a></td>
+<td>List of IRanges and NormalIRanges</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">class:CompressedLogicalList</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="IRangesList-class.html">class:CompressedNormalIRangesList</a></td>
+<td>List of IRanges and NormalIRanges</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">class:CompressedNumericList</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">class:CompressedRawList</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">class:CompressedRleList</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="DataFrame-class.html">class:DataFrame</a></td>
+<td>External Data Frame</td></tr>
+<tr><td width="25%"><a href="DataTable-API.html">class:DataTable</a></td>
+<td>The DataTable API</td></tr>
+<tr><td width="25%"><a href="DataTable-API.html">class:DataTableORNULL</a></td>
+<td>The DataTable API</td></tr>
+<tr><td width="25%"><a href="Grouping-class.html">class:Dups</a></td>
+<td>Grouping objects</td></tr>
+<tr><td width="25%"><a href="GappedRanges-class.html">class:GappedRanges</a></td>
+<td>GappedRanges objects</td></tr>
+<tr><td width="25%"><a href="Grouping-class.html">class:Grouping</a></td>
+<td>Grouping objects</td></tr>
+<tr><td width="25%"><a href="Grouping-class.html">class:H2LGrouping</a></td>
+<td>Grouping objects</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">class:IntegerList</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="IRanges-class.html">class:IRanges</a></td>
+<td>IRanges and NormalIRanges objects</td></tr>
+<tr><td width="25%"><a href="IRangesList-class.html">class:IRangesList</a></td>
+<td>List of IRanges and NormalIRanges</td></tr>
+<tr><td width="25%"><a href="List-class.html">class:List</a></td>
+<td>List objects</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">class:LogicalList</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="MaskCollection-class.html">class:MaskCollection</a></td>
+<td>MaskCollection objects</td></tr>
+<tr><td width="25%"><a href="IRanges-class.html">class:NormalIRanges</a></td>
+<td>IRanges and NormalIRanges objects</td></tr>
+<tr><td width="25%"><a href="IRangesList-class.html">class:NormalIRangesList</a></td>
+<td>List of IRanges and NormalIRanges</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">class:NumericList</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="OverlapEncodings-class.html">class:OverlapEncodings</a></td>
+<td>OverlapEncodings objects</td></tr>
+<tr><td width="25%"><a href="Grouping-class.html">class:Partitioning</a></td>
+<td>Grouping objects</td></tr>
+<tr><td width="25%"><a href="Grouping-class.html">class:PartitioningByEnd</a></td>
+<td>Grouping objects</td></tr>
+<tr><td width="25%"><a href="Grouping-class.html">class:PartitioningByWidth</a></td>
+<td>Grouping objects</td></tr>
+<tr><td width="25%"><a href="RangedData-class.html">class:RangedData</a></td>
+<td>Data on ranges</td></tr>
+<tr><td width="25%"><a href="Ranges-class.html">class:Ranges</a></td>
+<td>Ranges objects</td></tr>
+<tr><td width="25%"><a href="RangesList-class.html">class:RangesList-class</a></td>
+<td>List of Ranges</td></tr>
+<tr><td width="25%"><a href="nearest-methods.html">class:RangesORmissing</a></td>
+<td>Finding the nearest range neighbor</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">class:RawList</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">class:Rle</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">class:RleList</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="RleViews-class.html">class:RleViews</a></td>
+<td>The RleViews class</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">class:SimpleAtomicList</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">class:SimpleCharacterList</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">class:SimpleComplexList</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">class:SimpleIntegerList</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="IRangesList-class.html">class:SimpleIRangesList</a></td>
+<td>List of IRanges and NormalIRanges</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">class:SimpleLogicalList</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="IRangesList-class.html">class:SimpleNormalIRangesList</a></td>
+<td>List of IRanges and NormalIRanges</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">class:SimpleNumericList</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="RangesList-class.html">class:SimpleRangesList-class</a></td>
+<td>List of Ranges</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">class:SimpleRawList</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">class:SimpleRleList</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="ViewsList-class.html">class:SimpleViewsList</a></td>
+<td>List of Views</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">class:Vector</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="Views-class.html">class:Views</a></td>
+<td>Views objects</td></tr>
+<tr><td width="25%"><a href="ViewsList-class.html">class:ViewsList</a></td>
+<td>List of Views</td></tr>
+<tr><td width="25%"><a href="classNameForDisplay-methods.html">classNameForDisplay</a></td>
+<td>Provide a class name for displaying to users</td></tr>
+<tr><td width="25%"><a href="classNameForDisplay-methods.html">classNameForDisplay-method</a></td>
+<td>Provide a class name for displaying to users</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">coerce-method</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="DataFrame-class.html">coerce-method</a></td>
+<td>External Data Frame</td></tr>
+<tr><td width="25%"><a href="DataFrameList-class.html">coerce-method</a></td>
+<td>List of DataFrames</td></tr>
+<tr><td width="25%"><a href="GappedRanges-class.html">coerce-method</a></td>
+<td>GappedRanges objects</td></tr>
+<tr><td width="25%"><a href="Grouping-class.html">coerce-method</a></td>
+<td>Grouping objects</td></tr>
+<tr><td width="25%"><a href="Hits-class.html">coerce-method</a></td>
+<td>Set of hits between 2 vector-like objects</td></tr>
+<tr><td width="25%"><a href="IRanges-class.html">coerce-method</a></td>
+<td>IRanges and NormalIRanges objects</td></tr>
+<tr><td width="25%"><a href="IRanges-utils.html">coerce-method</a></td>
+<td>IRanges utility functions</td></tr>
+<tr><td width="25%"><a href="IRangesList-class.html">coerce-method</a></td>
+<td>List of IRanges and NormalIRanges</td></tr>
+<tr><td width="25%"><a href="IntervalForest-class.html">coerce-method</a></td>
+<td>Interval Search Forests</td></tr>
+<tr><td width="25%"><a href="IntervalTree-class.html">coerce-method</a></td>
+<td>Interval Search Trees</td></tr>
+<tr><td width="25%"><a href="List-class.html">coerce-method</a></td>
+<td>List objects</td></tr>
+<tr><td width="25%"><a href="MaskCollection-class.html">coerce-method</a></td>
+<td>MaskCollection objects</td></tr>
+<tr><td width="25%"><a href="RangedData-class.html">coerce-method</a></td>
+<td>Data on ranges</td></tr>
+<tr><td width="25%"><a href="RangedSelection-class.html">coerce-method</a></td>
+<td>Selection of ranges and columns</td></tr>
+<tr><td width="25%"><a href="RangesList-class.html">coerce-method</a></td>
+<td>List of Ranges</td></tr>
+<tr><td width="25%"><a href="RangesMapping-class.html">coerce-method</a></td>
+<td>Mapping of ranges to another sequence</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">coerce-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="RleViews-class.html">coerce-method</a></td>
+<td>The RleViews class</td></tr>
+<tr><td width="25%"><a href="RleViewsList-class.html">coerce-method</a></td>
+<td>List of RleViews</td></tr>
+<tr><td width="25%"><a href="SimpleList-class.html">coerce-method</a></td>
+<td>Simple and Compressed List Classes</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">coerce-method</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="Views-class.html">coerce-method</a></td>
+<td>Views objects</td></tr>
+<tr><td width="25%"><a href="MaskCollection-class.html">collapse</a></td>
+<td>MaskCollection objects</td></tr>
+<tr><td width="25%"><a href="MaskCollection-class.html">collapse-method</a></td>
+<td>MaskCollection objects</td></tr>
+<tr><td width="25%"><a href="DataFrame-class.html">colnames-method</a></td>
+<td>External Data Frame</td></tr>
+<tr><td width="25%"><a href="DataFrameList-class.html">colnames-method</a></td>
+<td>List of DataFrames</td></tr>
+<tr><td width="25%"><a href="RangedData-class.html">colnames-method</a></td>
+<td>Data on ranges</td></tr>
+<tr><td width="25%"><a href="RangedSelection-class.html">colnames-method</a></td>
+<td>Selection of ranges and columns</td></tr>
+<tr><td width="25%"><a href="DataFrame-class.html">colnames&lt;--method</a></td>
+<td>External Data Frame</td></tr>
+<tr><td width="25%"><a href="DataFrameList-class.html">colnames&lt;--method</a></td>
+<td>List of DataFrames</td></tr>
+<tr><td width="25%"><a href="RangedData-class.html">colnames&lt;--method</a></td>
+<td>Data on ranges</td></tr>
+<tr><td width="25%"><a href="RangedSelection-class.html">colnames&lt;--method</a></td>
+<td>Selection of ranges and columns</td></tr>
+<tr><td width="25%"><a href="DataFrameList-class.html">columnMetadata</a></td>
+<td>List of DataFrames</td></tr>
+<tr><td width="25%"><a href="DataFrameList-class.html">columnMetadata-method</a></td>
+<td>List of DataFrames</td></tr>
+<tr><td width="25%"><a href="RangedData-class.html">columnMetadata-method</a></td>
+<td>Data on ranges</td></tr>
+<tr><td width="25%"><a href="DataFrameList-class.html">columnMetadata&lt;-</a></td>
+<td>List of DataFrames</td></tr>
+<tr><td width="25%"><a href="DataFrameList-class.html">columnMetadata&lt;--method</a></td>
+<td>List of DataFrames</td></tr>
+<tr><td width="25%"><a href="RangedData-class.html">columnMetadata&lt;--method</a></td>
+<td>Data on ranges</td></tr>
+<tr><td width="25%"><a href="Vector-comparison.html">compare</a></td>
+<td>Compare, order, tabulate vector-like objects</td></tr>
+<tr><td width="25%"><a href="Ranges-comparison.html">compare-method</a></td>
+<td>Comparing and ordering ranges</td></tr>
+<tr><td width="25%"><a href="DataTable-API.html">complete.cases-method</a></td>
+<td>The DataTable API</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">Complex-method</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">Complex-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">ComplexList</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">ComplexList-class</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">CompressedAtomicList</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">CompressedAtomicList-class</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">CompressedCharacterList</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">CompressedCharacterList-class</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">CompressedComplexList</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">CompressedComplexList-class</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="HitsList-class.html">CompressedHitsList</a></td>
+<td>List of Hits objects</td></tr>
+<tr><td width="25%"><a href="HitsList-class.html">CompressedHitsList-class</a></td>
+<td>List of Hits objects</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">CompressedIntegerList</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">CompressedIntegerList-class</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="IRangesList-class.html">CompressedIRangesList</a></td>
+<td>List of IRanges and NormalIRanges</td></tr>
+<tr><td width="25%"><a href="IRangesList-class.html">CompressedIRangesList-class</a></td>
+<td>List of IRanges and NormalIRanges</td></tr>
+<tr><td width="25%"><a href="SimpleList-class.html">CompressedList</a></td>
+<td>Simple and Compressed List Classes</td></tr>
+<tr><td width="25%"><a href="SimpleList-class.html">CompressedList-class</a></td>
+<td>Simple and Compressed List Classes</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">CompressedLogicalList</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">CompressedLogicalList-class</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="IRangesList-class.html">CompressedNormalIRangesList</a></td>
+<td>List of IRanges and NormalIRanges</td></tr>
+<tr><td width="25%"><a href="IRangesList-class.html">CompressedNormalIRangesList-class</a></td>
+<td>List of IRanges and NormalIRanges</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">CompressedNumericList</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">CompressedNumericList-class</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">CompressedRawList</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">CompressedRawList-class</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">CompressedRleList</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">CompressedRleList-class</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="DataFrameList-class.html">CompressedSplitDataFrameList-class</a></td>
+<td>List of DataFrames</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">cor-method</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">cor-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Vector-comparison.html">countMatches</a></td>
+<td>Compare, order, tabulate vector-like objects</td></tr>
+<tr><td width="25%"><a href="Ranges-comparison.html">countMatches-method</a></td>
+<td>Comparing and ordering ranges</td></tr>
+<tr><td width="25%"><a href="Vector-comparison.html">countMatches-method</a></td>
+<td>Compare, order, tabulate vector-like objects</td></tr>
+<tr><td width="25%"><a href="findOverlaps-methods.html">countMatches-method</a></td>
+<td>Finding overlapping ranges</td></tr>
+<tr><td width="25%"><a href="findOverlaps-methods.html">countOverlaps</a></td>
+<td>Finding overlapping ranges</td></tr>
+<tr><td width="25%"><a href="findOverlaps-methods.html">countOverlaps-method</a></td>
+<td>Finding overlapping ranges</td></tr>
+<tr><td width="25%"><a href="Hits-class.html">countQueryHits</a></td>
+<td>Set of hits between 2 vector-like objects</td></tr>
+<tr><td width="25%"><a href="Hits-class.html">countQueryHits-method</a></td>
+<td>Set of hits between 2 vector-like objects</td></tr>
+<tr><td width="25%"><a href="Hits-class.html">countSubjectHits</a></td>
+<td>Set of hits between 2 vector-like objects</td></tr>
+<tr><td width="25%"><a href="Hits-class.html">countSubjectHits-method</a></td>
+<td>Set of hits between 2 vector-like objects</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">cov-method</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">cov-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="coverage-methods.html">coverage</a></td>
+<td>Coverage across a set of ranges</td></tr>
+<tr><td width="25%"><a href="coverage-methods.html">coverage-method</a></td>
+<td>Coverage across a set of ranges</td></tr>
+<tr><td width="25%"><a href="coverage-methods.html">coverage-methods</a></td>
+<td>Coverage across a set of ranges</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">cummax-method</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">cummin-method</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">cumprod-method</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">cumsum-method</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+</table>
+
+<h2><a name="D">-- D --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="DataFrame-class.html">DataFrame</a></td>
+<td>External Data Frame</td></tr>
+<tr><td width="25%"><a href="DataFrame-class.html">DataFrame-class</a></td>
+<td>External Data Frame</td></tr>
+<tr><td width="25%"><a href="DataFrameList-class.html">DataFrameList</a></td>
+<td>List of DataFrames</td></tr>
+<tr><td width="25%"><a href="DataFrameList-class.html">DataFrameList-class</a></td>
+<td>List of DataFrames</td></tr>
+<tr><td width="25%"><a href="DataTable-API.html">DataTable</a></td>
+<td>The DataTable API</td></tr>
+<tr><td width="25%"><a href="DataTable-API.html">DataTable-API</a></td>
+<td>The DataTable API</td></tr>
+<tr><td width="25%"><a href="DataTable-API.html">DataTable-class</a></td>
+<td>The DataTable API</td></tr>
+<tr><td width="25%"><a href="DataTable-stats.html">DataTable-stats</a></td>
+<td>Statistical modeling with DataTable</td></tr>
+<tr><td width="25%"><a href="DataTable-API.html">DataTableORNULL</a></td>
+<td>The DataTable API</td></tr>
+<tr><td width="25%"><a href="DataTable-API.html">DataTableORNULL-class</a></td>
+<td>The DataTable API</td></tr>
+<tr><td width="25%"><a href="MaskCollection-class.html">desc</a></td>
+<td>MaskCollection objects</td></tr>
+<tr><td width="25%"><a href="MaskCollection-class.html">desc-method</a></td>
+<td>MaskCollection objects</td></tr>
+<tr><td width="25%"><a href="MaskCollection-class.html">desc&lt;-</a></td>
+<td>MaskCollection objects</td></tr>
+<tr><td width="25%"><a href="MaskCollection-class.html">desc&lt;--method</a></td>
+<td>MaskCollection objects</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">diff-method</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">diff-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">diff.Rle</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="DataFrameList-class.html">dim-method</a></td>
+<td>List of DataFrames</td></tr>
+<tr><td width="25%"><a href="DataTable-API.html">dim-method</a></td>
+<td>The DataTable API</td></tr>
+<tr><td width="25%"><a href="RangesMapping-class.html">dim-method</a></td>
+<td>Mapping of ranges to another sequence</td></tr>
+<tr><td width="25%"><a href="DataFrameList-class.html">dimnames-method</a></td>
+<td>List of DataFrames</td></tr>
+<tr><td width="25%"><a href="DataTable-API.html">dimnames-method</a></td>
+<td>The DataTable API</td></tr>
+<tr><td width="25%"><a href="DataFrameList-class.html">dimnames&lt;--method</a></td>
+<td>List of DataFrames</td></tr>
+<tr><td width="25%"><a href="DataTable-API.html">dimnames&lt;--method</a></td>
+<td>The DataTable API</td></tr>
+<tr><td width="25%"><a href="inter-range-methods.html">disjoin</a></td>
+<td>Inter range transformations of a Ranges, Views, RangesList, MaskCollection, or RangedData object</td></tr>
+<tr><td width="25%"><a href="inter-range-methods.html">disjoin-method</a></td>
+<td>Inter range transformations of a Ranges, Views, RangesList, MaskCollection, or RangedData object</td></tr>
+<tr><td width="25%"><a href="inter-range-methods.html">disjointBins</a></td>
+<td>Inter range transformations of a Ranges, Views, RangesList, MaskCollection, or RangedData object</td></tr>
+<tr><td width="25%"><a href="inter-range-methods.html">disjointBins-method</a></td>
+<td>Inter range transformations of a Ranges, Views, RangesList, MaskCollection, or RangedData object</td></tr>
+<tr><td width="25%"><a href="nearest-methods.html">distance</a></td>
+<td>Finding the nearest range neighbor</td></tr>
+<tr><td width="25%"><a href="nearest-methods.html">distance-method</a></td>
+<td>Finding the nearest range neighbor</td></tr>
+<tr><td width="25%"><a href="nearest-methods.html">distanceToNearest</a></td>
+<td>Finding the nearest range neighbor</td></tr>
+<tr><td width="25%"><a href="nearest-methods.html">distanceToNearest-method</a></td>
+<td>Finding the nearest range neighbor</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">drop-method</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">duplicated-method</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="DataTable-API.html">duplicated-method</a></td>
+<td>The DataTable API</td></tr>
+<tr><td width="25%"><a href="Grouping-class.html">duplicated-method</a></td>
+<td>Grouping objects</td></tr>
+<tr><td width="25%"><a href="Ranges-comparison.html">duplicated-method</a></td>
+<td>Comparing and ordering ranges</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">duplicated-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Vector-comparison.html">duplicated-method</a></td>
+<td>Compare, order, tabulate vector-like objects</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">duplicated.AtomicList</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">duplicated.CompressedAtomicList</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="DataTable-API.html">duplicated.DataTable</a></td>
+<td>The DataTable API</td></tr>
+<tr><td width="25%"><a href="Grouping-class.html">duplicated.Dups</a></td>
+<td>Grouping objects</td></tr>
+<tr><td width="25%"><a href="Ranges-comparison.html">duplicated.Ranges</a></td>
+<td>Comparing and ordering ranges</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">duplicated.Rle</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Vector-comparison.html">duplicated.Vector</a></td>
+<td>Compare, order, tabulate vector-like objects</td></tr>
+<tr><td width="25%"><a href="Grouping-class.html">Dups</a></td>
+<td>Grouping objects</td></tr>
+<tr><td width="25%"><a href="Grouping-class.html">Dups-class</a></td>
+<td>Grouping objects</td></tr>
+</table>
+
+<h2><a name="E">-- E --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="List-class.html">elementLengths</a></td>
+<td>List objects</td></tr>
+<tr><td width="25%"><a href="GappedRanges-class.html">elementLengths-method</a></td>
+<td>GappedRanges objects</td></tr>
+<tr><td width="25%"><a href="IntervalForest-class.html">elementLengths-method</a></td>
+<td>Interval Search Forests</td></tr>
+<tr><td width="25%"><a href="List-class.html">elementLengths-method</a></td>
+<td>List objects</td></tr>
+<tr><td width="25%"><a href="RangedData-class.html">elementLengths-method</a></td>
+<td>Data on ranges</td></tr>
+<tr><td width="25%"><a href="Ranges-class.html">elementLengths-method</a></td>
+<td>Ranges objects</td></tr>
+<tr><td width="25%"><a href="Views-class.html">elementLengths-method</a></td>
+<td>Views objects</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">elementMetadata</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">elementMetadata-method</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">elementMetadata&lt;-</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">elementMetadata&lt;--method</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="List-class.html">elementType</a></td>
+<td>List objects</td></tr>
+<tr><td width="25%"><a href="List-class.html">elementType-method</a></td>
+<td>List objects</td></tr>
+<tr><td width="25%"><a href="encodeOverlaps-methods.html">encodeOverlaps</a></td>
+<td>Compute overlap encodings</td></tr>
+<tr><td width="25%"><a href="encodeOverlaps-methods.html">encodeOverlaps-method</a></td>
+<td>Compute overlap encodings</td></tr>
+<tr><td width="25%"><a href="encodeOverlaps-methods.html">encodeOverlaps1</a></td>
+<td>Compute overlap encodings</td></tr>
+<tr><td width="25%"><a href="OverlapEncodings-class.html">encoding</a></td>
+<td>OverlapEncodings objects</td></tr>
+<tr><td width="25%"><a href="OverlapEncodings-class.html">encoding-method</a></td>
+<td>OverlapEncodings objects</td></tr>
+<tr><td width="25%"><a href="GappedRanges-class.html">end-method</a></td>
+<td>GappedRanges objects</td></tr>
+<tr><td width="25%"><a href="Grouping-class.html">end-method</a></td>
+<td>Grouping objects</td></tr>
+<tr><td width="25%"><a href="IRangesList-class.html">end-method</a></td>
+<td>List of IRanges and NormalIRanges</td></tr>
+<tr><td width="25%"><a href="IntervalForest-class.html">end-method</a></td>
+<td>Interval Search Forests</td></tr>
+<tr><td width="25%"><a href="IntervalTree-class.html">end-method</a></td>
+<td>Interval Search Trees</td></tr>
+<tr><td width="25%"><a href="RangedData-class.html">end-method</a></td>
+<td>Data on ranges</td></tr>
+<tr><td width="25%"><a href="Ranges-class.html">end-method</a></td>
+<td>Ranges objects</td></tr>
+<tr><td width="25%"><a href="RangesList-class.html">end-method</a></td>
+<td>List of Ranges</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">end-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Views-class.html">end-method</a></td>
+<td>Views objects</td></tr>
+<tr><td width="25%"><a href="ViewsList-class.html">end-method</a></td>
+<td>List of Views</td></tr>
+<tr><td width="25%"><a href="Ranges-class.html">end&lt;-</a></td>
+<td>Ranges objects</td></tr>
+<tr><td width="25%"><a href="IRanges-class.html">end&lt;--method</a></td>
+<td>IRanges and NormalIRanges objects</td></tr>
+<tr><td width="25%"><a href="RangedData-class.html">end&lt;--method</a></td>
+<td>Data on ranges</td></tr>
+<tr><td width="25%"><a href="RangesList-class.html">end&lt;--method</a></td>
+<td>List of Ranges</td></tr>
+<tr><td width="25%"><a href="Views-class.html">end&lt;--method</a></td>
+<td>Views objects</td></tr>
+<tr><td width="25%"><a href="endoapply.html">endoapply</a></td>
+<td>Endomorphisms via application of a function over an object's elements</td></tr>
+<tr><td width="25%"><a href="List-class.html">endoapply-method</a></td>
+<td>List objects</td></tr>
+<tr><td width="25%"><a href="RangedData-class.html">endoapply-method</a></td>
+<td>Data on ranges</td></tr>
+<tr><td width="25%"><a href="SimpleList-class.html">endoapply-method</a></td>
+<td>Simple and Compressed List Classes</td></tr>
+<tr><td width="25%"><a href="endoapply.html">endoapply-method</a></td>
+<td>Endomorphisms via application of a function over an object's elements</td></tr>
+<tr><td width="25%"><a href="List-class.html">eval</a></td>
+<td>List objects</td></tr>
+<tr><td width="25%"><a href="FilterRules-class.html">eval-method</a></td>
+<td>Collection of Filter Rules</td></tr>
+<tr><td width="25%"><a href="List-class.html">eval-method</a></td>
+<td>List objects</td></tr>
+<tr><td width="25%"><a href="FilterRules-class.html">evalSeparately</a></td>
+<td>Collection of Filter Rules</td></tr>
+<tr><td width="25%"><a href="FilterRules-class.html">evalSeparately-method</a></td>
+<td>Collection of Filter Rules</td></tr>
+<tr><td width="25%"><a href="expand-methods.html">expand</a></td>
+<td>The expand method for uncompressing compressed data columns</td></tr>
+<tr><td width="25%"><a href="expand-methods.html">expand-method</a></td>
+<td>The expand method for uncompressing compressed data columns</td></tr>
+</table>
+
+<h2><a name="F">-- F --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="funprog-methods.html">Filter-method</a></td>
+<td>Functional programming methods for List objects</td></tr>
+<tr><td width="25%"><a href="FilterMatrix-class.html">FilterMatrix</a></td>
+<td>Matrix for Filter Results</td></tr>
+<tr><td width="25%"><a href="FilterMatrix-class.html">FilterMatrix-class</a></td>
+<td>Matrix for Filter Results</td></tr>
+<tr><td width="25%"><a href="FilterRules-class.html">FilterRules</a></td>
+<td>Collection of Filter Rules</td></tr>
+<tr><td width="25%"><a href="RDApplyParams-class.html">filterRules</a></td>
+<td>Applying over spaces</td></tr>
+<tr><td width="25%"><a href="FilterRules-class.html">FilterRules-class</a></td>
+<td>Collection of Filter Rules</td></tr>
+<tr><td width="25%"><a href="FilterMatrix-class.html">filterRules-method</a></td>
+<td>Matrix for Filter Results</td></tr>
+<tr><td width="25%"><a href="RDApplyParams-class.html">filterRules-method</a></td>
+<td>Applying over spaces</td></tr>
+<tr><td width="25%"><a href="RDApplyParams-class.html">filterRules&lt;-</a></td>
+<td>Applying over spaces</td></tr>
+<tr><td width="25%"><a href="RDApplyParams-class.html">filterRules&lt;--method</a></td>
+<td>Applying over spaces</td></tr>
+<tr><td width="25%"><a href="funprog-methods.html">Find-method</a></td>
+<td>Functional programming methods for List objects</td></tr>
+<tr><td width="25%"><a href="Vector-comparison.html">findMatches</a></td>
+<td>Compare, order, tabulate vector-like objects</td></tr>
+<tr><td width="25%"><a href="Ranges-comparison.html">findMatches-method</a></td>
+<td>Comparing and ordering ranges</td></tr>
+<tr><td width="25%"><a href="Vector-comparison.html">findMatches-method</a></td>
+<td>Compare, order, tabulate vector-like objects</td></tr>
+<tr><td width="25%"><a href="findOverlaps-methods.html">findMatches-method</a></td>
+<td>Finding overlapping ranges</td></tr>
+<tr><td width="25%"><a href="findOverlaps-methods.html">findOverlaps</a></td>
+<td>Finding overlapping ranges</td></tr>
+<tr><td width="25%"><a href="findOverlaps-methods.html">findOverlaps-method</a></td>
+<td>Finding overlapping ranges</td></tr>
+<tr><td width="25%"><a href="findOverlaps-methods.html">findOverlaps-methods</a></td>
+<td>Finding overlapping ranges</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">findRange</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">findRange-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">findRun</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">findRun-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Ranges-class.html">first</a></td>
+<td>Ranges objects</td></tr>
+<tr><td width="25%"><a href="Ranges-class.html">first-method</a></td>
+<td>Ranges objects</td></tr>
+<tr><td width="25%"><a href="intra-range-methods.html">flank</a></td>
+<td>Intra range transformations of a Ranges, Views, RangesList, or MaskCollection object</td></tr>
+<tr><td width="25%"><a href="intra-range-methods.html">flank-method</a></td>
+<td>Intra range transformations of a Ranges, Views, RangesList, or MaskCollection object</td></tr>
+<tr><td width="25%"><a href="OverlapEncodings-class.html">flippedQuery</a></td>
+<td>OverlapEncodings objects</td></tr>
+<tr><td width="25%"><a href="OverlapEncodings-class.html">flippedQuery-method</a></td>
+<td>OverlapEncodings objects</td></tr>
+<tr><td width="25%"><a href="nearest-methods.html">follow</a></td>
+<td>Finding the nearest range neighbor</td></tr>
+<tr><td width="25%"><a href="nearest-methods.html">follow-method</a></td>
+<td>Finding the nearest range neighbor</td></tr>
+<tr><td width="25%"><a href="funprog-methods.html">funprog-methods</a></td>
+<td>Functional programming methods for List objects</td></tr>
+</table>
+
+<h2><a name="G">-- G --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="GappedRanges-class.html">GappedRanges</a></td>
+<td>GappedRanges objects</td></tr>
+<tr><td width="25%"><a href="GappedRanges-class.html">GappedRanges-class</a></td>
+<td>GappedRanges objects</td></tr>
+<tr><td width="25%"><a href="inter-range-methods.html">gaps</a></td>
+<td>Inter range transformations of a Ranges, Views, RangesList, MaskCollection, or RangedData object</td></tr>
+<tr><td width="25%"><a href="inter-range-methods.html">gaps-method</a></td>
+<td>Inter range transformations of a Ranges, Views, RangesList, MaskCollection, or RangedData object</td></tr>
+<tr><td width="25%"><a href="DataTable-API.html">get_showHeadLines</a></td>
+<td>The DataTable API</td></tr>
+<tr><td width="25%"><a href="DataTable-API.html">get_showTailLines</a></td>
+<td>The DataTable API</td></tr>
+<tr><td width="25%"><a href="Grouping-class.html">Grouping</a></td>
+<td>Grouping objects</td></tr>
+<tr><td width="25%"><a href="Grouping-class.html">Grouping-class</a></td>
+<td>Grouping objects</td></tr>
+<tr><td width="25%"><a href="Grouping-class.html">grouplength</a></td>
+<td>Grouping objects</td></tr>
+<tr><td width="25%"><a href="Grouping-class.html">grouplength-method</a></td>
+<td>Grouping objects</td></tr>
+<tr><td width="25%"><a href="Grouping-class.html">grouprank</a></td>
+<td>Grouping objects</td></tr>
+<tr><td width="25%"><a href="Grouping-class.html">grouprank-method</a></td>
+<td>Grouping objects</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">gsub-method</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">gsub-method</a></td>
+<td>Rle objects</td></tr>
+</table>
+
+<h2><a name="H">-- H --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="Grouping-class.html">H2LGrouping</a></td>
+<td>Grouping objects</td></tr>
+<tr><td width="25%"><a href="Grouping-class.html">H2LGrouping-class</a></td>
+<td>Grouping objects</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">head-method</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">head.Vector</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="Grouping-class.html">high2low</a></td>
+<td>Grouping objects</td></tr>
+<tr><td width="25%"><a href="Grouping-class.html">high2low-method</a></td>
+<td>Grouping objects</td></tr>
+<tr><td width="25%"><a href="Hits-class.html">Hits</a></td>
+<td>Set of hits between 2 vector-like objects</td></tr>
+<tr><td width="25%"><a href="RangesMapping-class.html">hits</a></td>
+<td>Mapping of ranges to another sequence</td></tr>
+<tr><td width="25%"><a href="Hits-class.html">Hits-class</a></td>
+<td>Set of hits between 2 vector-like objects</td></tr>
+<tr><td width="25%"><a href="HitsList-class.html">HitsList-class</a></td>
+<td>List of Hits objects</td></tr>
+</table>
+
+<h2><a name="I">-- I --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="Rle-class.html">ifelse-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">IntegerList</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">IntegerList-class</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="inter-range-methods.html">inter-range-methods</a></td>
+<td>Inter range transformations of a Ranges, Views, RangesList, MaskCollection, or RangedData object</td></tr>
+<tr><td width="25%"><a href="setops-methods.html">intersect-method</a></td>
+<td>Set operations on IRanges, RangesList, and Hits objects</td></tr>
+<tr><td width="25%"><a href="IntervalForest-class.html">IntervalForest</a></td>
+<td>Interval Search Forests</td></tr>
+<tr><td width="25%"><a href="IntervalForest-class.html">IntervalForest-class</a></td>
+<td>Interval Search Forests</td></tr>
+<tr><td width="25%"><a href="IntervalTree-class.html">IntervalTree</a></td>
+<td>Interval Search Trees</td></tr>
+<tr><td width="25%"><a href="IntervalTree-class.html">IntervalTree-class</a></td>
+<td>Interval Search Trees</td></tr>
+<tr><td width="25%"><a href="intra-range-methods.html">intra-range-methods</a></td>
+<td>Intra range transformations of a Ranges, Views, RangesList, or MaskCollection object</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">IQR-method</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">IQR-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="IRanges-constructor.html">IRanges</a></td>
+<td>The IRanges constructor and supporting functions</td></tr>
+<tr><td width="25%"><a href="IRanges-class.html">IRanges-class</a></td>
+<td>IRanges and NormalIRanges objects</td></tr>
+<tr><td width="25%"><a href="IRanges-constructor.html">IRanges-constructor</a></td>
+<td>The IRanges constructor and supporting functions</td></tr>
+<tr><td width="25%"><a href="IRanges-utils.html">IRanges-utils</a></td>
+<td>IRanges utility functions</td></tr>
+<tr><td width="25%"><a href="IRangesList-class.html">IRangesList</a></td>
+<td>List of IRanges and NormalIRanges</td></tr>
+<tr><td width="25%"><a href="IRangesList-class.html">IRangesList-class</a></td>
+<td>List of IRanges and NormalIRanges</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">is.na-method</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="DataTable-API.html">is.na-method</a></td>
+<td>The DataTable API</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">is.na-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">is.unsorted-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="isConstant.html">isConstant</a></td>
+<td>Test if an atomic vector or array is constant</td></tr>
+<tr><td width="25%"><a href="isConstant.html">isConstant-method</a></td>
+<td>Test if an atomic vector or array is constant</td></tr>
+<tr><td width="25%"><a href="inter-range-methods.html">isDisjoint</a></td>
+<td>Inter range transformations of a Ranges, Views, RangesList, MaskCollection, or RangedData object</td></tr>
+<tr><td width="25%"><a href="inter-range-methods.html">isDisjoint-method</a></td>
+<td>Inter range transformations of a Ranges, Views, RangesList, MaskCollection, or RangedData object</td></tr>
+<tr><td width="25%"><a href="List-class.html">isEmpty</a></td>
+<td>List objects</td></tr>
+<tr><td width="25%"><a href="IRanges-class.html">isEmpty-method</a></td>
+<td>IRanges and NormalIRanges objects</td></tr>
+<tr><td width="25%"><a href="List-class.html">isEmpty-method</a></td>
+<td>List objects</td></tr>
+<tr><td width="25%"><a href="Ranges-class.html">isEmpty-method</a></td>
+<td>Ranges objects</td></tr>
+<tr><td width="25%"><a href="SimpleList-class.html">isEmpty-method</a></td>
+<td>Simple and Compressed List Classes</td></tr>
+<tr><td width="25%"><a href="Ranges-class.html">isNormal</a></td>
+<td>Ranges objects</td></tr>
+<tr><td width="25%"><a href="IRanges-class.html">isNormal-method</a></td>
+<td>IRanges and NormalIRanges objects</td></tr>
+<tr><td width="25%"><a href="IRangesList-class.html">isNormal-method</a></td>
+<td>List of IRanges and NormalIRanges</td></tr>
+<tr><td width="25%"><a href="Ranges-class.html">isNormal-method</a></td>
+<td>Ranges objects</td></tr>
+<tr><td width="25%"><a href="RDApplyParams-class.html">iteratorFun</a></td>
+<td>Applying over spaces</td></tr>
+<tr><td width="25%"><a href="RDApplyParams-class.html">iteratorFun-method</a></td>
+<td>Applying over spaces</td></tr>
+<tr><td width="25%"><a href="RDApplyParams-class.html">iteratorFun&lt;-</a></td>
+<td>Applying over spaces</td></tr>
+<tr><td width="25%"><a href="RDApplyParams-class.html">iteratorFun&lt;--method</a></td>
+<td>Applying over spaces</td></tr>
+</table>
+
+<h2><a name="L">-- L --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="AtomicList-class.html">lapply-method</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="List-class.html">lapply-method</a></td>
+<td>List objects</td></tr>
+<tr><td width="25%"><a href="RangedData-class.html">lapply-method</a></td>
+<td>Data on ranges</td></tr>
+<tr><td width="25%"><a href="SimpleList-class.html">lapply-method</a></td>
+<td>Simple and Compressed List Classes</td></tr>
+<tr><td width="25%"><a href="Ranges-class.html">last</a></td>
+<td>Ranges objects</td></tr>
+<tr><td width="25%"><a href="Ranges-class.html">last-method</a></td>
+<td>Ranges objects</td></tr>
+<tr><td width="25%"><a href="OverlapEncodings-class.html">Lencoding</a></td>
+<td>OverlapEncodings objects</td></tr>
+<tr><td width="25%"><a href="OverlapEncodings-class.html">Lencoding-method</a></td>
+<td>OverlapEncodings objects</td></tr>
+<tr><td width="25%"><a href="GappedRanges-class.html">length-method</a></td>
+<td>GappedRanges objects</td></tr>
+<tr><td width="25%"><a href="Grouping-class.html">length-method</a></td>
+<td>Grouping objects</td></tr>
+<tr><td width="25%"><a href="Hits-class.html">length-method</a></td>
+<td>Set of hits between 2 vector-like objects</td></tr>
+<tr><td width="25%"><a href="IntervalForest-class.html">length-method</a></td>
+<td>Interval Search Forests</td></tr>
+<tr><td width="25%"><a href="IntervalTree-class.html">length-method</a></td>
+<td>Interval Search Trees</td></tr>
+<tr><td width="25%"><a href="MaskCollection-class.html">length-method</a></td>
+<td>MaskCollection objects</td></tr>
+<tr><td width="25%"><a href="OverlapEncodings-class.html">length-method</a></td>
+<td>OverlapEncodings objects</td></tr>
+<tr><td width="25%"><a href="RangedData-class.html">length-method</a></td>
+<td>Data on ranges</td></tr>
+<tr><td width="25%"><a href="Ranges-class.html">length-method</a></td>
+<td>Ranges objects</td></tr>
+<tr><td width="25%"><a href="RangesMapping-class.html">length-method</a></td>
+<td>Mapping of ranges to another sequence</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">length-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="SimpleList-class.html">length-method</a></td>
+<td>Simple and Compressed List Classes</td></tr>
+<tr><td width="25%"><a href="Views-class.html">length-method</a></td>
+<td>Views objects</td></tr>
+<tr><td width="25%"><a href="Grouping-class.html">length&lt;--method</a></td>
+<td>Grouping objects</td></tr>
+<tr><td width="25%"><a href="OverlapEncodings-class.html">levels-method</a></td>
+<td>OverlapEncodings objects</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">levels-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">levels.Rle</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">levels&lt;--method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="List-class.html">List</a></td>
+<td>List objects</td></tr>
+<tr><td width="25%"><a href="List-class.html">List-class</a></td>
+<td>List objects</td></tr>
+<tr><td width="25%"><a href="OverlapEncodings-class.html">Lngap</a></td>
+<td>OverlapEncodings objects</td></tr>
+<tr><td width="25%"><a href="OverlapEncodings-class.html">Lngap-method</a></td>
+<td>OverlapEncodings objects</td></tr>
+<tr><td width="25%"><a href="OverlapEncodings-class.html">Loffset</a></td>
+<td>OverlapEncodings objects</td></tr>
+<tr><td width="25%"><a href="OverlapEncodings-class.html">Loffset-method</a></td>
+<td>OverlapEncodings objects</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">LogicalList</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">LogicalList-class</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="Grouping-class.html">low2high</a></td>
+<td>Grouping objects</td></tr>
+<tr><td width="25%"><a href="Grouping-class.html">low2high-method</a></td>
+<td>Grouping objects</td></tr>
+</table>
+
+<h2><a name="M">-- M --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="AtomicList-class.html">mad-method</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">mad-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">mad.Rle</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="RangesMapping-class.html">map</a></td>
+<td>Mapping of ranges to another sequence</td></tr>
+<tr><td width="25%"><a href="funprog-methods.html">Map-method</a></td>
+<td>Functional programming methods for List objects</td></tr>
+<tr><td width="25%"><a href="List-class.html">mapply-method</a></td>
+<td>List objects</td></tr>
+<tr><td width="25%"><a href="MaskCollection-class.html">Mask</a></td>
+<td>MaskCollection objects</td></tr>
+<tr><td width="25%"><a href="MaskCollection-class.html">MaskCollection</a></td>
+<td>MaskCollection objects</td></tr>
+<tr><td width="25%"><a href="MaskCollection-class.html">MaskCollection-class</a></td>
+<td>MaskCollection objects</td></tr>
+<tr><td width="25%"><a href="MaskCollection-class.html">MaskCollection.show_frame</a></td>
+<td>MaskCollection objects</td></tr>
+<tr><td width="25%"><a href="MaskCollection-class.html">maskedratio</a></td>
+<td>MaskCollection objects</td></tr>
+<tr><td width="25%"><a href="MaskCollection-class.html">maskedratio-method</a></td>
+<td>MaskCollection objects</td></tr>
+<tr><td width="25%"><a href="MaskCollection-class.html">maskedwidth</a></td>
+<td>MaskCollection objects</td></tr>
+<tr><td width="25%"><a href="MaskCollection-class.html">maskedwidth-method</a></td>
+<td>MaskCollection objects</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">match-method</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="Hits-class.html">match-method</a></td>
+<td>Set of hits between 2 vector-like objects</td></tr>
+<tr><td width="25%"><a href="Ranges-comparison.html">match-method</a></td>
+<td>Comparing and ordering ranges</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">match-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="findOverlaps-methods.html">match-method</a></td>
+<td>Finding overlapping ranges</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">Math-method</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">Math-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">Math2-method</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">Math2-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="IRanges-class.html">max-method</a></td>
+<td>IRanges and NormalIRanges objects</td></tr>
+<tr><td width="25%"><a href="IRangesList-class.html">max-method</a></td>
+<td>List of IRanges and NormalIRanges</td></tr>
+<tr><td width="25%"><a href="MaskCollection-class.html">max-method</a></td>
+<td>MaskCollection objects</td></tr>
+<tr><td width="25%"><a href="view-summarization-methods.html">max-method</a></td>
+<td>Summarize views on a vector-like object with numeric values</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">mcols</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">mcols-method</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">mcols&lt;-</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">mcols&lt;--method</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">mean-method</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">mean-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="view-summarization-methods.html">mean-method</a></td>
+<td>Summarize views on a vector-like object with numeric values</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">mean.Rle</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">median-method</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">median-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">median.Rle</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Grouping-class.html">members</a></td>
+<td>Grouping objects</td></tr>
+<tr><td width="25%"><a href="Grouping-class.html">members-method</a></td>
+<td>Grouping objects</td></tr>
+<tr><td width="25%"><a href="endoapply.html">mendoapply</a></td>
+<td>Endomorphisms via application of a function over an object's elements</td></tr>
+<tr><td width="25%"><a href="List-class.html">mendoapply-method</a></td>
+<td>List objects</td></tr>
+<tr><td width="25%"><a href="SimpleList-class.html">mendoapply-method</a></td>
+<td>Simple and Compressed List Classes</td></tr>
+<tr><td width="25%"><a href="endoapply.html">mendoapply-method</a></td>
+<td>Endomorphisms via application of a function over an object's elements</td></tr>
+<tr><td width="25%"><a href="DataTable-API.html">merge-method</a></td>
+<td>The DataTable API</td></tr>
+<tr><td width="25%"><a href="RangesList-class.html">merge-method</a></td>
+<td>List of Ranges</td></tr>
+<tr><td width="25%"><a href="Annotated-class.html">metadata</a></td>
+<td>Annotated class</td></tr>
+<tr><td width="25%"><a href="Annotated-class.html">metadata-method</a></td>
+<td>Annotated class</td></tr>
+<tr><td width="25%"><a href="Annotated-class.html">metadata&lt;-</a></td>
+<td>Annotated class</td></tr>
+<tr><td width="25%"><a href="Annotated-class.html">metadata&lt;--method</a></td>
+<td>Annotated class</td></tr>
+<tr><td width="25%"><a href="Ranges-class.html">mid</a></td>
+<td>Ranges objects</td></tr>
+<tr><td width="25%"><a href="Ranges-class.html">mid-method</a></td>
+<td>Ranges objects</td></tr>
+<tr><td width="25%"><a href="IRanges-class.html">min-method</a></td>
+<td>IRanges and NormalIRanges objects</td></tr>
+<tr><td width="25%"><a href="IRangesList-class.html">min-method</a></td>
+<td>List of IRanges and NormalIRanges</td></tr>
+<tr><td width="25%"><a href="MaskCollection-class.html">min-method</a></td>
+<td>MaskCollection objects</td></tr>
+<tr><td width="25%"><a href="view-summarization-methods.html">min-method</a></td>
+<td>Summarize views on a vector-like object with numeric values</td></tr>
+<tr><td width="25%"><a href="seqapply.html">mseqapply</a></td>
+<td>Apply function and cast to Vector</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">mstack</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="DataFrame-class.html">mstack-method</a></td>
+<td>External Data Frame</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">mstack-method</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="multisplit.html">multisplit</a></td>
+<td>Split elements belonging to multiple groups</td></tr>
+</table>
+
+<h2><a name="N">-- N --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="DataTable-API.html">na.exclude</a></td>
+<td>The DataTable API</td></tr>
+<tr><td width="25%"><a href="DataTable-API.html">na.exclude-method</a></td>
+<td>The DataTable API</td></tr>
+<tr><td width="25%"><a href="DataTable-API.html">na.omit</a></td>
+<td>The DataTable API</td></tr>
+<tr><td width="25%"><a href="DataTable-API.html">na.omit-method</a></td>
+<td>The DataTable API</td></tr>
+<tr><td width="25%"><a href="GappedRanges-class.html">names-method</a></td>
+<td>GappedRanges objects</td></tr>
+<tr><td width="25%"><a href="Grouping-class.html">names-method</a></td>
+<td>Grouping objects</td></tr>
+<tr><td width="25%"><a href="IRanges-class.html">names-method</a></td>
+<td>IRanges and NormalIRanges objects</td></tr>
+<tr><td width="25%"><a href="IntervalForest-class.html">names-method</a></td>
+<td>Interval Search Forests</td></tr>
+<tr><td width="25%"><a href="MaskCollection-class.html">names-method</a></td>
+<td>MaskCollection objects</td></tr>
+<tr><td width="25%"><a href="RangedData-class.html">names-method</a></td>
+<td>Data on ranges</td></tr>
+<tr><td width="25%"><a href="SimpleList-class.html">names-method</a></td>
+<td>Simple and Compressed List Classes</td></tr>
+<tr><td width="25%"><a href="Views-class.html">names-method</a></td>
+<td>Views objects</td></tr>
+<tr><td width="25%"><a href="GappedRanges-class.html">names&lt;--method</a></td>
+<td>GappedRanges objects</td></tr>
+<tr><td width="25%"><a href="Grouping-class.html">names&lt;--method</a></td>
+<td>Grouping objects</td></tr>
+<tr><td width="25%"><a href="IRanges-class.html">names&lt;--method</a></td>
+<td>IRanges and NormalIRanges objects</td></tr>
+<tr><td width="25%"><a href="MaskCollection-class.html">names&lt;--method</a></td>
+<td>MaskCollection objects</td></tr>
+<tr><td width="25%"><a href="RangedData-class.html">names&lt;--method</a></td>
+<td>Data on ranges</td></tr>
+<tr><td width="25%"><a href="SimpleList-class.html">names&lt;--method</a></td>
+<td>Simple and Compressed List Classes</td></tr>
+<tr><td width="25%"><a href="Views-class.html">names&lt;--method</a></td>
+<td>Views objects</td></tr>
+<tr><td width="25%"><a href="intra-range-methods.html">narrow</a></td>
+<td>Intra range transformations of a Ranges, Views, RangesList, or MaskCollection object</td></tr>
+<tr><td width="25%"><a href="intra-range-methods.html">narrow-method</a></td>
+<td>Intra range transformations of a Ranges, Views, RangesList, or MaskCollection object</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">nchar-method</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">nchar-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="DataTable-API.html">NCOL-method</a></td>
+<td>The DataTable API</td></tr>
+<tr><td width="25%"><a href="DataFrame-class.html">ncol-method</a></td>
+<td>External Data Frame</td></tr>
+<tr><td width="25%"><a href="DataFrameList-class.html">ncol-method</a></td>
+<td>List of DataFrames</td></tr>
+<tr><td width="25%"><a href="RangedData-class.html">ncol-method</a></td>
+<td>Data on ranges</td></tr>
+<tr><td width="25%"><a href="nearest-methods.html">nearest</a></td>
+<td>Finding the nearest range neighbor</td></tr>
+<tr><td width="25%"><a href="nearest-methods.html">nearest-method</a></td>
+<td>Finding the nearest range neighbor</td></tr>
+<tr><td width="25%"><a href="nearest-methods.html">nearest-methods</a></td>
+<td>Finding the nearest range neighbor</td></tr>
+<tr><td width="25%"><a href="Views-class.html">newViews</a></td>
+<td>Views objects</td></tr>
+<tr><td width="25%"><a href="GappedRanges-class.html">ngap</a></td>
+<td>GappedRanges objects</td></tr>
+<tr><td width="25%"><a href="GappedRanges-class.html">ngap-method</a></td>
+<td>GappedRanges objects</td></tr>
+<tr><td width="25%"><a href="OverlapEncodings-class.html">ngap-method</a></td>
+<td>OverlapEncodings objects</td></tr>
+<tr><td width="25%"><a href="MaskCollection-class.html">nir_list</a></td>
+<td>MaskCollection objects</td></tr>
+<tr><td width="25%"><a href="MaskCollection-class.html">nir_list-method</a></td>
+<td>MaskCollection objects</td></tr>
+<tr><td width="25%"><a href="Grouping-class.html">nobj</a></td>
+<td>Grouping objects</td></tr>
+<tr><td width="25%"><a href="Grouping-class.html">nobj-method</a></td>
+<td>Grouping objects</td></tr>
+<tr><td width="25%"><a href="IRanges-class.html">NormalIRanges</a></td>
+<td>IRanges and NormalIRanges objects</td></tr>
+<tr><td width="25%"><a href="IRanges-class.html">NormalIRanges-class</a></td>
+<td>IRanges and NormalIRanges objects</td></tr>
+<tr><td width="25%"><a href="IRangesList-class.html">NormalIRangesList</a></td>
+<td>List of IRanges and NormalIRanges</td></tr>
+<tr><td width="25%"><a href="IRangesList-class.html">NormalIRangesList-class</a></td>
+<td>List of IRanges and NormalIRanges</td></tr>
+<tr><td width="25%"><a href="DataTable-API.html">NROW-method</a></td>
+<td>The DataTable API</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">NROW-method</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="DataFrame-class.html">nrow-method</a></td>
+<td>External Data Frame</td></tr>
+<tr><td width="25%"><a href="DataFrameList-class.html">nrow-method</a></td>
+<td>List of DataFrames</td></tr>
+<tr><td width="25%"><a href="RangedData-class.html">nrow-method</a></td>
+<td>Data on ranges</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">nrun</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">nrun-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">NumericList</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">NumericList-class</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+</table>
+
+<h2><a name="O">-- O --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="AtomicList-class.html">Ops-method</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">Ops-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="intra-range-methods.html">Ops-method</a></td>
+<td>Intra range transformations of a Ranges, Views, RangesList, or MaskCollection object</td></tr>
+<tr><td width="25%"><a href="Ranges-comparison.html">order-method</a></td>
+<td>Comparing and ordering ranges</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">order-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="OverlapEncodings-class.html">OverlapEncodings</a></td>
+<td>OverlapEncodings objects</td></tr>
+<tr><td width="25%"><a href="OverlapEncodings-class.html">OverlapEncodings-class</a></td>
+<td>OverlapEncodings objects</td></tr>
+<tr><td width="25%"><a href="findOverlaps-methods.html">overlapsAny</a></td>
+<td>Finding overlapping ranges</td></tr>
+<tr><td width="25%"><a href="findOverlaps-methods.html">overlapsAny-method</a></td>
+<td>Finding overlapping ranges</td></tr>
+</table>
+
+<h2><a name="P">-- P --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="FilterRules-class.html">params</a></td>
+<td>Collection of Filter Rules</td></tr>
+<tr><td width="25%"><a href="FilterRules-class.html">params-method</a></td>
+<td>Collection of Filter Rules</td></tr>
+<tr><td width="25%"><a href="Grouping-class.html">Partitioning</a></td>
+<td>Grouping objects</td></tr>
+<tr><td width="25%"><a href="Grouping-class.html">Partitioning-class</a></td>
+<td>Grouping objects</td></tr>
+<tr><td width="25%"><a href="Grouping-class.html">PartitioningByEnd</a></td>
+<td>Grouping objects</td></tr>
+<tr><td width="25%"><a href="Grouping-class.html">PartitioningByEnd-class</a></td>
+<td>Grouping objects</td></tr>
+<tr><td width="25%"><a href="Grouping-class.html">PartitioningByWidth</a></td>
+<td>Grouping objects</td></tr>
+<tr><td width="25%"><a href="Grouping-class.html">PartitioningByWidth-class</a></td>
+<td>Grouping objects</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">paste-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="setops-methods.html">pgap</a></td>
+<td>Set operations on IRanges, RangesList, and Hits objects</td></tr>
+<tr><td width="25%"><a href="setops-methods.html">pgap-method</a></td>
+<td>Set operations on IRanges, RangesList, and Hits objects</td></tr>
+<tr><td width="25%"><a href="setops-methods.html">pintersect</a></td>
+<td>Set operations on IRanges, RangesList, and Hits objects</td></tr>
+<tr><td width="25%"><a href="setops-methods.html">pintersect-method</a></td>
+<td>Set operations on IRanges, RangesList, and Hits objects</td></tr>
+<tr><td width="25%"><a href="RangesMapping-class.html">pmap</a></td>
+<td>Mapping of ranges to another sequence</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">pmax-method</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">pmax-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">pmax.int-method</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">pmax.int-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">pmin-method</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">pmin-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">pmin.int-method</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">pmin.int-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="funprog-methods.html">Position-method</a></td>
+<td>Functional programming methods for List objects</td></tr>
+<tr><td width="25%"><a href="nearest-methods.html">precede</a></td>
+<td>Finding the nearest range neighbor</td></tr>
+<tr><td width="25%"><a href="nearest-methods.html">precede-method</a></td>
+<td>Finding the nearest range neighbor</td></tr>
+<tr><td width="25%"><a href="intra-range-methods.html">promoters</a></td>
+<td>Intra range transformations of a Ranges, Views, RangesList, or MaskCollection object</td></tr>
+<tr><td width="25%"><a href="intra-range-methods.html">promoters-method</a></td>
+<td>Intra range transformations of a Ranges, Views, RangesList, or MaskCollection object</td></tr>
+<tr><td width="25%"><a href="setops-methods.html">psetdiff</a></td>
+<td>Set operations on IRanges, RangesList, and Hits objects</td></tr>
+<tr><td width="25%"><a href="setops-methods.html">psetdiff-method</a></td>
+<td>Set operations on IRanges, RangesList, and Hits objects</td></tr>
+<tr><td width="25%"><a href="setops-methods.html">punion</a></td>
+<td>Set operations on IRanges, RangesList, and Hits objects</td></tr>
+<tr><td width="25%"><a href="setops-methods.html">punion-method</a></td>
+<td>Set operations on IRanges, RangesList, and Hits objects</td></tr>
+</table>
+
+<h2><a name="Q">-- Q --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="AtomicList-class.html">quantile-method</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">quantile-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">quantile.Rle</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Hits-class.html">queryHits</a></td>
+<td>Set of hits between 2 vector-like objects</td></tr>
+<tr><td width="25%"><a href="Hits-class.html">queryHits-method</a></td>
+<td>Set of hits between 2 vector-like objects</td></tr>
+<tr><td width="25%"><a href="HitsList-class.html">queryHits-method</a></td>
+<td>List of Hits objects</td></tr>
+<tr><td width="25%"><a href="RangesMapping-class.html">queryHits-method</a></td>
+<td>Mapping of ranges to another sequence</td></tr>
+<tr><td width="25%"><a href="Hits-class.html">queryLength</a></td>
+<td>Set of hits between 2 vector-like objects</td></tr>
+<tr><td width="25%"><a href="Hits-class.html">queryLength-method</a></td>
+<td>Set of hits between 2 vector-like objects</td></tr>
+<tr><td width="25%"><a href="HitsList-class.html">queryLength-method</a></td>
+<td>List of Hits objects</td></tr>
+</table>
+
+<h2><a name="R">-- R --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="inter-range-methods.html">range-method</a></td>
+<td>Inter range transformations of a Ranges, Views, RangesList, MaskCollection, or RangedData object</td></tr>
+<tr><td width="25%"><a href="Ranges-comparison.html">rangeComparisonCodeToLetter</a></td>
+<td>Comparing and ordering ranges</td></tr>
+<tr><td width="25%"><a href="RangedData-class.html">RangedData</a></td>
+<td>Data on ranges</td></tr>
+<tr><td width="25%"><a href="RDApplyParams-class.html">rangedData</a></td>
+<td>Applying over spaces</td></tr>
+<tr><td width="25%"><a href="RangedData-class.html">RangedData-class</a></td>
+<td>Data on ranges</td></tr>
+<tr><td width="25%"><a href="RDApplyParams-class.html">rangedData-method</a></td>
+<td>Applying over spaces</td></tr>
+<tr><td width="25%"><a href="RDApplyParams-class.html">rangedData&lt;-</a></td>
+<td>Applying over spaces</td></tr>
+<tr><td width="25%"><a href="RDApplyParams-class.html">rangedData&lt;--method</a></td>
+<td>Applying over spaces</td></tr>
+<tr><td width="25%"><a href="RangedDataList-class.html">RangedDataList</a></td>
+<td>Lists of RangedData</td></tr>
+<tr><td width="25%"><a href="RangedDataList-class.html">RangedDataList-class</a></td>
+<td>Lists of RangedData</td></tr>
+<tr><td width="25%"><a href="RangedSelection-class.html">RangedSelection</a></td>
+<td>Selection of ranges and columns</td></tr>
+<tr><td width="25%"><a href="RangedSelection-class.html">RangedSelection-class</a></td>
+<td>Selection of ranges and columns</td></tr>
+<tr><td width="25%"><a href="Ranges-class.html">Ranges</a></td>
+<td>Ranges objects</td></tr>
+<tr><td width="25%"><a href="Views-class.html">ranges</a></td>
+<td>Views objects</td></tr>
+<tr><td width="25%"><a href="Ranges-class.html">Ranges-class</a></td>
+<td>Ranges objects</td></tr>
+<tr><td width="25%"><a href="Ranges-comparison.html">Ranges-comparison</a></td>
+<td>Comparing and ordering ranges</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">ranges-method</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="HitsList-class.html">ranges-method</a></td>
+<td>List of Hits objects</td></tr>
+<tr><td width="25%"><a href="RangedData-class.html">ranges-method</a></td>
+<td>Data on ranges</td></tr>
+<tr><td width="25%"><a href="RangedSelection-class.html">ranges-method</a></td>
+<td>Selection of ranges and columns</td></tr>
+<tr><td width="25%"><a href="RangesMapping-class.html">ranges-method</a></td>
+<td>Mapping of ranges to another sequence</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">ranges-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Views-class.html">ranges-method</a></td>
+<td>Views objects</td></tr>
+<tr><td width="25%"><a href="ViewsList-class.html">ranges-method</a></td>
+<td>List of Views</td></tr>
+<tr><td width="25%"><a href="findOverlaps-methods.html">ranges-method</a></td>
+<td>Finding overlapping ranges</td></tr>
+<tr><td width="25%"><a href="Views-class.html">ranges&lt;-</a></td>
+<td>Views objects</td></tr>
+<tr><td width="25%"><a href="RangedData-class.html">ranges&lt;--method</a></td>
+<td>Data on ranges</td></tr>
+<tr><td width="25%"><a href="RangedSelection-class.html">ranges&lt;--method</a></td>
+<td>Selection of ranges and columns</td></tr>
+<tr><td width="25%"><a href="Views-class.html">ranges&lt;--method</a></td>
+<td>Views objects</td></tr>
+<tr><td width="25%"><a href="RangesList-class.html">RangesList</a></td>
+<td>List of Ranges</td></tr>
+<tr><td width="25%"><a href="RangesList-class.html">RangesList-class</a></td>
+<td>List of Ranges</td></tr>
+<tr><td width="25%"><a href="encodeOverlaps-methods.html">RangesList_encodeOverlaps</a></td>
+<td>Compute overlap encodings</td></tr>
+<tr><td width="25%"><a href="RangesMapping-class.html">RangesMapping-class</a></td>
+<td>Mapping of ranges to another sequence</td></tr>
+<tr><td width="25%"><a href="nearest-methods.html">RangesORmissing</a></td>
+<td>Finding the nearest range neighbor</td></tr>
+<tr><td width="25%"><a href="nearest-methods.html">RangesORmissing-class</a></td>
+<td>Finding the nearest range neighbor</td></tr>
+<tr><td width="25%"><a href="Ranges-comparison.html">rank-method</a></td>
+<td>Comparing and ordering ranges</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">RawList</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">RawList-class</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="DataFrame-class.html">rbind-method</a></td>
+<td>External Data Frame</td></tr>
+<tr><td width="25%"><a href="DataFrameList-class.html">rbind-method</a></td>
+<td>List of DataFrames</td></tr>
+<tr><td width="25%"><a href="DataTable-API.html">rbind-method</a></td>
+<td>The DataTable API</td></tr>
+<tr><td width="25%"><a href="FilterMatrix-class.html">rbind-method</a></td>
+<td>Matrix for Filter Results</td></tr>
+<tr><td width="25%"><a href="RangedData-class.html">rbind-method</a></td>
+<td>Data on ranges</td></tr>
+<tr><td width="25%"><a href="RDApplyParams-class.html">rdapply</a></td>
+<td>Applying over spaces</td></tr>
+<tr><td width="25%"><a href="RDApplyParams-class.html">rdapply-method</a></td>
+<td>Applying over spaces</td></tr>
+<tr><td width="25%"><a href="RDApplyParams-class.html">RDApplyParams</a></td>
+<td>Applying over spaces</td></tr>
+<tr><td width="25%"><a href="RDApplyParams-class.html">RDApplyParams-class</a></td>
+<td>Applying over spaces</td></tr>
+<tr><td width="25%"><a href="read.Mask.html">read.agpMask</a></td>
+<td>Read a mask from a file</td></tr>
+<tr><td width="25%"><a href="read.Mask.html">read.gapMask</a></td>
+<td>Read a mask from a file</td></tr>
+<tr><td width="25%"><a href="read.Mask.html">read.liftMask</a></td>
+<td>Read a mask from a file</td></tr>
+<tr><td width="25%"><a href="read.Mask.html">read.Mask</a></td>
+<td>Read a mask from a file</td></tr>
+<tr><td width="25%"><a href="read.Mask.html">read.rmMask</a></td>
+<td>Read a mask from a file</td></tr>
+<tr><td width="25%"><a href="read.Mask.html">read.trfMask</a></td>
+<td>Read a mask from a file</td></tr>
+<tr><td width="25%"><a href="inter-range-methods.html">reduce</a></td>
+<td>Inter range transformations of a Ranges, Views, RangesList, MaskCollection, or RangedData object</td></tr>
+<tr><td width="25%"><a href="funprog-methods.html">Reduce-method</a></td>
+<td>Functional programming methods for List objects</td></tr>
+<tr><td width="25%"><a href="inter-range-methods.html">reduce-method</a></td>
+<td>Inter range transformations of a Ranges, Views, RangesList, MaskCollection, or RangedData object</td></tr>
+<tr><td width="25%"><a href="RDApplyParams-class.html">reducerFun</a></td>
+<td>Applying over spaces</td></tr>
+<tr><td width="25%"><a href="RDApplyParams-class.html">reducerFun-method</a></td>
+<td>Applying over spaces</td></tr>
+<tr><td width="25%"><a href="RDApplyParams-class.html">reducerFun&lt;-</a></td>
+<td>Applying over spaces</td></tr>
+<tr><td width="25%"><a href="RDApplyParams-class.html">reducerFun&lt;--method</a></td>
+<td>Applying over spaces</td></tr>
+<tr><td width="25%"><a href="RDApplyParams-class.html">reducerParams</a></td>
+<td>Applying over spaces</td></tr>
+<tr><td width="25%"><a href="RDApplyParams-class.html">reducerParams-method</a></td>
+<td>Applying over spaces</td></tr>
+<tr><td width="25%"><a href="RDApplyParams-class.html">reducerParams&lt;-</a></td>
+<td>Applying over spaces</td></tr>
+<tr><td width="25%"><a href="RDApplyParams-class.html">reducerParams&lt;--method</a></td>
+<td>Applying over spaces</td></tr>
+<tr><td width="25%"><a href="intra-range-methods.html">reflect</a></td>
+<td>Intra range transformations of a Ranges, Views, RangesList, or MaskCollection object</td></tr>
+<tr><td width="25%"><a href="intra-range-methods.html">reflect-method</a></td>
+<td>Intra range transformations of a Ranges, Views, RangesList, or MaskCollection object</td></tr>
+<tr><td width="25%"><a href="Grouping-class.html">relist-method</a></td>
+<td>Grouping objects</td></tr>
+<tr><td width="25%"><a href="List-class.html">relist-method</a></td>
+<td>List objects</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">relist-method</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="Hits-class.html">remapHits</a></td>
+<td>Set of hits between 2 vector-like objects</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">rename</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">rename-method</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="OverlapEncodings-class.html">Rencoding</a></td>
+<td>OverlapEncodings objects</td></tr>
+<tr><td width="25%"><a href="OverlapEncodings-class.html">Rencoding-method</a></td>
+<td>OverlapEncodings objects</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">rep-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">rep-method</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">rep.int-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">rep.int-method</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="intra-range-methods.html">resize</a></td>
+<td>Intra range transformations of a Ranges, Views, RangesList, or MaskCollection object</td></tr>
+<tr><td width="25%"><a href="intra-range-methods.html">resize-method</a></td>
+<td>Intra range transformations of a Ranges, Views, RangesList, or MaskCollection object</td></tr>
+<tr><td width="25%"><a href="intra-range-methods.html">restrict</a></td>
+<td>Intra range transformations of a Ranges, Views, RangesList, or MaskCollection object</td></tr>
+<tr><td width="25%"><a href="intra-range-methods.html">restrict-method</a></td>
+<td>Intra range transformations of a Ranges, Views, RangesList, or MaskCollection object</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">rev-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">rev-method</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">rev.Rle</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="List-class.html">revElements</a></td>
+<td>List objects</td></tr>
+<tr><td width="25%"><a href="List-class.html">revElements-method</a></td>
+<td>List objects</td></tr>
+<tr><td width="25%"><a href="SimpleList-class.html">revElements-method</a></td>
+<td>Simple and Compressed List Classes</td></tr>
+<tr><td width="25%"><a href="reverse-methods.html">reverse</a></td>
+<td>reverse</td></tr>
+<tr><td width="25%"><a href="reverse-methods.html">reverse-method</a></td>
+<td>reverse</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">Rle</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">Rle-class</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">Rle-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">RleList</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">RleList-class</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">RleList-method</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="RleViews-class.html">RleViews</a></td>
+<td>The RleViews class</td></tr>
+<tr><td width="25%"><a href="RleViews-class.html">RleViews-class</a></td>
+<td>The RleViews class</td></tr>
+<tr><td width="25%"><a href="RleViewsList-class.html">RleViewsList</a></td>
+<td>List of RleViews</td></tr>
+<tr><td width="25%"><a href="RleViewsList-class.html">RleViewsList-class</a></td>
+<td>List of RleViews</td></tr>
+<tr><td width="25%"><a href="OverlapEncodings-class.html">Rngap</a></td>
+<td>OverlapEncodings objects</td></tr>
+<tr><td width="25%"><a href="OverlapEncodings-class.html">Rngap-method</a></td>
+<td>OverlapEncodings objects</td></tr>
+<tr><td width="25%"><a href="OverlapEncodings-class.html">Roffset</a></td>
+<td>OverlapEncodings objects</td></tr>
+<tr><td width="25%"><a href="OverlapEncodings-class.html">Roffset-method</a></td>
+<td>OverlapEncodings objects</td></tr>
+<tr><td width="25%"><a href="DataFrame-class.html">rownames-method</a></td>
+<td>External Data Frame</td></tr>
+<tr><td width="25%"><a href="DataFrameList-class.html">rownames-method</a></td>
+<td>List of DataFrames</td></tr>
+<tr><td width="25%"><a href="RangedData-class.html">rownames-method</a></td>
+<td>Data on ranges</td></tr>
+<tr><td width="25%"><a href="DataFrame-class.html">rownames&lt;--method</a></td>
+<td>External Data Frame</td></tr>
+<tr><td width="25%"><a href="DataFrameList-class.html">rownames&lt;--method</a></td>
+<td>List of DataFrames</td></tr>
+<tr><td width="25%"><a href="RangedData-class.html">rownames&lt;--method</a></td>
+<td>Data on ranges</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">runLength</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">runLength-method</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">runLength-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">runLength&lt;-</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">runLength&lt;--method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="runstat.html">runmean</a></td>
+<td>Fixed width running window summaries across vector-like objects</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">runmean-method</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">runmean-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">runmed-method</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">runmed-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="runstat.html">runq</a></td>
+<td>Fixed width running window summaries across vector-like objects</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">runq-method</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">runq-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="runstat.html">runstat</a></td>
+<td>Fixed width running window summaries across vector-like objects</td></tr>
+<tr><td width="25%"><a href="runstat.html">runsum</a></td>
+<td>Fixed width running window summaries across vector-like objects</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">runsum-method</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">runsum-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">runValue</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">runValue-method</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">runValue-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">runValue&lt;-</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">runValue&lt;--method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="runstat.html">runwtsum</a></td>
+<td>Fixed width running window summaries across vector-like objects</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">runwtsum-method</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">runwtsum-method</a></td>
+<td>Rle objects</td></tr>
+</table>
+
+<h2><a name="S">-- S --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="strutils.html">safeExplode</a></td>
+<td>Low-level string utilities</td></tr>
+<tr><td width="25%"><a href="List-class.html">sapply-method</a></td>
+<td>List objects</td></tr>
+<tr><td width="25%"><a href="score.html">score</a></td>
+<td>Score accessor and setter</td></tr>
+<tr><td width="25%"><a href="RangedData-class.html">score-method</a></td>
+<td>Data on ranges</td></tr>
+<tr><td width="25%"><a href="score.html">score&lt;-</a></td>
+<td>Score accessor and setter</td></tr>
+<tr><td width="25%"><a href="RangedData-class.html">score&lt;--method</a></td>
+<td>Data on ranges</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">sd-method</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">sd-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Vector-comparison.html">selfmatch</a></td>
+<td>Compare, order, tabulate vector-like objects</td></tr>
+<tr><td width="25%"><a href="Ranges-comparison.html">selfmatch-method</a></td>
+<td>Comparing and ordering ranges</td></tr>
+<tr><td width="25%"><a href="Vector-comparison.html">selfmatch-method</a></td>
+<td>Compare, order, tabulate vector-like objects</td></tr>
+<tr><td width="25%"><a href="seqapply.html">seqapply</a></td>
+<td>Apply function and cast to Vector</td></tr>
+<tr><td width="25%"><a href="seqapply.html">seqby</a></td>
+<td>Apply function and cast to Vector</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">seqselect</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">seqselect-method</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">seqselect&lt;-</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">seqselect&lt;--method</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="seqapply.html">seqsplit</a></td>
+<td>Apply function and cast to Vector</td></tr>
+<tr><td width="25%"><a href="setops-methods.html">setdiff-method</a></td>
+<td>Set operations on IRanges, RangesList, and Hits objects</td></tr>
+<tr><td width="25%"><a href="setops-methods.html">setops-methods</a></td>
+<td>Set operations on IRanges, RangesList, and Hits objects</td></tr>
+<tr><td width="25%"><a href="intra-range-methods.html">shift</a></td>
+<td>Intra range transformations of a Ranges, Views, RangesList, or MaskCollection object</td></tr>
+<tr><td width="25%"><a href="intra-range-methods.html">shift-method</a></td>
+<td>Intra range transformations of a Ranges, Views, RangesList, or MaskCollection object</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">shiftApply</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">shiftApply-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">shiftApply-method</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">show-method</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="DataFrameList-class.html">show-method</a></td>
+<td>List of DataFrames</td></tr>
+<tr><td width="25%"><a href="DataTable-API.html">show-method</a></td>
+<td>The DataTable API</td></tr>
+<tr><td width="25%"><a href="FilterMatrix-class.html">show-method</a></td>
+<td>Matrix for Filter Results</td></tr>
+<tr><td width="25%"><a href="FilterRules-class.html">show-method</a></td>
+<td>Collection of Filter Rules</td></tr>
+<tr><td width="25%"><a href="GappedRanges-class.html">show-method</a></td>
+<td>GappedRanges objects</td></tr>
+<tr><td width="25%"><a href="Grouping-class.html">show-method</a></td>
+<td>Grouping objects</td></tr>
+<tr><td width="25%"><a href="Hits-class.html">show-method</a></td>
+<td>Set of hits between 2 vector-like objects</td></tr>
+<tr><td width="25%"><a href="IntervalForest-class.html">show-method</a></td>
+<td>Interval Search Forests</td></tr>
+<tr><td width="25%"><a href="List-class.html">show-method</a></td>
+<td>List objects</td></tr>
+<tr><td width="25%"><a href="MaskCollection-class.html">show-method</a></td>
+<td>MaskCollection objects</td></tr>
+<tr><td width="25%"><a href="OverlapEncodings-class.html">show-method</a></td>
+<td>OverlapEncodings objects</td></tr>
+<tr><td width="25%"><a href="RangedData-class.html">show-method</a></td>
+<td>Data on ranges</td></tr>
+<tr><td width="25%"><a href="Ranges-class.html">show-method</a></td>
+<td>Ranges objects</td></tr>
+<tr><td width="25%"><a href="RangesList-class.html">show-method</a></td>
+<td>List of Ranges</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">show-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="RleViews-class.html">show-method</a></td>
+<td>The RleViews class</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">showAsCell</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">showAsCell-method</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="Ranges-class.html">showAsCell-method</a></td>
+<td>Ranges objects</td></tr>
+<tr><td width="25%"><a href="RangesList-class.html">showAsCell-method</a></td>
+<td>List of Ranges</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">showAsCell-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">showAsCell-method</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">SimpleAtomicList</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">SimpleAtomicList-class</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">SimpleCharacterList</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">SimpleCharacterList-class</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">SimpleComplexList</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">SimpleComplexList-class</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="DataFrameList-class.html">SimpleDataFrameList-class</a></td>
+<td>List of DataFrames</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">SimpleIntegerList</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">SimpleIntegerList-class</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="IRangesList-class.html">SimpleIRangesList</a></td>
+<td>List of IRanges and NormalIRanges</td></tr>
+<tr><td width="25%"><a href="IRangesList-class.html">SimpleIRangesList-class</a></td>
+<td>List of IRanges and NormalIRanges</td></tr>
+<tr><td width="25%"><a href="SimpleList-class.html">SimpleList</a></td>
+<td>Simple and Compressed List Classes</td></tr>
+<tr><td width="25%"><a href="SimpleList-class.html">SimpleList-class</a></td>
+<td>Simple and Compressed List Classes</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">SimpleLogicalList</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">SimpleLogicalList-class</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="IRangesList-class.html">SimpleNormalIRangesList</a></td>
+<td>List of IRanges and NormalIRanges</td></tr>
+<tr><td width="25%"><a href="IRangesList-class.html">SimpleNormalIRangesList-class</a></td>
+<td>List of IRanges and NormalIRanges</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">SimpleNumericList</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">SimpleNumericList-class</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="RangesList-class.html">SimpleRangesList</a></td>
+<td>List of Ranges</td></tr>
+<tr><td width="25%"><a href="RangesList-class.html">SimpleRangesList-class</a></td>
+<td>List of Ranges</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">SimpleRawList</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">SimpleRawList-class</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">SimpleRleList</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">SimpleRleList-class</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="RleViewsList-class.html">SimpleRleViewsList-class</a></td>
+<td>List of RleViews</td></tr>
+<tr><td width="25%"><a href="DataFrameList-class.html">SimpleSplitDataFrameList-class</a></td>
+<td>List of DataFrames</td></tr>
+<tr><td width="25%"><a href="ViewsList-class.html">SimpleViewsList</a></td>
+<td>List of Views</td></tr>
+<tr><td width="25%"><a href="ViewsList-class.html">SimpleViewsList-class</a></td>
+<td>List of Views</td></tr>
+<tr><td width="25%"><a href="RDApplyParams-class.html">simplify</a></td>
+<td>Applying over spaces</td></tr>
+<tr><td width="25%"><a href="RDApplyParams-class.html">simplify-method</a></td>
+<td>Applying over spaces</td></tr>
+<tr><td width="25%"><a href="RDApplyParams-class.html">simplify&lt;-</a></td>
+<td>Applying over spaces</td></tr>
+<tr><td width="25%"><a href="RDApplyParams-class.html">simplify&lt;--method</a></td>
+<td>Applying over spaces</td></tr>
+<tr><td width="25%"><a href="slice-methods.html">slice</a></td>
+<td>Slice a vector-like or list-like object</td></tr>
+<tr><td width="25%"><a href="slice-methods.html">slice-method</a></td>
+<td>Slice a vector-like or list-like object</td></tr>
+<tr><td width="25%"><a href="slice-methods.html">slice-methods</a></td>
+<td>Slice a vector-like or list-like object</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">smoothEnds-method</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">smoothEnds-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="IRanges-constructor.html">solveUserSEW</a></td>
+<td>The IRanges constructor and supporting functions</td></tr>
+<tr><td width="25%"><a href="IRanges-constructor.html">solveUserSEW0</a></td>
+<td>The IRanges constructor and supporting functions</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">sort-method</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">sort-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Vector-comparison.html">sort-method</a></td>
+<td>Compare, order, tabulate vector-like objects</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">sort.Rle</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">sort.RleList</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="Vector-comparison.html">sort.Vector</a></td>
+<td>Compare, order, tabulate vector-like objects</td></tr>
+<tr><td width="25%"><a href="RangesList-class.html">space</a></td>
+<td>List of Ranges</td></tr>
+<tr><td width="25%"><a href="HitsList-class.html">space-method</a></td>
+<td>List of Hits objects</td></tr>
+<tr><td width="25%"><a href="RangedData-class.html">space-method</a></td>
+<td>Data on ranges</td></tr>
+<tr><td width="25%"><a href="RangesList-class.html">space-method</a></td>
+<td>List of Ranges</td></tr>
+<tr><td width="25%"><a href="RangesMapping-class.html">space-method</a></td>
+<td>Mapping of ranges to another sequence</td></tr>
+<tr><td width="25%"><a href="RangedData-class.html">split-method</a></td>
+<td>Data on ranges</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">split-method</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">split&lt;--method</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="DataFrameList-class.html">SplitDataFrameList</a></td>
+<td>List of DataFrames</td></tr>
+<tr><td width="25%"><a href="DataFrameList-class.html">SplitDataFrameList-class</a></td>
+<td>List of DataFrames</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">splitRanges</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">splitRanges-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="DataFrameList-class.html">stack-method</a></td>
+<td>List of DataFrames</td></tr>
+<tr><td width="25%"><a href="List-class.html">stack-method</a></td>
+<td>List objects</td></tr>
+<tr><td width="25%"><a href="RangedDataList-class.html">stack-method</a></td>
+<td>Lists of RangedData</td></tr>
+<tr><td width="25%"><a href="GappedRanges-class.html">start-method</a></td>
+<td>GappedRanges objects</td></tr>
+<tr><td width="25%"><a href="Grouping-class.html">start-method</a></td>
+<td>Grouping objects</td></tr>
+<tr><td width="25%"><a href="IRanges-class.html">start-method</a></td>
+<td>IRanges and NormalIRanges objects</td></tr>
+<tr><td width="25%"><a href="IRangesList-class.html">start-method</a></td>
+<td>List of IRanges and NormalIRanges</td></tr>
+<tr><td width="25%"><a href="IntervalForest-class.html">start-method</a></td>
+<td>Interval Search Forests</td></tr>
+<tr><td width="25%"><a href="IntervalTree-class.html">start-method</a></td>
+<td>Interval Search Trees</td></tr>
+<tr><td width="25%"><a href="RangedData-class.html">start-method</a></td>
+<td>Data on ranges</td></tr>
+<tr><td width="25%"><a href="Ranges-class.html">start-method</a></td>
+<td>Ranges objects</td></tr>
+<tr><td width="25%"><a href="RangesList-class.html">start-method</a></td>
+<td>List of Ranges</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">start-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Views-class.html">start-method</a></td>
+<td>Views objects</td></tr>
+<tr><td width="25%"><a href="ViewsList-class.html">start-method</a></td>
+<td>List of Views</td></tr>
+<tr><td width="25%"><a href="Ranges-class.html">start&lt;-</a></td>
+<td>Ranges objects</td></tr>
+<tr><td width="25%"><a href="IRanges-class.html">start&lt;--method</a></td>
+<td>IRanges and NormalIRanges objects</td></tr>
+<tr><td width="25%"><a href="RangedData-class.html">start&lt;--method</a></td>
+<td>Data on ranges</td></tr>
+<tr><td width="25%"><a href="RangesList-class.html">start&lt;--method</a></td>
+<td>List of Ranges</td></tr>
+<tr><td width="25%"><a href="Views-class.html">start&lt;--method</a></td>
+<td>Views objects</td></tr>
+<tr><td width="25%"><a href="strutils.html">strsplitAsListOfIntegerVectors</a></td>
+<td>Low-level string utilities</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">sub-method</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">sub-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Views-class.html">subject</a></td>
+<td>Views objects</td></tr>
+<tr><td width="25%"><a href="RleViewsList-class.html">subject-method</a></td>
+<td>List of RleViews</td></tr>
+<tr><td width="25%"><a href="Views-class.html">subject-method</a></td>
+<td>Views objects</td></tr>
+<tr><td width="25%"><a href="Hits-class.html">subjectHits</a></td>
+<td>Set of hits between 2 vector-like objects</td></tr>
+<tr><td width="25%"><a href="Hits-class.html">subjectHits-method</a></td>
+<td>Set of hits between 2 vector-like objects</td></tr>
+<tr><td width="25%"><a href="HitsList-class.html">subjectHits-method</a></td>
+<td>List of Hits objects</td></tr>
+<tr><td width="25%"><a href="RangesMapping-class.html">subjectHits-method</a></td>
+<td>Mapping of ranges to another sequence</td></tr>
+<tr><td width="25%"><a href="Hits-class.html">subjectLength</a></td>
+<td>Set of hits between 2 vector-like objects</td></tr>
+<tr><td width="25%"><a href="Hits-class.html">subjectLength-method</a></td>
+<td>Set of hits between 2 vector-like objects</td></tr>
+<tr><td width="25%"><a href="HitsList-class.html">subjectLength-method</a></td>
+<td>List of Hits objects</td></tr>
+<tr><td width="25%"><a href="DataTable-API.html">subset-method</a></td>
+<td>The DataTable API</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">subset-method</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="FilterRules-class.html">subsetByFilter</a></td>
+<td>Collection of Filter Rules</td></tr>
+<tr><td width="25%"><a href="FilterRules-class.html">subsetByFilter-method</a></td>
+<td>Collection of Filter Rules</td></tr>
+<tr><td width="25%"><a href="findOverlaps-methods.html">subsetByOverlaps</a></td>
+<td>Finding overlapping ranges</td></tr>
+<tr><td width="25%"><a href="findOverlaps-methods.html">subsetByOverlaps-method</a></td>
+<td>Finding overlapping ranges</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">substr-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">substring-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Views-class.html">subviews</a></td>
+<td>Views objects</td></tr>
+<tr><td width="25%"><a href="Views-class.html">subviews-method</a></td>
+<td>Views objects</td></tr>
+<tr><td width="25%"><a href="IRanges-utils.html">successiveIRanges</a></td>
+<td>IRanges utility functions</td></tr>
+<tr><td width="25%"><a href="Views-class.html">successiveViews</a></td>
+<td>Views objects</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">sum-method</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="view-summarization-methods.html">sum-method</a></td>
+<td>Summarize views on a vector-like object with numeric values</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">Summary-method</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">Summary-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="view-summarization-methods.html">Summary-method</a></td>
+<td>Summarize views on a vector-like object with numeric values</td></tr>
+<tr><td width="25%"><a href="FilterMatrix-class.html">summary-method</a></td>
+<td>Matrix for Filter Results</td></tr>
+<tr><td width="25%"><a href="FilterRules-class.html">summary-method</a></td>
+<td>Collection of Filter Rules</td></tr>
+<tr><td width="25%"><a href="IRangesList-class.html">summary-method</a></td>
+<td>List of IRanges and NormalIRanges</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">summary-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">summary.Rle</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="strutils.html">svn.time</a></td>
+<td>Low-level string utilities</td></tr>
+</table>
+
+<h2><a name="T">-- T --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="Hits-class.html">t-method</a></td>
+<td>Set of hits between 2 vector-like objects</td></tr>
+<tr><td width="25%"><a href="HitsList-class.html">t-method</a></td>
+<td>List of Hits objects</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">table-method</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">table-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Vector-comparison.html">table-method</a></td>
+<td>Compare, order, tabulate vector-like objects</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">tail-method</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">tail.Vector</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">tapply-method</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="intra-range-methods.html">threebands</a></td>
+<td>Intra range transformations of a Ranges, Views, RangesList, or MaskCollection object</td></tr>
+<tr><td width="25%"><a href="intra-range-methods.html">threebands-method</a></td>
+<td>Intra range transformations of a Ranges, Views, RangesList, or MaskCollection object</td></tr>
+<tr><td width="25%"><a href="Grouping-class.html">tofactor</a></td>
+<td>Grouping objects</td></tr>
+<tr><td width="25%"><a href="Grouping-class.html">togroup</a></td>
+<td>Grouping objects</td></tr>
+<tr><td width="25%"><a href="Grouping-class.html">togroup-method</a></td>
+<td>Grouping objects</td></tr>
+<tr><td width="25%"><a href="Grouping-class.html">togrouplength</a></td>
+<td>Grouping objects</td></tr>
+<tr><td width="25%"><a href="Grouping-class.html">togrouplength-method</a></td>
+<td>Grouping objects</td></tr>
+<tr><td width="25%"><a href="Grouping-class.html">togrouprank</a></td>
+<td>Grouping objects</td></tr>
+<tr><td width="25%"><a href="Grouping-class.html">togrouprank-method</a></td>
+<td>Grouping objects</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">tolower-method</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">tolower-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">toupper-method</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">toupper-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Views-class.html">trim</a></td>
+<td>Views objects</td></tr>
+<tr><td width="25%"><a href="Views-class.html">trim-method</a></td>
+<td>Views objects</td></tr>
+<tr><td width="25%"><a href="seqapply.html">tseqapply</a></td>
+<td>Apply function and cast to Vector</td></tr>
+</table>
+
+<h2><a name="U">-- U --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="setops-methods.html">union-method</a></td>
+<td>Set operations on IRanges, RangesList, and Hits objects</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">unique-method</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="DataTable-API.html">unique-method</a></td>
+<td>The DataTable API</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">unique-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Vector-comparison.html">unique-method</a></td>
+<td>Compare, order, tabulate vector-like objects</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">unique.CompressedAtomicList</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">unique.CompressedRleList</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="DataTable-API.html">unique.DataTable</a></td>
+<td>The DataTable API</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">unique.Rle</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">unique.SimpleRleList</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="Vector-comparison.html">unique.Vector</a></td>
+<td>Compare, order, tabulate vector-like objects</td></tr>
+<tr><td width="25%"><a href="RangesList-class.html">universe</a></td>
+<td>List of Ranges</td></tr>
+<tr><td width="25%"><a href="RangedData-class.html">universe-method</a></td>
+<td>Data on ranges</td></tr>
+<tr><td width="25%"><a href="RangesList-class.html">universe-method</a></td>
+<td>List of Ranges</td></tr>
+<tr><td width="25%"><a href="ViewsList-class.html">universe-method</a></td>
+<td>List of Views</td></tr>
+<tr><td width="25%"><a href="RangesList-class.html">universe&lt;-</a></td>
+<td>List of Ranges</td></tr>
+<tr><td width="25%"><a href="RangedData-class.html">universe&lt;--method</a></td>
+<td>Data on ranges</td></tr>
+<tr><td width="25%"><a href="RangesList-class.html">universe&lt;--method</a></td>
+<td>List of Ranges</td></tr>
+<tr><td width="25%"><a href="ViewsList-class.html">universe&lt;--method</a></td>
+<td>List of Views</td></tr>
+<tr><td width="25%"><a href="IRangesList-class.html">unlist-method</a></td>
+<td>List of IRanges and NormalIRanges</td></tr>
+<tr><td width="25%"><a href="List-class.html">unlist-method</a></td>
+<td>List objects</td></tr>
+<tr><td width="25%"><a href="RangedDataList-class.html">unlist-method</a></td>
+<td>Lists of RangedData</td></tr>
+<tr><td width="25%"><a href="Ranges-class.html">unlist-method</a></td>
+<td>Ranges objects</td></tr>
+<tr><td width="25%"><a href="SimpleList-class.html">unlist-method</a></td>
+<td>Simple and Compressed List Classes</td></tr>
+<tr><td width="25%"><a href="List-class.html">unsplit-method</a></td>
+<td>List objects</td></tr>
+<tr><td width="25%"><a href="IRanges-class.html">update-method</a></td>
+<td>IRanges and NormalIRanges objects</td></tr>
+<tr><td width="25%"><a href="Ranges-class.html">update-method</a></td>
+<td>Ranges objects</td></tr>
+<tr><td width="25%"><a href="updateObject-methods.html">updateObject-method</a></td>
+<td>Update an object of a class defined in the IRanges package to its current class definition</td></tr>
+<tr><td width="25%"><a href="updateObject-methods.html">updateObject-methods</a></td>
+<td>Update an object of a class defined in the IRanges package to its current class definition</td></tr>
+</table>
+
+<h2><a name="V">-- V --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="Vector-class.html">values</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="RangedData-class.html">values-method</a></td>
+<td>Data on ranges</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">values-method</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">values&lt;-</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="RangedData-class.html">values&lt;--method</a></td>
+<td>Data on ranges</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">values&lt;--method</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">var-method</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">var-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">Vector</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">Vector-class</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="Vector-comparison.html">Vector-comparison</a></td>
+<td>Compare, order, tabulate vector-like objects</td></tr>
+<tr><td width="25%"><a href="view-summarization-methods.html">view-summarization-methods</a></td>
+<td>Summarize views on a vector-like object with numeric values</td></tr>
+<tr><td width="25%"><a href="view-summarization-methods.html">viewApply</a></td>
+<td>Summarize views on a vector-like object with numeric values</td></tr>
+<tr><td width="25%"><a href="view-summarization-methods.html">viewApply-method</a></td>
+<td>Summarize views on a vector-like object with numeric values</td></tr>
+<tr><td width="25%"><a href="view-summarization-methods.html">viewMaxs</a></td>
+<td>Summarize views on a vector-like object with numeric values</td></tr>
+<tr><td width="25%"><a href="view-summarization-methods.html">viewMaxs-method</a></td>
+<td>Summarize views on a vector-like object with numeric values</td></tr>
+<tr><td width="25%"><a href="view-summarization-methods.html">viewMeans</a></td>
+<td>Summarize views on a vector-like object with numeric values</td></tr>
+<tr><td width="25%"><a href="view-summarization-methods.html">viewMeans-method</a></td>
+<td>Summarize views on a vector-like object with numeric values</td></tr>
+<tr><td width="25%"><a href="view-summarization-methods.html">viewMins</a></td>
+<td>Summarize views on a vector-like object with numeric values</td></tr>
+<tr><td width="25%"><a href="view-summarization-methods.html">viewMins-method</a></td>
+<td>Summarize views on a vector-like object with numeric values</td></tr>
+<tr><td width="25%"><a href="view-summarization-methods.html">viewRangeMaxs</a></td>
+<td>Summarize views on a vector-like object with numeric values</td></tr>
+<tr><td width="25%"><a href="view-summarization-methods.html">viewRangeMaxs-method</a></td>
+<td>Summarize views on a vector-like object with numeric values</td></tr>
+<tr><td width="25%"><a href="view-summarization-methods.html">viewRangeMins</a></td>
+<td>Summarize views on a vector-like object with numeric values</td></tr>
+<tr><td width="25%"><a href="view-summarization-methods.html">viewRangeMins-method</a></td>
+<td>Summarize views on a vector-like object with numeric values</td></tr>
+<tr><td width="25%"><a href="Views-class.html">Views</a></td>
+<td>Views objects</td></tr>
+<tr><td width="25%"><a href="Views-class.html">Views-class</a></td>
+<td>Views objects</td></tr>
+<tr><td width="25%"><a href="RleViews-class.html">Views-method</a></td>
+<td>The RleViews class</td></tr>
+<tr><td width="25%"><a href="RleViewsList-class.html">Views-method</a></td>
+<td>List of RleViews</td></tr>
+<tr><td width="25%"><a href="ViewsList-class.html">ViewsList</a></td>
+<td>List of Views</td></tr>
+<tr><td width="25%"><a href="ViewsList-class.html">ViewsList-class</a></td>
+<td>List of Views</td></tr>
+<tr><td width="25%"><a href="view-summarization-methods.html">viewSums</a></td>
+<td>Summarize views on a vector-like object with numeric values</td></tr>
+<tr><td width="25%"><a href="view-summarization-methods.html">viewSums-method</a></td>
+<td>Summarize views on a vector-like object with numeric values</td></tr>
+<tr><td width="25%"><a href="view-summarization-methods.html">viewWhichMaxs</a></td>
+<td>Summarize views on a vector-like object with numeric values</td></tr>
+<tr><td width="25%"><a href="view-summarization-methods.html">viewWhichMaxs-method</a></td>
+<td>Summarize views on a vector-like object with numeric values</td></tr>
+<tr><td width="25%"><a href="view-summarization-methods.html">viewWhichMins</a></td>
+<td>Summarize views on a vector-like object with numeric values</td></tr>
+<tr><td width="25%"><a href="view-summarization-methods.html">viewWhichMins-method</a></td>
+<td>Summarize views on a vector-like object with numeric values</td></tr>
+<tr><td width="25%"><a href="Grouping-class.html">vmembers</a></td>
+<td>Grouping objects</td></tr>
+<tr><td width="25%"><a href="Grouping-class.html">vmembers-method</a></td>
+<td>Grouping objects</td></tr>
+</table>
+
+<h2><a name="W">-- W --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="AtomicList-class.html">which-method</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">which-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">which.max-method</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">which.max-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="view-summarization-methods.html">which.max-method</a></td>
+<td>Summarize views on a vector-like object with numeric values</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">which.min-method</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="view-summarization-methods.html">which.min-method</a></td>
+<td>Summarize views on a vector-like object with numeric values</td></tr>
+<tr><td width="25%"><a href="IRanges-utils.html">whichAsIRanges</a></td>
+<td>IRanges utility functions</td></tr>
+<tr><td width="25%"><a href="Ranges-class.html">whichFirstNotNormal</a></td>
+<td>Ranges objects</td></tr>
+<tr><td width="25%"><a href="IRangesList-class.html">whichFirstNotNormal-method</a></td>
+<td>List of IRanges and NormalIRanges</td></tr>
+<tr><td width="25%"><a href="Ranges-class.html">whichFirstNotNormal-method</a></td>
+<td>Ranges objects</td></tr>
+<tr><td width="25%"><a href="Ranges-class.html">width</a></td>
+<td>Ranges objects</td></tr>
+<tr><td width="25%"><a href="Grouping-class.html">width-method</a></td>
+<td>Grouping objects</td></tr>
+<tr><td width="25%"><a href="IRanges-class.html">width-method</a></td>
+<td>IRanges and NormalIRanges objects</td></tr>
+<tr><td width="25%"><a href="IRangesList-class.html">width-method</a></td>
+<td>List of IRanges and NormalIRanges</td></tr>
+<tr><td width="25%"><a href="IntervalForest-class.html">width-method</a></td>
+<td>Interval Search Forests</td></tr>
+<tr><td width="25%"><a href="MaskCollection-class.html">width-method</a></td>
+<td>MaskCollection objects</td></tr>
+<tr><td width="25%"><a href="RangedData-class.html">width-method</a></td>
+<td>Data on ranges</td></tr>
+<tr><td width="25%"><a href="Ranges-class.html">width-method</a></td>
+<td>Ranges objects</td></tr>
+<tr><td width="25%"><a href="RangesList-class.html">width-method</a></td>
+<td>List of Ranges</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">width-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Views-class.html">width-method</a></td>
+<td>Views objects</td></tr>
+<tr><td width="25%"><a href="ViewsList-class.html">width-method</a></td>
+<td>List of Views</td></tr>
+<tr><td width="25%"><a href="Ranges-class.html">width&lt;-</a></td>
+<td>Ranges objects</td></tr>
+<tr><td width="25%"><a href="IRanges-class.html">width&lt;--method</a></td>
+<td>IRanges and NormalIRanges objects</td></tr>
+<tr><td width="25%"><a href="RangedData-class.html">width&lt;--method</a></td>
+<td>Data on ranges</td></tr>
+<tr><td width="25%"><a href="RangesList-class.html">width&lt;--method</a></td>
+<td>List of Ranges</td></tr>
+<tr><td width="25%"><a href="Views-class.html">width&lt;--method</a></td>
+<td>Views objects</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">window-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">window-method</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">window.factor</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">window.NULL</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">window.Rle</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">window.Vector</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">window.vector</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="DataTable-API.html">window&lt;--method</a></td>
+<td>The DataTable API</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">window&lt;--method</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="DataTable-API.html">window&lt;-.DataTable</a></td>
+<td>The DataTable API</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">window&lt;-.factor</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">window&lt;-.Vector</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">window&lt;-.vector</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="List-class.html">with-method</a></td>
+<td>List objects</td></tr>
+<tr><td width="25%"><a href="List-class.html">within-method</a></td>
+<td>List objects</td></tr>
+<tr><td width="25%"><a href="RangedData-class.html">within-method</a></td>
+<td>Data on ranges</td></tr>
+</table>
+
+<h2><a name="X">-- X --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="DataTable-stats.html">xtabs-method</a></td>
+<td>Statistical modeling with DataTable</td></tr>
+</table>
+
+<h2><a name="misc">-- misc --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="AtomicList-class.html">!-method</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">!-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Vector-comparison.html">!=-method</a></td>
+<td>Compare, order, tabulate vector-like objects</td></tr>
+<tr><td width="25%"><a href="List-class.html">$-method</a></td>
+<td>List objects</td></tr>
+<tr><td width="25%"><a href="List-class.html">$&lt;--method</a></td>
+<td>List objects</td></tr>
+<tr><td width="25%"><a href="RangedData-class.html">$&lt;--method</a></td>
+<td>Data on ranges</td></tr>
+<tr><td width="25%"><a href="SimpleList-class.html">$&lt;--method</a></td>
+<td>Simple and Compressed List Classes</td></tr>
+<tr><td width="25%"><a href="AtomicList-class.html">%in%-method</a></td>
+<td>Lists of Atomic Vectors in Natural and Rle Form</td></tr>
+<tr><td width="25%"><a href="Ranges-comparison.html">%in%-method</a></td>
+<td>Comparing and ordering ranges</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">%in%-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Vector-comparison.html">%in%-method</a></td>
+<td>Compare, order, tabulate vector-like objects</td></tr>
+<tr><td width="25%"><a href="findOverlaps-methods.html">%in%-method</a></td>
+<td>Finding overlapping ranges</td></tr>
+<tr><td width="25%"><a href="findOverlaps-methods.html">%outside%</a></td>
+<td>Finding overlapping ranges</td></tr>
+<tr><td width="25%"><a href="findOverlaps-methods.html">%over%</a></td>
+<td>Finding overlapping ranges</td></tr>
+<tr><td width="25%"><a href="findOverlaps-methods.html">%within%</a></td>
+<td>Finding overlapping ranges</td></tr>
+<tr><td width="25%"><a href="Vector-comparison.html">&lt;-method</a></td>
+<td>Compare, order, tabulate vector-like objects</td></tr>
+<tr><td width="25%"><a href="Vector-comparison.html">&lt;=-method</a></td>
+<td>Compare, order, tabulate vector-like objects</td></tr>
+<tr><td width="25%"><a href="Vector-comparison.html">==-method</a></td>
+<td>Compare, order, tabulate vector-like objects</td></tr>
+<tr><td width="25%"><a href="Vector-comparison.html">&gt;-method</a></td>
+<td>Compare, order, tabulate vector-like objects</td></tr>
+<tr><td width="25%"><a href="Vector-comparison.html">&gt;=-method</a></td>
+<td>Compare, order, tabulate vector-like objects</td></tr>
+<tr><td width="25%"><a href="DataFrame-class.html">[-method</a></td>
+<td>External Data Frame</td></tr>
+<tr><td width="25%"><a href="DataFrameList-class.html">[-method</a></td>
+<td>List of DataFrames</td></tr>
+<tr><td width="25%"><a href="FilterMatrix-class.html">[-method</a></td>
+<td>Matrix for Filter Results</td></tr>
+<tr><td width="25%"><a href="FilterRules-class.html">[-method</a></td>
+<td>Collection of Filter Rules</td></tr>
+<tr><td width="25%"><a href="IRangesList-class.html">[-method</a></td>
+<td>List of IRanges and NormalIRanges</td></tr>
+<tr><td width="25%"><a href="IntervalForest-class.html">[-method</a></td>
+<td>Interval Search Forests</td></tr>
+<tr><td width="25%"><a href="List-class.html">[-method</a></td>
+<td>List objects</td></tr>
+<tr><td width="25%"><a href="MaskCollection-class.html">[-method</a></td>
+<td>MaskCollection objects</td></tr>
+<tr><td width="25%"><a href="RangedData-class.html">[-method</a></td>
+<td>Data on ranges</td></tr>
+<tr><td width="25%"><a href="RangesList-class.html">[-method</a></td>
+<td>List of Ranges</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">[-method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="SimpleList-class.html">[-method</a></td>
+<td>Simple and Compressed List Classes</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">[-method</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="DataFrame-class.html">[&lt;--method</a></td>
+<td>External Data Frame</td></tr>
+<tr><td width="25%"><a href="DataFrameList-class.html">[&lt;--method</a></td>
+<td>List of DataFrames</td></tr>
+<tr><td width="25%"><a href="List-class.html">[&lt;--method</a></td>
+<td>List objects</td></tr>
+<tr><td width="25%"><a href="Rle-class.html">[&lt;--method</a></td>
+<td>Rle objects</td></tr>
+<tr><td width="25%"><a href="Vector-class.html">[&lt;--method</a></td>
+<td>Vector objects</td></tr>
+<tr><td width="25%"><a href="List-class.html">[[-method</a></td>
+<td>List objects</td></tr>
+<tr><td width="25%"><a href="RangedData-class.html">[[-method</a></td>
+<td>Data on ranges</td></tr>
+<tr><td width="25%"><a href="DataFrame-class.html">[[&lt;--method</a></td>
+<td>External Data Frame</td></tr>
+<tr><td width="25%"><a href="FilterRules-class.html">[[&lt;--method</a></td>
+<td>Collection of Filter Rules</td></tr>
+<tr><td width="25%"><a href="List-class.html">[[&lt;--method</a></td>
+<td>List objects</td></tr>
+<tr><td width="25%"><a href="RangedData-class.html">[[&lt;--method</a></td>
+<td>Data on ranges</td></tr>
+<tr><td width="25%"><a href="SimpleList-class.html">[[&lt;--method</a></td>
+<td>Simple and Compressed List Classes</td></tr>
+</table>
+</body></html>

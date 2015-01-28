@@ -1,0 +1,6 @@
+check.cdf.type          CDF file format function
+read.cdffile.list       Read CDF file into an R list
+read.celfile            Read a CEL file into an R list
+read.celfile.header     Read header information from cel file
+read.celfile.probeintensity.matrices
+                        Read PM or MM from CEL file into matrices

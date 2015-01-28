@@ -1,0 +1,39 @@
+A RFC for dealing with annotation data.
+
+Please comment on the following proposal.
+
+In order to deal with the ever changing needs and continual evolution
+of genomic data the annotate package must be able to update and
+install annotation data.
+
+It seems that this process is not unlike the R package system and
+perhaps much can be gained by using features from both the package
+system and the data system.
+
+Functionality:
+
+annotation: A function, like data, if given no argument it lists the
+annotation that is available. Annotation is loaded using "data",
+however.
+There is an argument, local, if TRUE look on the local machine, if
+FALSE, list available annotation datasets from Bioconductor.
+
+We will use a different index file, 00Annotate.dcf in the annotate
+data directory to hold this listing. It isn't really data and we
+wouldn't really want people to get confused.
+
+install.annotation: Takes a base name (like "hgu95A") and obtains and
+installs a package from the bioconductor web site (using the same
+system of URL access as install.packages).
+This will download data, put it in the appropriate directory and
+update the index file.
+
+update.annotation: Takes a base name (like "hgu95A") and checks to see
+if it needs to be updated.
+
+I still need to figure out how to automagically build this stuff but
+would like to get comments quickly so it can be squeezed in to the
+release. 
+
+thanks 
+  robert

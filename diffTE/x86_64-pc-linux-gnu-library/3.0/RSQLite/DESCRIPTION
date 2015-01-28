@@ -1,0 +1,36 @@
+Package: RSQLite
+Version: 1.0.0
+Title: SQLite Interface for R
+Authors@R: as.person(c(
+    "Hadley Wickham <hadley@rstudio.com> [aut, cre]",
+    "David A. James [aut]",
+    "Seth Falcon [aut]",
+    "SQLite Authors (for the included SQLite sources) [ctb]",
+    "Liam Healy (for the include SQLite extensions) [ctb]",
+    "RStudio [cph]"
+    ))
+Description: This package embeds the SQLite database engine in R and
+    provides an interface compliant with the DBI package.
+    The source for the SQLite engine (version 3.8.6) is included.
+Depends: R (>= 2.10.0), DBI (>= 0.3.1), methods
+Suggests: testthat
+License: LGPL (>= 2)
+URL: https://github.com/rstats-db/RSQLite
+BugReports: https://github.com/rstats-db/RSQLite/issues
+Collate: 'ConnectionExtensions.R' 'Connection.R' 'Driver.R' 'Connect.R'
+        'ConnectionRead.R' 'ConnectionTransactions.R'
+        'ConnectionWrite.R' 'Constants.R' 'Escaping.R' 'Result.R'
+        'Object.R' 'Summary.R' 'Utils.R' 'datasetsDb.R' 'dbGetInfo.R'
+        'extensions.R' 'zzz.R'
+Packaged: 2014-10-24 18:38:41 UTC; hadley
+Author: Hadley Wickham [aut, cre],
+  David A. James [aut],
+  Seth Falcon [aut],
+  SQLite Authors [ctb] (for the included SQLite sources),
+  Liam Healy [ctb] (for the include SQLite extensions),
+  RStudio [cph]
+Maintainer: Hadley Wickham <hadley@rstudio.com>
+NeedsCompilation: yes
+Repository: CRAN
+Date/Publication: 2014-10-25 01:58:48
+Built: R 3.0.2; x86_64-pc-linux-gnu; 2015-01-28 15:39:08 UTC; unix

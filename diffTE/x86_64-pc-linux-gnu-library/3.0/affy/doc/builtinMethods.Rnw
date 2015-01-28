@@ -1,0 +1,291 @@
+% -*- mode: noweb; noweb-default-code-mode: R-mode; -*-
+%\VignetteIndexEntry{2. Built-in Processing Methods}
+%\VignetteKeywords{Preprocessing, Affymetrix}
+%\VignetteDepends{affy}
+%\VignettePackage{affy}
+%documentclass[12pt, a4paper]{article}
+\documentclass[12pt]{article}
+
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage[authoryear,round]{natbib}
+
+\textwidth=6.2in
+\textheight=8.5in
+%\parskip=.3cm
+\oddsidemargin=.1in
+\evensidemargin=.1in
+\headheight=-.3in
+
+\newcommand{\scscst}{\scriptscriptstyle}
+\newcommand{\scst}{\scriptstyle}
+\author{Ben Bolstad}
+\begin{document}
+\title{affy: Built-in Processing Methods}
+\maketitle
+\tableofcontents
+\section{Introduction}
+
+This document describes the preprocessing methods that have currently
+been built into the \verb+affy+ package.  Hopefully it will clarify
+for the reader what each of the routines does. There is a separate
+vignette which describes how you might write your own routines and use
+them in combination with the built-in routines. 
+
+As usual, loading the package in your \verb+R+ session is required. 
+\begin{Sinput}
+R> library(affy) ##load the affy package
+\end{Sinput}
+<<echo=F,results=hide>>=
+library(affy)
+@
+
+\section{Background methods}
+
+You can see the background correction methods that are built into the
+package by examining the variable \verb+bgcorrect.method+. 
+
+<<>>=
+bgcorrect.methods()
+@
+
+\subsection{none}
+
+Calling this method actually does nothing. It returns the object
+unchanged. May be used as a placeholder. 
+
+\subsection{rma/rma2}
+
+These are background adjustment implementations for the rma method
+\cite{iriz:etal:2003}. They differ only in how they estimate a set of
+parameters (generally you should use \verb+rma+ in preference to
+\verb+rma2+. In both cases PM probe intensities are corrected by using
+a global model for the distribution of probe intensities. The model is
+suggested by looking at plots of the empirical distribution of probe
+intensities.  In particular the observed PM probes are modeled as the
+sum of a normal noise component N (Normal with mean $\mu$ and variance
+$\sigma^2$) and a exponential signal component S (exponential with
+mean $\alpha$). To avoid any possibility of negatives, the normal is
+truncated at zero. Given we have O the observed intensity, this then
+leads to an adjustment. 
+
+\begin{equation*}
+E\left(s \lvert O=o\right) = a + b \frac{\phi\left(\frac{a}{b}\right)
+  - \phi\left(\frac{o-a}{b}\right)}{\Phi\left(\frac{a}{b}\right) +
+  \Phi\left(\frac{o-a}{b}\right) - 1 } 
+\end{equation*}
+where $a =  s- \mu - \sigma^2\alpha$ and $b = \sigma$. Note that
+$\phi$ and $\Phi$ are the standard normal distribution density and
+distribution functions respectively. 
+
+Note that MM probe intensities are not corrected by either of these routines.
+
+\subsection{mas}
+
+This is an implementation of the background correction method outlined
+in the Statistical Algorithms Description Document
+\cite{affy:tech:2002}. The chip is broken into a grid of 16
+rectangular regions. For each region the lowest 2\% of probe
+intensities are used to compute a background value for that grid. Each
+probe is then adjusted based upon a weighted average of the
+backgrounds for each of the regions. The weights are based on the
+distances between the location of the probe and the centriods of 16
+different regions. Note this method corrects both PM and MM probes. 
+
+\section{Normalization Methods}
+
+You can see the background correction methods that are built into the
+package by examining the variable \verb+bgcorrect.method+. 
+<<>>=
+normalize.AffyBatch.methods()
+@
+
+The Quantile, Contrast and Loess normalizations have been discussed
+and compared in \cite{bols:etal:2003}. 
+
+\subsection{quantiles/quantiles.robust}
+
+The quantile method was introduced by \cite{bols:etal:2003}. The goal
+is to give each chip the same empirical distribution. To do this we
+use the following algorithm where $X$ is a matrix of probe intensities
+(probes by arrays):  
+
+\begin{enumerate}
+\item Given $n$ array of length $p$, form $X$  of dimension $p \times n$  where
+each array is a column
+\item Sort each column of $X$ to give $X_{\mbox{sort}}$
+\item Take the means across rows of $X_{\mbox{sort}}$ and assign this mean to
+each element in the row to get $X'_{\mbox{sort}}$
+\item Get $X_{\mbox{normalized}}$ by rearranging each column of
+$X'_{\mbox{sort}}$ to have the same ordering as original $X$
+\end{enumerate}
+ 
+The quantile normalization method is a specific case of the
+transformation $x'_{i} = F^{-1}\left(G\left(x_{i}\right)\right)$,
+where we estimate $G$ by the empirical distribution of each array and
+$F$ using the empirical distribution of the averaged sample quantiles.
+Quantile normalization is pretty fast. 
+
+The {\tt quantiles} function performs the algorithm as above. The
+{\tt quantile.robust} function allows you to exclude or down-weight
+arrays in the computation of $\hat G$ above. In most cases we have
+found that the {\tt quantiles} method is sufficient for use and
+{\tt quantiles.robust} not required.   
+
+\subsection{loess}
+
+There is a discussion of this method in \cite{bols:etal:2003}. It
+generalizes the $M$ vs $A$ methodology proposed in \cite{Dudoit:2002}
+to multiple arrays. It works in a pairwise manner and is thus slow
+when used with a large number of arrays. 
+
+\subsection{contrasts}
+
+This method was proposed by \cite{astr:2003}. It is also a variation
+on the  $M$ vs $A$ methodology, but the normalization is done by
+transforming the data to a set of contrasts, then normalizing. 
+
+\subsection{constant}
+
+A scaling normalization. This means that all the arrays are scaled so
+that they have the same mean value. This would be typical of the
+approach taken by Affymetrix. However, the Affymetrix normalization is
+usually done after summarization (you can investigate
+\verb+affy.scalevalue.exprSet+ if you are interested) and this
+normalization is carried out before summarization. 
+
+\subsection{invariantset}
+
+A normalization similar to that used in the dChip software
+\cite{li:wong:2001a}. Using a baseline array, arrays are normalized by
+selecting invariant sets of genes (or probes) then using them to fit a
+non-linear relationship between the ``treatment'' and ``baseline''
+arrays. The non-linear relationship is used to carry out the
+normalization. 
+
+\subsection{qspline}
+
+This method is documented in \cite{workman:etal:2002}. Using a target array
+(either one of the arrays or a synthetic target), arrays are normalized by
+fitting splines to the quantiles, then using the splines to perform the
+normalization.
+
+\section{PM correct methods}
+
+<<>>=
+pmcorrect.methods()
+@
+\subsection{mas}
+
+An {\it ideal mismatch} is subtracted from PM. The ideal mismatch is
+documented by \cite{affy:tech:2002}. It has been designed so that you
+subtract MM when possible (ie MM is less than PM) or something else
+when it is not possible. The Ideal Mismatch will always be less than
+the corresponding PM and thus we can safely subtract it without risk
+of negative values.  
+
+\subsection{pmonly}
+
+Make no adjustment to the pm values.
+
+\subsection{subtractmm}
+
+Subtract MM from PM. This would be the approach taken in MAS 4
+\cite{affy4}. It could also be used in conjunction with the Li-Wong
+model. 
+
+\section{Summarization methods}
+
+<<>>=
+express.summary.stat.methods()
+@
+
+\subsection{avgdiff}
+
+Compute the average. This is the approach that was taken in \cite{affy4}.
+
+\subsection{liwong}
+
+This is an implementation of the methods proposed in
+\cite{li:wong:2001a} and \cite{li:wong:2001b}. The Li-Wong MBEI is
+based upon fitting the following multi-chip model to each probeset 
+\begin{equation}
+y_{ij} = \phi_i \theta_j + \epsilon_{ij}
+\end{equation}
+where $y_{ij}$ is $PM_{ij}$ or the difference between
+$PM_{ij}-MM_{ij}$. The $\phi_i$ parameter is a probe response
+parameter and $\theta_j$ is the expression on array $j$. 
+
+
+\subsection{mas}
+
+As documented in \cite{affy:tech:2002}, a robust average using 1-step
+Tukey biweight on $\log_2$ scale. 
+
+\subsection{medianpolish}
+
+This is the summarization used in the RMA expression summary
+\cite{iriz:etal:2003}. A multichip linear model is fit to data from
+each probeset. In particular for a probeset $k$ with $i=1,\dots,I_k$
+probes and data from $j=1,\dots,J$ arrays we fit the following model 
+\begin{equation*}
+\log_2\left(PM^{(k)}_{ij}\right) = \alpha_i^{(k)} + \beta_j^{(k)} + \epsilon_{ij}^{(k)}
+\end{equation*}
+where $\alpha_i$ is a probe effect and $\beta_j$ is the $\log_2$
+expression value. The medianpolish is an algorithm (see
+\cite{tukey:1977}) for fitting this model robustly. Please note that
+expression values you get using this summary measure will be in
+$\log_2$ scale. 
+
+\subsection{playerout}
+
+This method is detailed in \cite{Lazardis:etal:2002}. A non-parametric
+method is used to determine weights. The expression value is then the
+weighted average. 
+
+\section{Putting it altogether using {\tt expresso}}
+
+The function that you should use is {\tt expresso}. It is important to
+note that not every preprocessing method can be combined together. In
+particular the \verb+rma+ backgrounds adjust only PM probe intensities
+and so they should only be used in conjunction with the \verb+pmonly+
+PM correction. Also remember that the \verb+mas+ and
+\verb+medianpolish+ summarization methods $\log_2$ transform the data,
+thus they should not be used in conjunction with any preprocessing
+steps that are likely to yield negatives like the \verb+subtractmm+ pm
+correction method. The following is a typical call to
+\verb+expresso+. 
+
+\begin{Sinput}
+ library(affydata)
+ data(Dilution)
+ eset <- expresso(Dilution,bgcorrect.method="rma",
+                  normalize.method="quantiles",
+                  pmcorrect.method="pmonly",
+                  summary.method="medianpolish")
+\end{Sinput}
+%@ 
+
+This would give you the RMA expression measure, but of course there
+are other ways of computing RMA (chiefly \verb+rma+). The true power
+of \verb+expresso+ becomes apparent when you start combining different
+methods. By choosing a method for each of the four steps ({\tt
+  bgcorrect.method}, {\tt normalize.method}, {\tt pmcorrect.method},
+{\tt summary.method}) you can create quite a variety of expression
+measures. For instance 
+
+\begin{Sinput}
+eset <- expresso(Dilution,bgcorrect.method="mas",
+                  normalize.method="qspline",
+                  pmcorrect.method="subtractmm",
+                  summary.method="playerout")
+\end{Sinput}
+
+would be a valid way of computing an expression measure (it is up to
+the user to decide whether such a concoction is sensible or not). 
+
+
+\bibliographystyle{plainnat}
+\bibliography{affy}
+
+\end{document}

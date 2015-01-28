@@ -1,0 +1,110 @@
+% -*- mode: noweb; noweb-default-code-mode: R-mode; -*-
+%\VignetteIndexEntry{4. Import Methods}
+%\VignetteKeywords{Preprocessing, Affymetrix}
+%\VignetteDepends{affy}
+%\VignettePackage{affy}
+%documentclass[12pt, a4paper]{article}
+\documentclass[12pt]{article}
+
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage[authoryear,round]{natbib}
+
+\textwidth=6.2in
+\textheight=8.5in
+%\parskip=.3cm
+\oddsidemargin=.1in
+\evensidemargin=.1in
+\headheight=-.3in
+
+\newcommand{\scscst}{\scriptscriptstyle}
+\newcommand{\scst}{\scriptstyle}
+
+\author{Laurent}
+\begin{document}
+\title{affy: Import Methods (HowTo)}
+
+\maketitle
+\tableofcontents
+\section{Introduction}
+This document describes briefly how to write import methods for
+the \verb+affy+ package. As one might know, the Affymetrix data are
+originally stored in files of type \verb+.CEL+ and \verb+.CDF+. The
+package extracts and store the information contained in \verb+R+ data
+structures using file parsers. This document outlines how to get the
+data from other sources than the current\footnote{today's date is
+early 2003} file formats.
+
+As usual, loading the package in your \verb+R+ session is required. 
+\begin{Sinput}
+R> library(affy) ##load the affy package
+\end{Sinput}
+<<echo=F,results=hide>>=
+library(affy)
+@
+
+{\bf note: this document only describes the process for .CEL files}
+
+Knowing the slots of \verb+Cel+ and \verb+AffyBatch+ objects will
+probably help you to achieve your goals. You may want to refer to
+the respective help pages. Try \verb+help(Cel)+, \verb+help(AffyBatch)+.
+
+\section{How-to}
+ \subsection{Cel objects}
+The functions \verb+getNrowForCEL+ and \verb+getNcolForCEL+ are assumed to return
+the number of rows and the number of columns in the \verb+.CEL+ file respectively
+
+You will also need to have access to the $X$ and $Y$ position for the probes in the
+{\verb .CEL} file. The functions \verb+getPosXForCel+ and \verb+getPosYForCEL+
+are assumed to return the $X$ and $Y$ positions respectively. The corresponding
+probe intensities are assumed to be returned by the function \verb+getIntensitiesForCEL+.
+
+If you stored {\bf all} the $X$ and $Y$ values that were in the \verb+.CEL+, the
+functions verb+getNrowForCEL+ and \verb+getNcolForCEL+ can written:
+<<<>>=
+getNrowForCEL <- function() max(getPosXForCEL())
+getNcolForCEL <- function() max(getPosYForCEL())
+@ 
+
+You will also need the name for the corresponding \verb+.CDF+ (although you will
+probably no need the \verb+.CDF+ file itself, the cdf packages available for download
+will probably be enough).
+
+\begin{Sinput}
+import.celfile <- function(celfile, ...) {
+
+  cel.nrow <- getNrowForCEL(celfile)
+  cel.ncol <- getNcolForCEL(celfile)
+  x <- matrix(NA, nr=cel.nrow, nc=cel.ncol)
+
+  cel.intensities <- getIntensitiesForCEL(celfile)
+
+  cel.posx <- getPosXForCEL(celfile) # +1 if indexing starts at 0 (like in .CEL)
+  cel.posy <- getPosYForCEL(celfile) # idem
+
+  x[cbind(cel.posx, cel.posy)] <- cel.intensities
+
+  mycdfName <- whatcdf("aCELfile.CEL")
+
+  myCel <- new("Cel", exprs=x, cdfName=mycdfName)
+
+  return(myCel)
+}
+\end{Sinput}
+
+The function \verb+import.celfile+ can now replace the function \verb+read.celfile+
+in the \verb+affy+ package
+
+
+ \subsection{AffyBatch objects}
+
+(scratch)
+the use of \verb+...+ should make you able to override the function
+read.celfile by a hack like:
+\begin{Sinput}
+read.celfile <- import.celfile
+\end{Sinput}
+The function \verb+read.affybatch+ should now function using your \verb+import.celfile+
+
+
+\end{document}

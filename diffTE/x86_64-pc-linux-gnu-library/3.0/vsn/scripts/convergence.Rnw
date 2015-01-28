@@ -1,0 +1,145 @@
+%\VignetteIndexEntry{vsn - verifying and assessing the performance with simulated data}
+%\VignetteDepends{Biobase,vsn}
+%\VignetteKeywords{Expression Analysis}
+%\VignettePackage{vsn}
+
+\documentclass[11pt]{article}
+\usepackage[margin=2.5cm,noheadfoot]{geometry}
+
+%------------------------------------------------------------
+% newcommand
+%------------------------------------------------------------
+\newcommand{\Rfunction}[1]{\texttt{#1}}
+\newcommand{\Robject}[1]{\texttt{#1}}
+\newcommand{\Rpackage}[1]{\textit{#1}}
+\newcommand{\Rfunarg}[1]{\textit{#1}}
+\newcommand{\Rclass}[1]{\textit{#1}}
+
+\begin{document}
+\SweaveOpts{eps=false}
+
+%------------------------------------------------------------------------
+\title{How to assess the accuracy of vsn with simulated data}
+%------------------------------------------------------------------------
+\author{Wolfgang Huber}
+\maketitle
+<<no.nonsense,eval=FALSE,echo=FALSE,results=hide>>=
+q(save="no")
+@
+
+The purpose of this vignette is to demonstrate that the software in
+\Rpackage{vsn} actually does what it is supposed to do according to the
+mathematical theory. And to see \textit{how fast} (or slow, depending on your
+point of view) and \textit{how accurately} it does that.
+
+There are two functions \Rfunction{sagmbSimulateData} and
+\Rfunction{sagmbAssess} that can be used to generate simulated data and assess
+the difference between the 'true' and 'estimated' data calibration and
+transformation by \Rpackage{vsn}. This vignette demonstrates some examples. 
+Reference~\cite{HuberSAGMB2003} describes in more detail (i) the
+simulation model, (ii) the assessment strategy, and (iii) a comprehensive
+suite of assessments with respect to the number of probes \Robject{n}, the
+number of arrays \Robject{d}, the fraction of differentially expressed genes
+\Robject{de}, and the fraction of up-regulated genes \Robject{up}.
+<<setup,results=hide>>=
+library(vsn)
+set.seed(1)
+
+sim <- function(..., nrrep=16) {
+  callpar <- list(...)
+  ll      <- sapply(callpar, length)
+  stopifnot(ll[1]>1, all(ll[-1]==1))
+  res  <- matrix(NA, nrow=nrrep, ncol=ll[1])
+  simpar <- append(callpar, list(n=4096, d=2, de=0, up=0.5, nrstrata=1)) ## default parameters
+  simpar <- simpar[!duplicated(names(simpar))]
+  for (i in 1:ll[1]) {
+    simpar[[1]] <- callpar[[1]][i]
+    for (r in 1:nrrep) {
+      sim <- do.call("sagmbSimulateData", simpar)
+      ny  <- vsn(sim$y, strata=sim$strata, verbose=FALSE)
+      ## plot(exprs(ny)[, 1:2], pch=16, col=1+preproc(description(ny))$vsnTrimSelection)
+      res[r, i] <- sagmbAssess(exprs(ny), sim)
+    }
+  }
+  return(res)
+}
+@
+
+The following plot shows the estimation error for the transformation (i.\,e.\
+the root mean squared difference between true and estimated transformed data)
+as a function of the number of genes $n$. If \Rfunction{vsn} works correctly,
+the estimation error should decrease roughly as $n^{-1/2}$.
+<<n1, fig=TRUE>>=
+n   <- 1000*2^seq(-2, 5)
+res <- sim(n=n)
+matplot(n, t(res), pch=20, log="xy", col="#909090", main="n")
+lines(n, colMeans(res), col="blue")
+@
+
+\newpage
+The same with 8 strata:
+<<n2, fig=TRUE>>=
+n   <- 1000*2^seq(1, 5)
+res <- sim(n=n, nrstrata=8)
+matplot(n, t(res), pch=20, log="xy", col="#909090", main="n (8 strata)")
+lines(n, colMeans(res), col="blue")
+@
+
+\newpage
+The following plot shows the estimation error as a function of the number of
+samples $d$. Initially, it also decreases slightly with $d$, but eventually
+reaches a plateau. This is because the number of parameters that need to be
+estimated is proportional to $d$, so the "number of data points per parameter"
+is constant in this plot (above, it was increasing proportionally to $n$).
+<<d, fig=TRUE>>=
+d   <- 2^seq(1, 5)
+res <- sim(d=d)
+matplot(d, t(res), pch=20, log="xy", col="#909090", main="d")
+lines(d, colMeans(res), col="blue")
+@
+
+\newpage
+Here, we see the estimation error as a function of the number of strata. It
+should increase, since for each stratum, we need to estimate separate
+parameters, and if the overall number of probes does not change, more strata
+means less and less data per parameters.
+<<nrstrata, fig=TRUE>>=
+nrstrata <- 2^seq(0, 4)
+res <- sim(nrstrata=nrstrata)
+matplot(nrstrata, t(res), pch=20, log="xy", col="#909090", main="nrstrata")
+lines(nrstrata, colMeans(res), col="blue")
+@
+
+\newpage
+\Robject{de} is the fraction of differentially expressed genes.
+<<de, fig=TRUE>>=
+de  <- (0:6)/10
+res <- sim(de=de)
+matplot(de, t(res), pch=20, col="#909090", main="de")
+lines(de, colMeans(res), col="blue")
+@
+
+\newpage
+\Robject{up} is the fraction of up-regulated genes among the differentially
+expressed genes.  The best results are obtained for \Robject{up}$\approx0.5$,
+while the estimation goes up the more unbalanced the situation becomes.
+<<up, fig=TRUE>>=
+up  <- (0:8)/8
+res <- sim(up=up, de=0.2)
+matplot(up, t(res), pch=20, col="#909090", main="up")
+lines(up, colMeans(res), col="blue")
+@
+\begin{thebibliography}{10}
+
+\bibitem{HuberSAGMB2003}
+W. Huber, A. von Heydebreck, H. {S\"ultmann}, A. Poustka, and M. Vingron.
+\newblock Parameter estimation for the calibration and variance stabilization 
+of microarray data.
+\newblock \textit{Statistical Applications in Genetics and Molecular Biology}, 
+Vol. 2: No. 1, Article 3, 2003. 
+http://www.bepress.com/sagmb/vol2/iss1/art3
+
+\end{thebibliography}
+
+\end{document}
+

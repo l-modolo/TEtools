@@ -1,0 +1,213 @@
+useDynLib(GenomicRanges)
+
+import(methods)
+
+import(utils)  # for as.roman()
+
+importFrom(stats, setNames)
+
+import(BiocGenerics)
+
+import(IRanges)
+
+exportClasses(
+    Constraint, ConstraintORNULL,
+    Seqinfo,
+    GenomicRanges, GenomicRangesORmissing, GRanges, GRangesList, GIntervalTree,
+    GenomicRangesORGRangesList,
+    GAlignments, GAlignmentPairs, GAlignmentsList,
+    GappedAlignments, GappedAlignmentPairs,  # old names
+    SummarizedExperiment, Assays,
+    GenomicRangesList, SimpleGenomicRangesList
+)
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### Export S3 methods
+###
+
+S3method(duplicated, GenomicRanges)
+
+### We also export them thru the export() directive so that (a) they can be
+### called directly, (b) tab-completion on the name of the generic shows them,
+### and (c) methods() doesn't asterisk them.
+export(
+    duplicated.GenomicRanges
+)
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### Export S4 methods for generics not defined in GenomicRanges
+###
+
+exportMethods(
+    length,
+    names, "names<-",
+    "dimnames<-",
+    "[", "[<-", "[[", "[[<-", "$", "$<-",
+    as.data.frame,
+    coerce,
+    c,
+    cbind,
+    rbind,
+    show,
+    "==", "<=",
+    duplicated, match, "%in%",
+    order, sort, rank,
+    union, intersect, setdiff,
+    start, end,
+    split, unlist,
+    range,
+    Ops,
+    merge,
+    updateObject,
+    strand, "strand<-",
+
+    ## Generics defined in IRanges:
+    elementMetadata, "elementMetadata<-",
+    mcols, "mcols<-",
+    values, "values<-",
+    splitAsListReturnedClass,
+    width, "start<-", "width<-", "end<-",
+    compare,
+    ranges, "ranges<-",
+    map,
+    ngap,
+    score,
+    shift, narrow, flank, resize, promoters, restrict,
+    reduce, gaps, disjoin, isDisjoint, disjointBins,
+    punion, pintersect, psetdiff, pgap,
+    findOverlaps, countOverlaps, overlapsAny, subsetByOverlaps,
+    precede, follow, nearest, distance, distanceToNearest,
+    encodeOverlaps,
+    coverage
+)
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### Export non-generic functions
+###
+
+export(
+    phicoef,
+
+    validCigar,
+    CIGAR_OPS,
+    explodeCigarOps, explodeCigarOpLengths,
+    cigarToRleList,
+    splitCigar,
+    cigarRangesAlongReferenceSpace,
+    cigarRangesAlongQuerySpace,
+    cigarRangesAlongPairwiseSpace,
+    extractAlignmentRangesOnReference,
+    cigarToIRanges,
+    cigarToIRangesListByAlignment, cigarToIRangesListByRName,
+    cigarWidthAlongReferenceSpace,
+    cigarWidthAlongQuerySpace,
+    cigarWidthAlongPairwiseSpace,
+    cigarToWidth, cigarToQWidth,
+    cigarNarrow, cigarQNarrow,
+    cigarOpTable, cigarToCigarTable, summarizeCigarTable,
+    queryLoc2refLoc, queryLocs2refLocs,
+
+    makeSeqnameIds,
+    Seqinfo,
+    GRanges, GRangesList, GenomicRangesList, GIntervalTree, 
+    .DollarNames.GenomicRanges,
+    makeGRangesFromDataFrame,
+    makeGRangesListFromFeatureFragments,
+    tileGenome,
+    makeGAlignmentsListFromFeatureFragments,
+    GAlignments, readGAlignments,
+    GAlignmentPairs, readGAlignmentPairs,
+    GappedAlignments, readGappedAlignments,  # old names
+    GappedAlignmentPairs, readGappedAlignmentPairs,  # old names
+    GAlignmentsList, readGAlignmentsList,
+    flipQuery,
+    selectEncodingWithCompatibleStrand,
+    extractQueryStartInTranscript,
+    countCompatibleOverlaps,
+    Union, IntersectionNotEmpty, IntersectionStrict,
+
+    keepSeqlevels, dropSeqlevels, renameSeqlevels, restoreSeqlevels
+)
+
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### Export S4 generics defined in GenomicRanges + export corresponding
+### methods
+###
+
+export(
+    ## constraint.R:
+    #constraint, "constraint<-",
+    checkConstraint,
+
+    ## seqinfo.R:
+    seqinfo, "seqinfo<-",
+    seqnames, "seqnames<-",
+    seqlevels, "seqlevels<-",
+    sortSeqlevels,
+    seqlevelsInUse,
+    seqlevels0,
+    seqlengths, "seqlengths<-",
+    isCircular, "isCircular<-",
+    genome, "genome<-",
+    seqnameStyle, "seqnameStyle<-",
+
+    ## GAlignments-class.R:
+    rname, "rname<-", cigar, qwidth, qnarrow,
+    grglist, granges, introns, rglist,
+
+    ## GAlignmentPairs-class.R:
+    first, last, left, right, isProperPair,
+
+    ## SummarizedExperiment-class.R:
+    SummarizedExperiment,
+    exptData, "exptData<-",
+    rowData, "rowData<-",
+    colData, "colData<-",
+    assays, "assays<-",
+    assay, "assay<-",
+
+    ## summarizeOverlaps.R:
+    summarizeOverlaps,
+
+    ## encodeOverlaps-methods.R:
+    isCompatibleWithSplicing, isCompatibleWithSkippedExons,
+    extractSteppedExonRanks, extractSpannedExonRanks, extractSkippedExonRanks,
+    findCompatibleOverlaps,
+
+    ## findSpliceOverlaps-methods.R:
+    findSpliceOverlaps
+)
+
+### Exactly the same list as above.
+exportMethods(
+    #constraint, "constraint<-",
+    checkConstraint,
+    seqinfo, "seqinfo<-",
+    seqnames, "seqnames<-",
+    seqlevels, "seqlevels<-",
+    sortSeqlevels,
+    seqlevelsInUse,
+    seqlengths, "seqlengths<-",
+    isCircular, "isCircular<-",
+    genome, "genome<-",
+    seqnameStyle, "seqnameStyle<-",
+    rname, "rname<-", cigar, qwidth, qnarrow,
+    grglist, granges, introns, rglist,
+    first, last, left, right, isProperPair,
+    SummarizedExperiment,
+    exptData, "exptData<-",
+    rowData, "rowData<-",
+    colData, "colData<-",
+    assays, "assays<-",
+    assay, "assay<-",
+    summarizeOverlaps,
+    isCompatibleWithSplicing, isCompatibleWithSkippedExons,
+    extractSteppedExonRanks, extractSpannedExonRanks, extractSkippedExonRanks,
+    findCompatibleOverlaps,
+    findSpliceOverlaps
+)
+

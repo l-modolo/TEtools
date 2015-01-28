@@ -1,0 +1,893 @@
+%\VignetteIndexEntry{GenomicRanges HOWTOs}
+%\VignetteDepends{GenomicRanges, Rsamtools, pasillaBamSubset, TxDb.Dmelanogaster.UCSC.dm3.ensGene, AnnotationHub, DESeq, edgeR, TxDb.Hsapiens.UCSC.hg19.knownGene, GenomicFeatures, Biostrings, BSgenome.Hsapiens.UCSC.hg19, KEGG.db, KEGGgraph, BSgenome.Scerevisiae.UCSC.sacCer2}
+%\VignetteKeywords{sequence, sequencing, alignments}
+%\VignettePackage{GenomicRanges}
+
+\documentclass{article}
+
+\usepackage[authoryear,round]{natbib}
+\bibliographystyle{plainnat}
+
+<<style, eval=TRUE, echo=FALSE, results=tex>>=
+BiocStyle::latex()
+@
+
+\title{\Biocpkg{GenomicRanges} HOWTOs}
+\author{Bioconductor Team}
+\date{Edited: October 2013; Compiled: \today}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+<<options, echo=FALSE>>=
+options(width=72)
+options("showHeadLines" = 3)
+options("showTailLines" = 3)
+@
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Introduction}
+
+This vignette is a collection of {\it HOWTOs}. Each {\it HOWTO} is
+a short section that demonstrates how to use the containers and
+operations implemented in the \Biocpkg{GenomicRanges} and related
+packages (\Biocpkg{IRanges}, \Biocpkg{GenomicFeatures},
+\Biocpkg{Rsamtools}, and \Biocpkg{Biostrings}) to perform a task
+typically found in the context of a high throughput sequence analysis.
+
+The HOWTOs are self contained, independent of each other, and can be
+studied and reproduced in any order.
+
+We assume the reader has some previous experience with \R{} and
+with basic manipulation of \Rcode{GRanges}, \Rcode{GRangesList}, \Rcode{Rle},
+\Rcode{RleList}, and \Rcode{DataFrame} objects. See the ``An Introduction
+to Genomic Ranges Classes'' vignette located in the \Biocpkg{GenomicRanges}
+package (in the same folder as this document) for an introduction to these
+containers.
+
+Additional recommended readings after this vignette are the ``Software for
+Computing and Annotating Genomic Ranges'' paper[\citet{Lawrence2013ranges}]
+and the ``Counting reads with \Rfunction{summarizeOverlaps}'' vignette
+located in the \Biocpkg{GenomicRanges} package (in the same folder as this
+document).
+
+To display the list of vignettes available in the \Biocpkg{GenomicRanges},
+use \Rcode{browseVignettes("GenomicRanges")}.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{How to read BAM files into \R{}}
+
+As sample data we use the \Biocpkg{pasillaBamSubset} data package which
+contains both a BAM file with single-end reads (untreated1\_chr4) and
+a BAM file with paired-end reads (untreated3\_chr4). Each file is a subset
+of chr4 from the "Pasilla" experiment. See ?\Biocpkg{pasillaBamSubset}
+for details.
+
+<<load, results=hide>>=
+library(GenomicRanges)
+library(Rsamtools)
+library(pasillaBamSubset)
+un1 <- untreated1_chr4() ## single-end reads
+@
+
+Several functions are available for reading BAM files into \R{}:
+
+\begin{verbatim}
+  scanBam()
+  readGAlignments()
+  readGAlignmentPairs()
+  readGAlignmentsList()
+\end{verbatim}
+
+\Rfunction{scanBam} is a low-level function that returns a list of lists
+and is not discussed further here. For details see ?\Rfunction{scanBam}.
+
+\subsection{Single-end reads}
+Single-end reads can be loaded with the \Rfunction{readGAlignments} function.
+
+<<readGAlignments>>=
+un1 <- untreated1_chr4()
+gal <- readGAlignments(un1)
+@
+
+Data subsets can be specified by genomic position, field names, or flag
+criteria in the \Rcode{ScanBamParam}. Here we input records that overlap 
+position 1 to 5000 on the negative strand with \Rcode{flag} and 
+\Rcode{cigar} as metadata columns.
+ 
+<<ScanBamParam>>=
+what <- c("flag", "cigar") 
+which <- GRanges("chr4", IRanges(1, 5000)) 
+flag <- scanBamFlag(isMinusStrand = TRUE)
+param <- ScanBamParam(which=which, what=what, flag=flag)
+neg <- readGAlignments(un1, param=param)
+neg
+@
+
+Another approach to subsetting the data is to use \Rfunction{filterBam}.
+This function creates a new BAM file of records passing user-defined 
+criteria. See ?\Rfunction{filterBam} for details.
+
+\subsection{Paired-end reads}
+
+Paired-end reads can be loaded with \Rfunction{readGAlignmentPairs}
+or \Rfunction{readGAlignmentsList}. These functions use the same
+mate paring algorithm but output different objects.
+
+Let's start with \Rfunction{readGAlignmentPairs}:
+
+<<readGAlignmentPairs>>=
+un3 <- untreated3_chr4()
+gapairs <- readGAlignmentPairs(un3)
+@
+
+The \Robject{GAlignmentPairs} class holds only pairs; reads with no
+mate or with ambiguous pairing are discarded.
+Each list element holds exactly 2 records (a mated pair). Records
+can be accessed as the \Rcode{first} and\Rcode{last} segments in
+a template or as \Rcode{left} and \Rcode{right} alignments.
+See ?\Rfunction{GAlignmentPairs} for details.
+
+<<gapairs>>=
+gapairs
+@ 
+
+For \Rcode{readGAlignmentsList}, mate pairing is performed when \Rcode{asMates}
+is set to \Rcode{TRUE} on the \Rcode{BamFile} object, otherwise records are
+treated as single-end. 
+
+<<readGAlignmentsList>>=
+galist <- readGAlignmentsList(BamFile(un3, asMates=TRUE))
+@
+
+\Robject{GAlignmentsList} is a more general `list-like' structure
+that holds mate pairs as well as non-mates (i.e., singletons, records 
+with unmapped mates etc.) A \Rcode{mates} metadata column (accessed
+with \Rfunction{mcols}) indicates which records were paired and is set 
+on both the individual \Robject{GAlignments} and the outer list elements.
+
+<<galist>>=
+galist
+@
+
+Non-mated reads are returned as groups by QNAME and contain any number 
+of records. Here the non-mate groups range in size from 1 to 9.
+
+<<non_mates>>=
+non_mates <- galist[unlist(mcols(galist)$mates) == FALSE]
+table(elementLengths(non_mates))
+@
+
+\subsection{Iterating with \Rcode{yieldSize}}
+
+Large files can be iterated through in chunks by setting a \Rcode{yieldSize} 
+on the \Rcode{BamFile}.
+
+<<yieldSize>>=
+bf <- BamFile(un1, yieldSize=100000)
+@
+
+Iteration through a BAM file requires that the file be opened, repeatedly
+queried inside a loop, then closed. Repeated calls to 
+\Rfunction{readGAlignments} without opening the file first result
+in the same 100000 records returned each time.
+
+<<readGAlignments_by_chunk>>=
+open(bf)
+cvg <- NULL
+repeat {
+    chunk <- readGAlignments(bf)
+    if (length(chunk) == 0L)
+        break
+    chunk_cvg <- coverage(chunk)
+    if (is.null(cvg)) {
+        cvg <- chunk_cvg
+    } else {
+        cvg <- cvg + chunk_cvg
+    }
+}
+close(bf)
+cvg
+@
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{How to prepare a table of read counts for RNA-Seq differential
+         gene expression}
+
+Methods for RNA-Seq gene expression analysis generally require a table of
+counts that summarize the number of reads that overlap or `hit' a 
+particular gene. In this section we count with \Rcode{summarizeOverlaps}
+and create a count table from the results. 
+
+Other packages that provide read counting are \Biocpkg{Rsubread} and 
+\Biocpkg{easyRNASeq}. The \Biocpkg{parathyroidSE} package vignette 
+contains a workflow on counting and other common operations required for 
+differential expression analysis. 
+
+\subsection{Counting with \Rfunction{summarizeOverlaps}}
+
+As sample data we use \Biocpkg{pasillaBamSubset} which contains both
+a single-end BAM (untreated1\_chr4) and a paired-end BAM
+(untreated3\_chr4). Each file is a subset of chr4 from the "Pasilla" 
+experiment. See ?\Biocpkg{pasillaBamSubset} for details.
+
+<<load, results=hide>>=
+library(GenomicRanges)
+library(Rsamtools)
+library(pasillaBamSubset)
+un1 <- untreated1_chr4() ## single-end records
+@
+
+\Rcode{summarizeOverlaps} requires the name of a BAM file(s) and an
+annotation to count against. The annotation must match the genome 
+build the BAM records were aligned to. For the pasilla data this is 
+dm3 Dmelanogaster which is available as a \Bioconductor{} package. 
+Load the package and extract the exon ranges by gene.
+
+<<count_1>>=
+library(TxDb.Dmelanogaster.UCSC.dm3.ensGene)
+exbygene <- exonsBy(TxDb.Dmelanogaster.UCSC.dm3.ensGene, "gene")
+@
+
+\Rcode{summarizeOverlaps} automatically sets a \Rcode{yieldSize}
+on large BAM files and iterates over them in chunks. When reading
+paired-end data set the \Rcode{singleEnd} argument to FALSE.
+See ?\Rfunction{summarizeOverlaps} for details reguarding the
+count \Rcode{modes} and additional arguments. 
+
+<<count_2>>=
+se <- summarizeOverlaps(exbygene, un1, mode="IntersectionNotEmpty")
+@
+
+The return object is a \Rcode{SummarizedExperiment} with counts in 
+the \Rcode{assays} slot.
+
+<<count_3>>=
+class(se)
+head(table(assays(se)$counts))
+@
+
+The count vector is the same length as the annotation.
+
+<<count_4>>=
+identical(length(exbygene), length(assays(se)$counts))
+@
+
+The annotation is stored in the \Rcode{rowData} slot.
+
+<<count_5>>=
+rowData(se)
+@
+
+\subsection{Retrieving annotations from \Biocpkg{AnnotationHub}}
+
+When the annotation is not available as a \Rcode{GRanges} or a
+\Bioconductor{} package it may be available in \Rcode{AnnotationHub}.
+Create a `hub' and filter on Drosophila melanogaster.
+
+<<hub_1>>=
+library(AnnotationHub)
+hub <- AnnotationHub()
+filters(hub) <- list(Species="Drosophila melanogaster")
+@
+
+There are 87 files that match Drosophila melanogaster.
+
+<<hub_2>>=
+length(hub)
+head(names(hub))
+@
+
+Retrieve a dm3 file as a \Rcode{GRanges}. 
+
+<<hub_3>>=
+gr <- hub$goldenpath.dm3.database.ensGene_0.0.1.RData
+summary(gr)
+@
+
+The metadata fields contain the details of file origin and content.
+
+<<hub_4>>=
+names(metadata(gr)[[2]])
+metadata(gr)[[2]]$Tags
+@
+
+Split the GRanges by gene name to get a \Robject{GRangesList} of
+transcripts by gene.
+
+<<hub_5>>= 
+split(gr, gr$name)
+@
+
+Before performing overlap operations confirm that the seqlevels 
+(chromosome names) in the annotation match those in the BAM file. See 
+?\Rfunction{renameSeqlevels}, ?\Rfunction{keepSeqlevels} and 
+?\Rfunction{seqlevels} for examples of renaming seqlevels.
+
+\subsection{Count tables}
+
+Two popular packages for gene expression are \Biocpkg{DESeq} and 
+\Biocpkg{edgeR}. Tables of counts per gene are required for both and can be 
+easily created with a vector of counts. Here we use the counts from the 
+\Robject{SummarizedExperiment}.
+
+<<count_table>>=
+library(DESeq)
+deseq <- newCountDataSet(assays(se)$counts, rownames(colData(se)))
+library(edgeR)
+edger <- DGEList(assays(se)$counts, group=rownames(colData(se)))
+@
+
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{How to extract DNA sequences of gene regions}
+
+\subsection{DNA sequences for intron and exon regions of a single gene}
+
+DNA sequences for the introns and exons of a gene are essentially
+the sequences for the introns and exons for all known transcripts of
+a gene. The first task is to identify all transcripts associated
+with the gene of interest. Our sample gene is the human TRAK2
+which is involved in regulation of endosome-to-lysosome trafficking 
+of membrane cargo. The Entrez gene id is `66008'. 
+
+<<trak_1>>=
+trak2 <- "66008"
+@
+
+Load the UCSC `Known Gene' table annotation available as a
+\Bioconductor{} package.
+
+<<trak_2>>=
+library(TxDb.Hsapiens.UCSC.hg19.knownGene)
+txdb <- TxDb.Hsapiens.UCSC.hg19.knownGene
+@
+
+To get the transcripts associated with the trak2 gene we use the
+\Rfunction{transcriptsBy} function from the \Biocpkg{GenomicFeatures} 
+package. This returns a \Robject{GRangesList} of all transcripts
+grouped by gene. We are only interested in trak2 so we subset the 
+list on the trak2 gene id.
+
+<<trak_3>>=
+library(GenomicFeatures)
+txbygene <- transcriptsBy(txdb, by="gene")[trak2]
+txbygene
+@
+
+The transcript names corresponding to the trak2 gene will be used to 
+subset the extracted intron and exon regions. The \Rcode{txbygene} 
+object is a \Robject{GRangesList} and the transcript names are a 
+metadata column on the individual \Robject{GRanges}. To extract the 
+names we must first `flatten' or unlist \Rcode{txbygene}.
+
+<<trak_4>>=
+tx_names <- mcols(unlist(txbygene))$tx_name
+tx_names
+@
+
+Intron and exon regions are extracted with \Rfunction{intronsByTranscript} 
+and \Rfunction{exonsBy}. The resulting \Robject{GRangesLists} are
+subset on the trak2 transcript names. 
+
+Extract the intron regions ...
+
+<<trak_5>>=
+intronsbytx <- intronsByTranscript(txdb, use.names=TRUE)[tx_names]
+elementLengths(intronsbytx)
+@
+
+and the exon regions.
+
+<<trak_7>>=
+exonsbytx <- exonsBy(txdb, "tx", use.names=TRUE)[tx_names]
+elementLengths(exonsbytx)
+@
+
+Next we want the DNA sequences for these intron and exon regions.
+The \Rfunction{extractTranscriptsFromGenome} function in the 
+\Biocpkg{Biostrings} package will query a \Biocpkg{BSGenome} package 
+with a set of genomic positions and retrieve the DNA sequences. 
+
+<<trak_8>>=
+library(Biostrings)
+library(BSgenome.Hsapiens.UCSC.hg19)
+@
+
+Extract the intron sequences ...
+
+<<trak_9>>=
+intron_seqs <- extractTranscriptsFromGenome(Hsapiens, intronsbytx)
+intron_seqs
+@
+
+and the exon sequences.
+
+<<trak_10>>=
+exon_seqs <- extractTranscriptsFromGenome(Hsapiens, exonsbytx)
+exon_seqs
+@
+
+
+\subsection{DNA sequences for coding and UTR regions of genes associated 
+            with colorectal cancer}
+
+In this section we extract the coding and UTR sequences of genes involved
+in colorectal cancer. The workflow extends the ideas presented in the single 
+gene example and suggests an approach to identify disease-related genes.
+
+\subsubsection{Build a gene list}
+
+We start with a list of gene or transcript ids. If you do not have 
+pre-defined list one can be created with the \Biocpkg{KEGG.db} and 
+\Biocpkg{KEGGgraph} packages. Updates to the data in the \Biocpkg{KEGG.db} 
+package are no longer available, however, the resource is still useful for 
+identifying pathway names and ids. 
+
+Create a table of KEGG pathways and ids and search on the term `cancer'.
+
+<<cancer_1>>=
+library(KEGG.db)
+pathways <- toTable(KEGGPATHNAME2ID)
+pathways[grepl("cancer", pathways$path_name, fixed=TRUE),] 
+@
+
+Use the "05210" id to query the KEGG web resource (accesses the currently
+maintained data).
+
+<<cancer_2>>=
+library(KEGGgraph)
+dest <- tempfile()
+retrieveKGML("05200", "hsa", dest, "internal")
+@
+
+The suffix of the KEGG id is the Entrez gene id. The 
+\Rfunction{translateKEGGID2GeneID} simply removes the prefix leaving 
+just the Entrez gene ids.
+
+<<cancer_3>>=
+crids <- as.character(parseKGML2DataFrame(dest)[,1])
+crgenes <- unique(translateKEGGID2GeneID(crids))
+head(crgenes)
+@
+
+\subsubsection{Identify genomic coordinates}
+
+The list of gene ids is used to extract genomic positions of the regions 
+of interest. The Known Gene table from UCSC will be the annotation and
+is available as a \Bioconductor{} package.
+
+<<cancer_4>>=
+library(TxDb.Hsapiens.UCSC.hg19.knownGene)
+txdb <- TxDb.Hsapiens.UCSC.hg19.knownGene
+@
+
+If an annotation is not available as a \Bioconductor{} annotation package
+it may be available in \Biocpkg{AnnotationHub}. Additionally, there are
+functions in \Biocpkg{GenomicFeatures} which can retrieve data from UCSC and
+Ensembl to create a \Robject{TranscriptDb}. See 
+?\Rcode{makeTranscriptDbFromUCSC} for details.
+
+As in the single gene example we need to identify the transcripts 
+corresponding to each gene. The transcript id (or name) is used
+to isolate the UTR and coding regions of interest. This grouping of
+transcript by gene is also used to re-group the final sequence results.
+
+The \Rcode{transcriptsBy} function outputs both the gene and transcript
+identifiers which we use to create a map between the two. The 
+\Rcode{map} is a \Robject{CharacterList} with gene ids as names and 
+transcript ids as the list elements.
+
+<<cancer_5>>=
+txbygene <- transcriptsBy(txdb, "gene")[crgenes] ## subset on colorectal genes
+map <- relist(unlist(txbygene, use.names=FALSE)$tx_id, txbygene)
+map
+@
+
+Extract the UTR and coding regions.
+
+<<cancer_6>>=
+cds <- cdsBy(txdb, "tx")
+threeUTR <- threeUTRsByTranscript(txdb)
+fiveUTR <- fiveUTRsByTranscript(txdb)
+@
+
+Coding and UTR regions may not be present for all transcripts specified 
+in \Rcode{map}. Consequently, the subset results will not be the same 
+length. This length discrepancy must be taken into account when re-listing 
+the final results by gene.
+
+<<cancer_7>>=
+txid <- unlist(map, use.names=FALSE)
+cds <- cds[names(cds) %in% txid]
+threeUTR <- threeUTR[names(threeUTR) %in% txid]
+fiveUTR <- fiveUTR[names(fiveUTR) %in% txid]
+@
+
+Note the different lengths of the subset regions.
+
+<<cancer_8>>=
+length(txid) ## all possible transcripts
+length(cds)
+length(threeUTR)
+length(fiveUTR)
+@
+
+These objects are \Robject{GRangesList}s with the transcript id as the 
+outer list element. 
+
+<<cancer_9>>=
+cds
+@
+
+\subsubsection{Extract sequences from BSgenome}
+
+The \Rcode{BSgenome} packages contain complete genome sequences
+for a given organism.
+
+Load the \Rcode{BSgenome} package for homo sapiens.
+
+<<cancer_10>>=
+library(BSgenome.Hsapiens.UCSC.hg19)
+genome <- BSgenome.Hsapiens.UCSC.hg19
+@
+
+Use \Rfunction{extractTranscriptsFromGenome} to extract the UTR and coding 
+regions from the \Rcode{BSGenome}. This function retrieves the sequences 
+for an any \Robject{GRanges} or \Robject{GRangesList} (i.e., not just 
+transcripts like the name implies).
+
+<<cancer_11>>=
+threeUTR_seqs <- extractTranscriptsFromGenome(genome, threeUTR) 
+fiveUTR_seqs <- extractTranscriptsFromGenome(genome, fiveUTR) 
+cds_seqs <- extractTranscriptsFromGenome(genome, cds) 
+@
+
+The return values are \Robject{DNAStringSet} objects.
+
+<<cancer_12>>=
+cds_seqs
+@
+
+Our final step is to collect the coding and UTR regions (currently 
+organzied by transcript) into groups by gene id. The \Rfunction{split} 
+function splits the sequences in the \Robject{DNAStringSet} by the partition
+object. The partition object represents the number of transcript ranges 
+(defined as the width) in each gene id group. These widths are different for 
+each region because not all transcripts had a coding or 3' or 5' UTR region 
+defined. 
+
+<<cancer_13>>=
+lst3 <- split(threeUTR_seqs, PartitioningByWidth(sum(map %in% names(threeUTR))))
+lst5 <- split(fiveUTR_seqs, PartitioningByWidth(sum(map %in% names(fiveUTR))))
+lstc <- split(cds_seqs, PartitioningByWidth(sum(map %in% names(cds))))
+names(lst3) <- names(lst5) <- names(lstc) <- names(map)
+@
+
+There are 239 genes in \Rcode{map} each of which have 1 or more transcripts. 
+The table of element lengths shows how many genes have each number of
+transcripts. For example, 47 genes have 1 transcript, 48 genes have 2 etc.
+
+<<cancer_14>>=
+length(map)
+table(elementLengths(map))
+@
+
+The lists of DNA sequences all have the same length as \Rcode{map} but one or
+more of the element lengths may be zero. This would indicate that data were
+not available for that gene. The tables below show that there was at least
+1 coding region available for all genes (i.e., none of the element lengths
+are 0). However, both the 3' and 5' UTR results have element lengths of 0 
+which indicates no UTR data were available for that gene.
+
+<<cancer_15>>=
+table(elementLengths(lstc))
+table(elementLengths(lst3))
+names(lst3)[elementLengths(lst3) == 0L] ## genes with no 3' UTR data
+table(elementLengths(lst5))
+names(lst5)[elementLengths(lst5) == 0L] ## genes with no 5' UTR data
+@
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{How to create DNA consensus sequences for read group `families'}
+
+The motivation for this HOWTO comes from a study which explored the
+dynamics of point mutations. The mutations of interest exist with a range 
+of frequencies in the control group (e.g., 0.1\% - 50\%). PCR and sequencing 
+error rates make it difficult to identify low frequency events 
+(e.g., < 20\%).
+
+When a library is prepared with Nextera, random fragments are generated 
+followed by a few rounds of PCR. When the genome is large enough, reads 
+aligning to the same start position are likely descendant from the same 
+template fragment and should have identical sequences. 
+
+The goal is to elimininate noise by grouping the reads by common start 
+position and discarding those that do not exceed a certain threshold within 
+each family. A new consensus sequence will be created for each read group
+family.
+
+\subsection{Sort reads into groups by start position}
+
+Load the BAM file into a GAlignments object.
+
+<<cseq_1>>=
+library(Rsamtools)
+bamfile <- system.file("extdata", "ex1.bam", package="Rsamtools")
+param <- ScanBamParam(what=c("seq", "qual"))
+gal <- readGAlignmentsFromBam(bamfile, use.names=TRUE, param=param)
+@
+
+Use the \Rfunction{sequenceLayer} function to {\it lay} the query sequences
+and quality strings on the reference.
+
+<<cseq_2>>=
+qseq <- setNames(mcols(gal)$seq, names(gal))
+qual <- setNames(mcols(gal)$qual, names(gal))
+qseq_on_ref <- sequenceLayer(qseq, cigar(gal),
+                             from="query", to="reference")
+qual_on_ref <- sequenceLayer(qual, cigar(gal),
+                             from="query", to="reference")
+@
+
+Split by chromosome.
+
+<<cseq_3>>=
+qseq_on_ref_by_chrom <- splitAsList(qseq_on_ref, seqnames(gal))
+qual_on_ref_by_chrom <- splitAsList(qual_on_ref, seqnames(gal))
+pos_by_chrom <- splitAsList(start(gal), seqnames(gal))
+@
+
+For each chromosome generate one GRanges object that contains
+unique alignment start positions and attach 3 metadata columns
+to it: the number of reads, the query sequences, and the quality
+strings.
+
+<<cseq_4>>=
+gr_by_chrom <- lapply(seqlevels(gal),
+  function(seqname)
+  {
+    qseq_on_ref2 <- qseq_on_ref_by_chrom[[seqname]]
+    qual_on_ref2 <- qual_on_ref_by_chrom[[seqname]]
+    pos2 <- pos_by_chrom[[seqname]]
+    qseq_on_ref_per_pos <- split(qseq_on_ref2, pos2)
+    qual_on_ref_per_pos <- split(qual_on_ref2, pos2)
+    nread <- elementLengths(qseq_on_ref_per_pos)
+    gr_mcols <- DataFrame(nread=unname(nread),
+                          qseq_on_ref=unname(qseq_on_ref_per_pos),
+                          qual_on_ref=unname(qual_on_ref_per_pos))
+    gr <- GRanges(Rle(seqname, nrow(gr_mcols)),
+                  IRanges(as.integer(names(nread)), width=1))
+    mcols(gr) <- gr_mcols
+    seqlevels(gr) <- seqlevels(gal)
+    gr
+  })
+@
+
+Combine all the GRanges objects obtained in (4) in 1 big GRanges
+object:
+
+<<cseq_5>>=
+gr <- do.call(c, gr_by_chrom)
+seqinfo(gr) <- seqinfo(gal)
+@
+
+`gr' is a GRanges object that contains unique alignment start positions:
+
+<<cseq_6>>=
+gr[1:6]
+@
+
+Look at qseq\_on\_ref and qual\_on\_ref.
+
+<<cseq_7>>= 
+qseq_on_ref
+qual_on_ref
+@
+
+2 reads align to start position 13. Let's have a close look at their 
+sequences:
+
+<<cseq_8>>=
+mcols(gr)$qseq_on_ref[[6]]
+@
+
+and their qualities:
+
+<<cseq_9>>=
+mcols(gr)$qual_on_ref[[6]]
+@
+
+Note that the sequence and quality strings are those projected to the 
+reference so the first letter in those strings are on top of start 
+position 13, the 2nd letter on top of position 14, etc...
+
+\subsection{Remove low frequency reads}
+
+For each start position, remove reads with and under-represented sequence 
+(e.g. threshold = 20\% for the data used here which is low coverage).
+A unique number is assigned to each unique sequence. This will make
+future calculations easier and a little bit faster.
+
+<<cseq_10>>=
+qseq_on_ref <- mcols(gr)$qseq_on_ref
+tmp <- unlist(qseq_on_ref, use.names=FALSE)
+qseq_on_ref_id <- relist(match(tmp, tmp), qseq_on_ref)
+@
+
+Quick look at `qseq\_on\_ref\_id':
+It's an IntegerList object with the same length and "shape"
+as `qseq\_on\_ref'.
+
+<<cseq_11>>=
+qseq_on_ref_id
+@
+
+Remove the under represented ids from each list element of `qseq\_on\_ref\_id':
+
+<<cseq_12>>=
+qseq_on_ref_id2 <- endoapply(qseq_on_ref_id,
+    function(ids) ids[countMatches(ids, ids) >= 0.2 * length(ids)])
+@
+
+Remove corresponding sequences from `qseq\_on\_ref':
+
+<<cseq_13>>=
+tmp <- unlist(qseq_on_ref_id2, use.names=FALSE)
+qseq_on_ref2 <- relist(unlist(qseq_on_ref, use.names=FALSE)[tmp],
+                       qseq_on_ref_id2)
+@
+
+\subsection{Create a consensus sequence for each read group family}
+
+Compute 1 consensus matrix per chromosome:
+
+<<cseq_14>>=
+split_factor <- rep.int(seqnames(gr), elementLengths(qseq_on_ref2))
+qseq_on_ref2 <- unlist(qseq_on_ref2, use.names=FALSE)
+qseq_on_ref2_by_chrom <- splitAsList(qseq_on_ref2, split_factor)
+qseq_pos_by_chrom <- splitAsList(start(gr), split_factor)
+
+cm_by_chrom <- lapply(names(qseq_pos_by_chrom),
+    function(seqname)
+        consensusMatrix(qseq_on_ref2_by_chrom[[seqname]],
+                        as.prob=TRUE,
+                        shift=qseq_pos_by_chrom[[seqname]]-1,
+                        width=seqlengths(gr)[[seqname]]))
+names(cm_by_chrom) <- names(qseq_pos_by_chrom)
+@
+
+'cm\_by\_chrom' is a list of consensus matrices. Each matrix has 17 rows 
+(1 per letter in the DNA alphabet) and 1 column per chromosome position.
+
+<<cseq_15>>=
+lapply(cm_by_chrom, dim)
+@
+
+Compute the consensus string from each consensus matrix. We'll put "+" 
+in the strings wherever there is no coverage for that position, and "N" 
+where there is coverage but no consensus.
+
+<<cseq_16>>=
+cs_by_chrom <- lapply(cm_by_chrom,
+    function(cm) {
+        ## need to "fix" 'cm' because consensusString()
+        ## doesn't like consensus matrices with columns
+        ## that contain only zeroes (e.g., chromosome
+        ## positions with no coverage)
+        idx <- colSums(cm) == 0L
+        cm["+", idx] <- 1
+        DNAString(consensusString(cm, ambiguityMap="N"))
+    })
+@
+
+The new consensus strings.
+
+<<cseq_17>>=
+cs_by_chrom
+@
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{How to compute binned averages along a genome}
+
+In some applications, there is the need to compute the average of a 
+variable along a genome for a set of predefined fixed-width regions 
+(sometimes called "bins"). One such example is coverage.
+Coverage is an \Robject{RleList} with one list element per
+chromosome. Here we simulate a coverage list.
+
+<<bim_1>>=
+library(BSgenome.Scerevisiae.UCSC.sacCer2)
+set.seed(22)
+cov <- RleList(
+    lapply(seqlengths(Scerevisiae),
+           function(len) Rle(sample(-10:10, len, replace=TRUE))),
+    compress=FALSE)
+head(cov, 3)
+@
+
+Use the \Rfunction{tileGenome} function to create a set of bins along
+the genome.
+
+<<bin_2>>=
+bins1 <- tileGenome(seqinfo(Scerevisiae), tilewidth=100,
+                    cut.last.tile.in.chrom=TRUE)
+@
+
+We define the following function to compute the binned average of a
+numerical variable defined along a genome.
+
+\begin{verbatim}
+Arguments:
+  'bins': a GRanges object representing the genomic bins.
+       Typically obtained by calling tileGenome() with
+       'cut.last.tile.in.chrom=TRUE'.
+  'numvar': a named RleList object representing a numerical
+       variable defined along the genome covered by 'bins', which
+       is the genome described by 'seqinfo(bins)'.
+  'mcolname': the name to give to the metadata column that will
+       contain the binned average in the returned object.
+\end{verbatim}
+
+The function returns `bins' with an additional metadata column named 
+`mcolname' containing the binned average.
+
+<<bin_3>>=
+binnedAverage <- function(bins, numvar, mcolname)
+{
+    stopifnot(is(bins, "GRanges"))
+    stopifnot(is(numvar, "RleList"))
+    stopifnot(identical(seqlevels(bins), names(numvar)))
+    bins_per_chrom <- split(ranges(bins), seqnames(bins))
+    means_list <- lapply(names(numvar),
+        function(seqname) {
+            views <- Views(numvar[[seqname]],
+                           bins_per_chrom[[seqname]])
+            viewMeans(views)
+        })
+    new_mcol <- unsplit(means_list, as.factor(seqnames(bins)))
+    mcols(bins)[[mcolname]] <- new_mcol
+    bins
+}
+@
+
+Compute the binned average for `cov':
+
+<<bin_4>>=
+bins1 <- binnedAverage(bins1, cov, "binned_cov")
+bins1
+@
+
+The bin size can be modified with the \Rcode{tilewidth} argument
+to \Rfunction{tileGenome}. For additional examples see
+?\Rfunction{tileGenome}.
+
+\section{Session Information}
+
+<<SessionInfo, echo=FALSE>>=
+sessionInfo()
+@
+
+\bibliography{GenomicRanges}
+
+\end{document}

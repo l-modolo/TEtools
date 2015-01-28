@@ -1,0 +1,30 @@
+class:vsn               Class to contain result of a vsn fit
+justvsn                 Wrapper functions for vsn
+kidney                  Intensity data for 1 cDNA slide with two
+                        adjacent tissue samples from a nephrectomy
+                        (kidney)
+logLik-methods          Calculate the log likelihood and its gradient
+                        for the vsn model
+lymphoma                Intensity data for 8 cDNA slides with CLL and
+                        DLBL samples from the Alizadeh et al. paper in
+                        Nature 2000
+meanSdPlot              Plot row standard deviations versus row means
+normalize.AffyBatch.vsn
+                        Wrapper for vsn to be used as a normalization
+                        method with expresso
+predict,vsn-method      Apply the vsn transformation to data
+sagmbSimulateData       Simulate data and assess vsn's parameter
+                        estimation
+scalingFactorTransformation
+                        The transformation that is applied to the
+                        scaling parameter of the vsn model
+vsn                     Variance stabilization and calibration for
+                        microarray data.
+vsn-package             vsn
+vsn2                    Fit the vsn model
+vsnInput                Class to contain input data and parameters for
+                        vsn functions
+vsnPlotPar              Plot trajectories of calibration and
+                        transformation parameters for a vsn fit
+vsnh                    A function that transforms a matrix of
+                        microarray intensities.

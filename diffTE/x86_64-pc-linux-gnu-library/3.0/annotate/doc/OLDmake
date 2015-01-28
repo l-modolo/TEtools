@@ -1,0 +1,4 @@
+chromLocs.dvi: chromLocs.tex
+	latex chromLocs
+	latex chromLocs
+

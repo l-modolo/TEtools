@@ -1,0 +1,354 @@
+%
+% NOTE -- ONLY EDIT Biobase.Rnw!!!
+% Biobase.tex file will get overwritten.
+%
+%\VignetteIndexEntry{Biobase Primer}
+%\VignetteDepends{}
+%\VignetteKeywords{Expression Analysis}
+%\VignettePackage{Biobase}
+\documentclass{article}
+
+\usepackage{hyperref}
+
+\textwidth=6.2in
+\textheight=8.5in
+%\parskip=.3cm
+\oddsidemargin=.1in
+\evensidemargin=.1in
+\headheight=-.3in
+
+\newcommand{\Rfunction}[1]{{\texttt{#1}}}
+\newcommand{\Robject}[1]{{\texttt{#1}}}
+\newcommand{\Rpackage}[1]{{\textsf{#1}}}
+\newcommand{\Rmethod}[1]{{\texttt{#1}}}
+\newcommand{\Rfunarg}[1]{{\texttt{#1}}}
+\newcommand{\Rclass}[1]{{\textit{#1}}}
+
+
+
+\newcommand{\classdef}[1]{%
+  {\em #1}
+}
+%%FIXME: Jianhua, can you go through the current class definitions for
+%%exprSet and phenoData etc and update the documentation here accordingly.
+
+\begin{document}
+\title{Textual Description of Biobase}
+\maketitle
+
+\section*{Introduction}
+
+Biobase is part of the Bioconductor project. It is meant to be the
+location of any reusable (or non--specific) functionality.
+Biobase will be required by most of the other Bioconductor libraries.
+
+\section{Data Structures}
+
+Part of the Biobase functionality is the standardization of data
+structures for genomic data.
+Currently we have designed some data structures to handle microarray
+data.
+
+The \classdef{exprSet} class has the following slots:
+\begin{description}
+\item[exprs] A matrix of expression levels. Arrays are columns and
+  genes are rows.
+\item[se.exprs] A matrix of standard errors for expressions if they
+                          are available. It will have length 0 if they
+                          are not.
+\item[phenoData] An object of class \verb+phenoData+ that contains
+  phenotypic and/or experimental data.
+\item[description] A description of the experiment (object of class MIAME)
+\item[annotation] A character string indicating the base name for the
+  associated annotation.
+\item[notes] A set of notes describing aspects or features of the data,
+  the analysis, processing done, etc.
+\end{description}
+
+These data are extremely large and complex. To deal with them
+effectively we will need better tools for combining data and
+documentation. The \verb+exprSet+ class represents an initial attempt
+by the Bioconductor project to provide better tools for documenting
+and handling these large and complex data sets.
+
+The expression data represent experimentally derived data. In most
+cases these data will benefit from making use of biologically relevant
+meta-data. The meta-data are very large and diverse. In order to
+facilitate interactions and explorations we have taken the approach
+of constructing a specialized meta-data package for each chip or instrument.
+Many of these packages are available from the Bioconductor web site.
+These packages contain information such as the gene name, symbol and
+chromosomal location. There are other meta-data packages that contain
+the information that is provided by other initiatives such as GO and
+KEGG. These data can then be linked to the \verb+exprSet+ via the
+\verb+annotation+ slot.
+
+The \textit{annotate} package provides basic data manipulation tools
+for the meta-data packages.
+
+The \texttt{phenoData} class has the following slots:
+\begin{description}
+\item[pData] A dataframe where the rows are cases and the columns are
+  variables.
+\item[varLabels] A list of labels and descriptions for the variables
+  represented by the columns of \verb+pData+.
+\item[varMetaData] A \Rclass{data.frame} defining meta-data for the
+  variables contained in the \Robject{pData} slot.
+\end{description}
+
+Instances of this class are essentially \verb+data.frame+'s with some
+additional documentation on the variables stored in the
+\verb+varLabels+ and \Robject{varMetaData} slots.
+
+%%FIXME: does this currently exist? It should be easy to require that
+%%the names of the pData data.frame are the same, and in the same
+%%order as the column names of the exprs
+A mechanism for ensuring that the elements of the \verb+phenoData+
+slot of an instance of \verb+exprSet+ are in the same order as the
+columns of the \verb+exprs+ array is needed. It is important that these be
+properly aligned since analyses will require this and automatic tools
+for checking will probably be better than ad hoc ones.
+
+In addition to the class definitions a number of special methods (or
+functions) have been defined to operate on instances of these classes.
+Some particular attention has been paid to subsetting operations.
+Instances of both \verb+phenoData+ and \verb+exprSet+ are closed under
+subsetting operations.
+That is, any subset of one of these objects retains its class.
+There are also specialized print methods for objects of both classes.
+
+We consider an instance of an \verb+exprSet+ to be an expression array
+with some additional information. Thus there are two subscripts, one
+for the rows and one for the columns.
+For that reason subsetting works in the following ways:
+\begin{itemize}
+\item If the first subscript is given then the appropriate subset
+  of rows from \verb+exprs+ and \verb+se.exprs+ is taken. All the data
+  in \verb+phenoData+ is propagated since no subset of cases was made.
+\item If the second subscript is given then the appropriate set of
+  columns from \verb+exprs+ and \verb+se.exprs+ is taken. At the same
+  time the corresponding set of {\em rows} of \verb+phenoData+ are
+  taken.
+\end{itemize}
+
+\subsection{An exprSet Vignette}
+
+In the data directory for Biobase there is a small anonymized data
+set. It consists of expression level data for 500 genes on 26
+patients. The data can be accessed with the command
+\verb+data(geneData)+.
+There are three artificial covariates provided as well.
+These can be accessed using \verb+data(geneCovariate)+ once the Biobase
+library is attached.
+
+%%FIXME: is there a better way to do this?
+The following vignette shows how to read in these data and to create
+an instance of the \verb+exprSet+ class using those data.
+The first step is to create an object of \verb+phenoData+ calss.   
+This object is used to store the phenotype data.  
+We will use the example data frame \verb+geneCovariate+ to create such an object.  
+
+<<R.hide, echo=F, results=hide>>=
+library(Biobase)
+@
+
+%%<<R>>=
+%%data(geneCov)
+%%data(geneData)
+%%covN <- list(cov1 = "Covariate 1; 2 levels",
+%%             cov2 = "Covariate 2; 2 levels",
+%%             cov3 = "Covariate 3; 3 levels")
+%%
+%%pD <- new("phenoData", pData=geneCov, varLabels=covN)
+%%eSet <- new("exprSet", exprs=geneData, phenoData=pD)
+%%
+%%@
+
+<<R.phenoData>>=
+data(geneCovariate)
+head(geneCovariate)
+
+phenoD <- new("phenoData", pData=geneCovariate,
+              varLabels=list("sex"="Female/Male","type"="Case/Control","score"="Testing Score")
+              )
+phenoD
+@ 
+
+We also need a \verb+MIAME+ object to represent the background information, such as the names of the experimenter and laboratory, for this data set.
+
+<<R.MIAME>>=
+descr <- new("MIAME",
+             name="Pierre Fermat",
+             lab="Francis Galton Lab",
+             contact="pfermat@lab.not.exist",
+             title="Smoking-Cancer Experiment",
+             abstract="An example object of expression set (exprSet) class",
+             url="www.lab.not.exist",
+             other=list(
+               notes="An example object of expression set (exprSet) class")
+             )
+descr
+@ 
+
+Moreover, we need a \verb+data.frame+ object to group the reporters (probes) at this data set (chip).  
+The definition of probe types is applied from \textit{Affymetrix GeneChip Expression Analysis Data Analysis Fundamentals} (\url{http://www.affymetrix.com/Auth/support/downloads/manuals/data_analysis_fundamentals_manual.pdf}), and the result is stored in the \verb+data.frame+ object \Robject{reporter}.  This is a one-column data frame.  The rows represent the probe ids in the data set, and the values in the data frame are the predefined types associated with each probe.  
+
+<<R.reporterInfo>>=
+data(reporter)
+head(reporter)
+@ 
+
+The data frame \Robject{geneData}, containing 500 probes and 26 samples, is a subset of real expression data from an Affymetrix U95v2
+chip. The \Robject{seD} is a \Rclass{matrix} object containing the standard errors of \Robject{geneData}.  Finaly, we can put all objects together to create the \verb+exprSet+ object.  
+
+<<R.exSet>>=
+data(geneData)
+data(seD)
+exSet <- new("exprSet",
+             exprs       = geneData,
+             se.exprs    = seD,
+             phenoData   = phenoD,
+             annotation  = "hgu95av2",
+             description = descr,
+             notes       = descr@other$notes,
+             reporterInfo = reporter
+             )
+
+exSet
+@ 
+
+If instead, you have the data stored in files, e.g. \texttt{.csv}
+files and want to read it in using \Rfunction{read.table} you will
+need to do some conversion. \Rfunction{read.table} reads data into a
+\Robject{data.frame}, and this is fine for the phenotypic data, but
+not for the expression data. You will need to convert the
+\Robject{data.frame} into a matrix. The code example gives a short
+example of the commands that you would need to execute if you have the
+expression data stored in a file named \texttt{myexprs.csv} and the
+phenotypic data in a file named \texttt{mycovs.csv}.
+
+\begin{verbatim}
+
+ myExprs = read.csv("myexprs.csv")
+ myExprsmat = as.matrix(myExprs)
+ myCovs = read.csv("mycovs.csv")
+
+ if( ncol(myExprsmat) != nrow(myCovs) )
+   print("ERROR: these should be the same")
+
+\end{verbatim}
+
+You should probably also check to ensure that you have the appropriate
+samples names used as row names for \Robject{myCovs} and as column
+names for \Robject{myExprsmat}, and they must be in the same order.
+So, again some pseudo-code that gives the essential ingredients is
+given next. If you are unclear on the difference between a
+\Robject{matrix} and a \Robject{data.frame} then you should consult
+one of the very many introductory texts on using R as well as the
+manual pages and documents that come with R.
+
+\begin{verbatim}
+
+  if( !all.equal( row.names(myCovs), dimnames(myExprsmat)[[2]] ) )
+    print("ERROR: samples names are wrong")
+
+\end{verbatim}
+
+
+Now, we are almost ready to create an instance of an \Robject{exprSet}
+object. The missing piece is a list of descriptions for the covariates
+that constitute the phenotypic data. Suppose that we have two
+variables, one the age of the patient in years and the other the
+particular translocation they are known to have. And suppose that in
+the \Robject{data.frame} \Robject{myCovs} the column names are
+\texttt{age} and \texttt{translocation}. Then we could make up the
+covariate descriptions as follows.
+
+\begin{verbatim}
+ covDesc = list(age="age of the patient in years",
+    translocation="known translocation")
+\end{verbatim}
+
+The purpose of this level of documentation is to help others who might
+want to re-analyze your data, or you, if at some time in the future
+you need to go back and see what was done. By carefully annotating the
+data, in a self-describing way, you increase the chances that you will
+understand what was done. Below is the simplest form for creating an
+\Robject{exprSet}. We note that typically you would fill in more
+details, like the name of the chip used and some additional data
+describing the experiment itself.
+
+\begin{verbatim}
+myphenoData = new("phenoData", pData=myCovs, varLabels=covDesc)
+
+myEset = new("exprSet", exprs=myExprsmat, phenoData=myphenoData)
+
+\end{verbatim}
+
+
+\section{Aggregate}
+
+When performing an interative computation such as cross--validation or
+bootstrapping it is often useful to be able to aggregate certain intermediate
+results.
+The \verb+Aggregate+ functions (and soon the Aggregate class) provide
+some simple tools for doing this.
+
+The strategy employed is to maintain the summary statistics in an
+environment. This is passed to the iterative function. It does not
+need to be returned since environments have a {\em
+  pass--by--reference} semantic. Once the function has finished the
+environment can be queried for the summary statistics.
+
+One simple task that people often want to carry out is to determine in
+a cross--validation calculation which genes are selected the most
+often. In some sense these genes may form a more stable basis for
+inference.
+Achieving that using an Aggregator is very straight forward.
+
+At each iteration we will pass the names of the selected genes to the
+Aggregator. It has two functions, one for initializing and one for
+updating (or aggregating). The aggregator also has an environment.
+This environment stores the data that is being aggregated.
+
+For our cross--validation example the process goes as follows:
+\begin{enumerate}
+\item At each iteration Aggregate is called with the list of genes
+  selected.
+\item For each gene in that list we check to see if it was selected
+  before.
+  \begin{enumerate}
+  \item If not then \verb+initfun+ is called with that gene name.
+        The value returned by \verb+initfun+ is then associated with
+        the gene name in the aggregation environment.
+  \item If so, then the current value is obtained and \verb+agfun+ is
+    called with the the gene name and the current value. This returns
+    a new value that is then associated with the gene name in the
+    aggregation environment.
+  \end{enumerate}
+\end{enumerate}
+
+Basically we are using this as a form of updating hash table.
+At the same time we are slightly subverting R's usual pass--by--value
+semantics.
+
+
+
+%\section*{Resampling exprSet's}
+%need to fill this in again
+
+\section{Session Information}
+
+The version number of R and packages loaded for generating the vignette were:
+
+
+<<echo=FALSE,results=tex>>=
+toLatex(sessionInfo())
+@
+
+\end{document}
+
+
+
+
+

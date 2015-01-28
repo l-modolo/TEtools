@@ -1,0 +1,22 @@
+Some todos:
+
+ 1) links, toTable etc need to be better documented
+
+ 2) hgu95av2_dbschema() should not just cat its output across 
+ the screen - it should return something that could be processed
+
+ 3) Put details on the meta data needed for building chip packages
+  into the vignette
+  myMeta = c("DBSCHEMA" = "HUMANCHIP_DB",
+           "ORGANISM" = "Homo sapiens",
+           "SPECIES" = "Human",
+           "MANUFACTURER" = "Affymetrix",
+           "CHIPNAME" = "Affymetrix Human Genome U95 Set Version 2",
+           "MANUFACTURERURL" = "http:www.affymetrix.com")
+
+  4) Add a function to the templates for all the classes to make the
+  datacache available do this before we push out new devel packages in
+  January. So near to where you see: 
+  @ANNOBJPREFIX@_dbInfo <- function() dbInfo(datacache) 
+  Add something that will produce:
+  hgu95av2_datacache(), once it has been called.

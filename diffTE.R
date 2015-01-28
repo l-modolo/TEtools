@@ -1,10 +1,14 @@
 #!/usr/bin/Rscript
 
+# sudo apt-get install libxml2-dev
+# yum install libxml2-devel
 # source("http://bioconductor.org/biocLite.R")
-# biocLite("DESeq2")
-# biocLite("gplots")
-# biocLite("ggplot2")
-# biocLite("RColorBrewer")
+# biocLite("DESeq2", dep=T)
+# biocLite("gplots", dep=T)
+# biocLite("ggplot2", dep=T)
+# biocLite("RColorBrewer", dep=T)
+
+.libPaths( c( paste0(dirname(sys.frame(1)$ofile),"diffTE"), .libPaths()) )
 
 # --args --FDR_level=0.05 --count_column=3 --count_file=\"count.txt\" --experiment_formula=\"population:extraction\" --sample_names=\"makindu:prot,makindu:size,chicharo:prot,chicharo:size\"
 args = commandArgs(trailingOnly=TRUE)

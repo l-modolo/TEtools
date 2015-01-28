@@ -1,0 +1,14 @@
+citEntry(entry="Article",
+  author ="Robert C Gentleman and Vincent J. Carey and Douglas M. Bates and others",
+title ="Bioconductor: Open software development for computational biology and bioinformatics",
+  journal =      "Genome Biology",
+  volume =       "5",
+  year =         "2004", 
+  pages =        "R80",
+  url =          "http://genomebiology.com/2004/5/10/R80",
+  textVersion = paste(
+ "Bioconductor: Open software development for computational biology",
+ "and bioinformatics", "R. Gentleman, V. J. Carey, D. M. Bates, B.Bolstad, 
+  M. Dettling, S. Dudoit, B. Ellis, L. Gautier, Y. Ge, and others",
+  "2004, Genome Biology, Vol. 5, R80")
+)

@@ -1,0 +1,191 @@
+% -*- mode: noweb; noweb-default-code-mode: R-mode; -*-
+%\VignetteIndexEntry{3. Custom Processing Methods}
+%\VignetteKeywords{Preprocessing, Affymetrix}
+%\VignetteDepends{affy}
+%\VignettePackage{affy}
+%documentclass[12pt, a4paper]{article}
+\documentclass[12pt]{article}
+
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage[authoryear,round]{natbib}
+
+\textwidth=6.2in
+\textheight=8.5in
+%\parskip=.3cm
+\oddsidemargin=.1in
+\evensidemargin=.1in
+\headheight=-.3in
+
+\newcommand{\scscst}{\scriptscriptstyle}
+\newcommand{\scst}{\scriptstyle}
+
+\newcommand{\Rfunction}[1]{{\texttt{#1}}}
+\newcommand{\Robject}[1]{{\texttt{#1}}}
+\newcommand{\Rpackage}[1]{{\textit{#1}}}
+\newcommand{\Rmethod}[1]{{\texttt{#1}}}
+\newcommand{\Rfunarg}[1]{{\texttt{#1}}}
+\newcommand{\Rclass}[1]{{\textit{#1}}}
+
+\author{Laurent}
+\begin{document}
+\title{affy: Custom Processing Methods (HowTo)}
+
+\maketitle
+\tableofcontents
+\section{Introduction}
+This document describes briefly how to customize the affy package by
+adding one's own processing methods. The types of processing methods
+are background correction, normalization, perfect match correction 
+and summary expression value computation. 
+We tried our best to make this as easy as we could, but we are aware
+that it is far from being perfect. We are still working on things to
+improve them.
+Hopefully this document should let you extend the
+package with supplementary processing methods easily.
+
+As usual, loading the package in your \verb+R+ session is required. 
+\begin{Sinput}
+R> library(affy) ##load the affy package
+\end{Sinput}
+<<echo=F,results=hide>>=
+library(affy)
+@
+
+\section{How-to}
+For each processing step, labels for the methods known to the package
+are stored in variables. 
+
+<<>>=
+normalize.AffyBatch.methods()
+bgcorrect.methods()
+pmcorrect.methods()
+express.summary.stat.methods()
+@
+We would recommend the use of the method \verb+normalize.methods+ to access
+the list of available normalization methods (as a scheme for normalization
+methods that would go beyond 'affy' is thought).
+<<>>=
+library(affydata)
+data(Dilution)
+normalize.methods(Dilution)
+@
+
+For each processing step, a naming convention exists between the method label
+and the function name in \verb+R+ (see table~\ref{table:summary.labels}).
+Each processing methods should be passed objects (and return objects)
+corresponding to the processing step (see table~\ref{table:summary.methods}). 
+\begin{table}
+ \begin{tabular}{|c|c|}
+\hline
+variable for labels & naming convention \\
+\hline
+bgcorrect.methods & bg.correct.<label> \\
+%\hline
+normalize.AffyBatch.methods & normalize.AffyBatch.<label> \\
+%\hline
+pmcorrect.methods & pmcorrect.<label> \\
+%\hline
+express.summary.stat.methods & generateExprset.methods.<label>\\
+\hline
+ \end{tabular}
+\caption{\label{table:summary.labels}Summary table for the processing methods.}
+\end{table}
+
+\begin{table}
+ %\begin{tabular}{|c|c|p{0.5\textwidth}|}
+ \begin{tabular}{|c|c|p{5cm}|}
+\hline
+step & argument(s) & returns \\
+\hline
+background correction & \verb+AffyBatch+ & \verb+AffyBatch+ \\
+%\hline
+normalization & \verb+AffyBatch+ & \verb+AffyBatch+ \\
+%\hline
+{\it pm} correction &  \verb+ProbeSet+ & a \verb+matrix+ of corrected PM values
+(one probe per row, one column per chip).\\
+%\hline
+expression value & a \verb+matrix+ of PM values & a list of two elements
+\verb+exprs+ and \verb+se.exprs+\\
+\hline
+ \end{tabular}
+\caption{\label{table:summary.methods}Summary table for the processing methods.}
+\end{table}
+
+Practically, this means that to add a method one has to 
+\begin{enumerate}
+ \item create an appropriate method with a name satisfying the convention.
+ \item register the method by adding the label name to the corresponding
+ variable.
+\end{enumerate}
+
+\section{Examples}
+As an example we show how to add two simple new methods. The first one does
+{\it pm} correction. The method subtract {\it mm} values to the {\it pm} values,
+except when the result is negative. In this case the {\it pm} value remains
+unchanged.
+
+We create a function using the label name \verb+subtractmmsometimes+.
+<<>>=
+pmcorrect.subtractmmsometimes <- function(object) {
+
+  ## subtract mm
+  mm.subtracted <- pm(object) - mm(object)
+
+  ## find which ones are unwanted and fix them
+  invalid <- which(mm.subtracted <= 0)
+  mm.subtracted[invalid] <- pm(object)[invalid]
+
+  return(mm.subtracted)
+}
+@ 
+Once the method defined, we just register the \emph{label name} in the
+corresponding variable.
+<<>>=
+upDate.pmcorrect.methods(c(pmcorrect.methods(), "subtractmmsometimes"))
+@
+
+The second new method intends to be an robust alternative to the summary
+expression value computation \verb+avgdiff+. The idea is to use the function
+\verb+huber+ of the package \verb+MASS+.
+<<>>=
+huber <- function (y, k = 1.5, tol = 1e-06) {
+    y <- y[!is.na(y)]
+    n <- length(y)
+    mu <- median(y)
+    s <- mad(y)
+    if (s == 0) 
+        stop("cannot estimate scale: MAD is zero for this sample")
+    repeat {
+        yy <- pmin(pmax(mu - k * s, y), mu + k * s)
+        mu1 <- sum(yy)/n
+        if (abs(mu - mu1) < tol * s) 
+            break
+        mu <- mu1
+    }
+    list(mu = mu, s = s)
+}
+@
+This method returns P.J. Huber's location estimate with MAD scale. You
+think this is what you want to compute the summary expression value
+from the probe intensities. What is needed to have as a processing method
+is a simple wrapper:
+<<>>=
+computeExprVal.huber <- function(probes) {
+  res <- apply(probes, 2, huber)
+  mu <- unlist(lapply(res, function(x) x$mu))
+  s <- unlist(lapply(res, function(x) x$s))
+  return(list(exprs=mu, se.exprs=s))
+}
+
+upDate.generateExprSet.methods(c(generateExprSet.methods(), "huber"))
+@ 
+
+From now the package is aware of the two new methods\ldots in this session.
+
+The code for the methods included in the package can be informative if you plan
+to develop methods. An example that demonstrates how a normalization method can
+be added is given by the function \Rfunction{normalize.AffyBatch.vsn} in the
+package \Rpackage{vsn}; see its help file.
+
+\end{document}

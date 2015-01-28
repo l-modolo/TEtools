@@ -1,0 +1,298 @@
+%\VignetteIndexEntry{parathyroidGenesSE}
+%\VignettePackage{parathyroidSE}
+\documentclass{article}
+
+<<style, eval=TRUE, echo=FALSE, results=tex>>=
+BiocStyle::latex()
+@
+
+\usepackage{Sweave}
+\SweaveOpts{keep.source=TRUE,eps=FALSE,height=4.5,width=4} 
+
+\usepackage{fancyvrb}
+\usepackage[utf8]{inputenc}
+
+\definecolor{darkgray}{gray}{0.2}
+\DefineVerbatimEnvironment{Sinput}{Verbatim}{xleftmargin=1em,formatcom={\color{darkgray}}}
+\DefineVerbatimEnvironment{Soutput}{Verbatim}{xleftmargin=1em,frame=leftline,framerule=.6pt,rulecolor=\color{darkgray},framesep=1em,formatcom={\color{darkgray}}}
+\fvset{listparameters={\setlength{\topsep}{0pt}}}
+\renewenvironment{Schunk}{\vspace{\topsep}}{\vspace{\topsep}}
+
+\setlength{\parindent}{0em}
+\setlength{\parskip}{.5em}
+
+\title{Creation of \Robject{parathyroidGenesSE} and \Robject{parathyroidExonsSE}}
+\author{Michael Love}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+This vignette describes the construction of the SummarizedExperiment 
+\Robject{parathyroidGenesSE} and \Robject{parathyroidExonsSE}
+in the \Biocexptpkg{parathyroidSE} package.
+\end{abstract}
+
+\tableofcontents
+
+<<options,results=hide,echo=FALSE>>=
+options(digits=3, width=80, prompt=" ", continue=" ")
+@
+
+\section{Dataset description}
+
+We downloaded the RNA-Seq data from the publication of Haglund et al. 
+\cite{Haglund2012Evidence}.  
+The paired-end sequencing was performed on primary cultures from 
+parathyroid tumors of 4 patients at 2 time points over 3 conditions 
+(control, treatment with diarylpropionitrile (DPN) and treatment with 
+4-hydroxytamoxifen (OHT)).  DPN is a selective estrogen receptor $\beta$ 1 
+agonist and OHT is a selective estrogen receptor modulator.  
+One sample (patient 4, 24 hours, control) was omitted by the paper 
+authors due to low quality.  
+
+\section{Downloading the data}
+
+The raw sequencing data is publicly available from the NCBI Gene Expression Omnibus
+under accession number 
+GSE37211\footnote{\url{http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE37211}}.  
+The read sequences in FASTQ format were extracted from the NCBI short read archive file 
+(.sra files), using the sra 
+toolkit\footnote{\url{http://www.ncbi.nlm.nih.gov/books/NBK56560/}}.
+
+\section{Aligning reads}
+
+The sequenced reads in the FASTQ files were aligned using TopHat version 
+2.0.4\footnote{\url{http://tophat.cbcb.umd.edu/}} with default parameters to the GRCh37 
+human reference genome using the Bowtie index available at the Illumina 
+iGenomes page\footnote{\url{http://tophat.cbcb.umd.edu/igenomes.html}}.  
+The following code for the command line produces a directory for each run and 
+then sorts resulting BAM files by QNAME, allowing us to read 
+in the paired-end reads in batches using the \Robject{yieldSize} 
+argument of \Rfunction{BamFileList}. 
+
+\begin{Verbatim}[frame=single]
+  tophat2 -o file_tophat_out genome file_1.fastq file_2.fastq 
+  samtools sort -n file_tophat_out/accepted_hits.bam _sorted 
+\end{Verbatim}
+
+\section{Counting reads in genes}
+
+The genes were downloaded using the \Rfunction{makeTranscriptDbFromBiomart} 
+of the \Biocpkg{GenomicFeatures} package, 
+drawing from Ensembl release 72 on July 30 2013. 
+For stability and reproducibility of results, 
+one might consider to download the GTF files for the appropriate
+Ensembl release directly from the Ensembl website.
+The GTF file can be read in using the \Rfunction{makeTranscriptDbFromGFF}
+function with the argument \texttt{format} set to \texttt{"gtf"}.
+The \Rfunction{exonsBy} function produces a \Rclass{GRangesList} 
+object of all exons grouped by gene.
+
+<<getExonsByGene, eval=FALSE>>=
+library("GenomicFeatures")
+hse <- makeTranscriptDbFromBiomart(biomart="ensembl",
+                                   dataset="hsapiens_gene_ensembl")
+exonsByGene <- exonsBy(hse, by="gene")
+@ 
+
+For demonstration purposes in the vignette, we load a subset of these genes:
+
+<<loadExonsByGene>>=
+library("parathyroidSE")
+data(exonsByGene)
+@  
+
+The following code is used to generate a character vector of the location of the BAM files. 
+The first line specifying \Robject{bamDir} would typically be replaced 
+with the directory containing the BAM files.
+
+<<locateFiles>>=
+bamDir <- system.file("extdata",package="parathyroidSE",mustWork=TRUE)
+fls <- list.files(bamDir, pattern="bam$",full=TRUE)
+@ 
+
+We specified the files using \Rfunction{BamFileList} of the \Biocpkg{Rsamtools}
+package. The BAM files are sorted by QNAME, so there is not an index file,
+and we set \Robject{obeyQname}.
+The \Robject{yieldSize} argument allows for reads to be counted in batches.
+
+<<bamFiles>>=
+library("Rsamtools")
+bamLst <- BamFileList(fls, index=character(), 
+                      yieldSize=100000, obeyQname=TRUE)
+@ 
+
+For counting reads in genes, we used \Rfunction{summarizeOverlaps} from the 
+\Biocpkg{GenomicRanges} and \Biocpkg{Rsamtools} packages.  The following 
+code demonstrates counting reads from 3 reduced BAM files over a subset 
+of the Ensembl genes.  
+We set the counting mode to \texttt{"Union"}, which is explained in the diagram for 
+htseq-count\footnote{\url{http://www-huber.embl.de/users/anders/HTSeq/doc/count.html}}.
+The protocol is not strand specific, so we set \texttt{ignore.strand=TRUE}.  
+We specified \texttt{fragments=TRUE},
+in order to count both proper pairs and ``singletons'' (reads without a mate).
+Note that multiple BAM files can be counted at once by setting the 
+number of available cores with \texttt{options(mc.cores=4)}.
+
+<<countGenes>>=
+parathyroidGenesSE <- summarizeOverlaps(exonsByGene, bamLst, 
+                                        mode="Union", 
+                                        singleEnd=FALSE, 
+                                        ignore.strand=TRUE,
+                                        fragments=TRUE)
+@ 
+
+\section{Preparing exonic parts}
+
+For counting reads at the exon-level, we first prepared a \Rclass{GRanges} 
+object which contains non-overlapping exonic parts. 
+We used the function \Rfunction{disjointExons} from the \Biocpkg{GenomicFeatures} 
+package in order to prepare the non-overlapping exonic parts.
+By comparing count levels across these exonic parts, 
+we could infer cases of differential exon usage.  
+The resulting exonic parts are identical to those produced by the python script 
+distributed with the \Biocpkg{DEXSeq} package (though the aggregated gene names 
+might be in a different order). Note that some of the exonic parts have changed 
+since the preparation of the \Biocexptpkg{parathyroid} package due to the different 
+Ensembl releases.  
+
+<<getExonsByTranscript, eval=FALSE>>=
+exonicParts <- disjointExons(hse)
+@ 
+
+For the vignette, we import a subset of these exonic parts:
+
+<<importExonicParts>>=
+data(exonicParts)
+@ 
+
+The resulting exonic parts look like:
+
+<<exonicPartsResult>>=
+exonicParts[1:3]
+@ 
+
+\section{Counting reads in exonic parts}
+
+We used the \Rfunction{summarizeOverlaps} function again, this time 
+specifying \texttt{inter.feature=FALSE} in order to count all overlaps, 
+treating each feature independently.  Otherwise, paired-end reads and
+junction-spanning reads which hit more than one exonic part would not be 
+counted.
+
+<<exonCounts>>=
+parathyroidExonsSE <- summarizeOverlaps(exonicParts, bamLst,
+                                        mode="Union",
+                                        singleEnd=FALSE,
+                                        ignore.strand=TRUE,
+                                        inter.feature=FALSE,
+                                        fragments=TRUE)
+@ 
+
+Note that the metadata about the transcripts is stored in the \Robject{rowData}
+of these \Rclass{SummarizedExperiment} objects. Here, \Rfunction{str}
+is used to neatly print a list.
+
+<<metaExons>>=
+str(metadata(rowData(parathyroidGenesSE)))
+@
+
+\section{Obtaining sample annotations from GEO}
+
+In order to provide phenotypic data for the samples, we used the 
+\Biocpkg{GEOquery} package to parse the series matrix file downloaded 
+from the NCBI Gene Expression Omnibus under accession number GSE37211.  
+We included this file as well in the package, and read it in locally 
+in the code below.
+
+<<getGEO>>=
+library("GEOquery")
+gse37211 <- getGEO(filename=system.file("extdata/GSE37211_series_matrix.txt",
+                               package="parathyroidSE",mustWork=TRUE))
+samples <- pData(gse37211)[,c("characteristics_ch1","characteristics_ch1.2",
+                              "characteristics_ch1.3","relation")]
+colnames(samples) <- c("patient","treatment","time","experiment")
+samples$patient <- sub("patient: (.+)","\\1",samples$patient)
+samples$treatment <- sub("agent: (.+)","\\1",samples$treatment)
+samples$time <- sub("time: (.+)","\\1",samples$time)
+samples$experiment <- sub("SRA: http://www.ncbi.nlm.nih.gov/sra\\?term=(.+)","\\1",
+                          samples$experiment)
+samples
+@
+
+\section{Matching GEO experiments with SRA runs}
+
+The sample information from GEO must be matched to the individual runs from the Short Read Archive (the FASTQ files), as some samples are spread over multiple sequencing runs.  The run information can be obtained from the Short Read Archive using the \Biocpkg{SRAdb} package (note that the first step involves a large download of the SRA metadata database).  We included the conversion table in the package.
+
+<<getSRA, eval=FALSE>>=
+library("SRAdb")
+sqlfile <- getSRAdbFile()
+sra_con <- dbConnect(SQLite(),sqlfile)
+conversion <- sraConvert(in_acc = samples$experiment, out_type = 
+                         c("sra","submission","study","sample","experiment","run"), 
+                         sra_con = sra_con)
+write.table(conversion,file="inst/extdata/conversion.txt")
+@ 
+
+We used the \Rfunction{merge} function to match the sample annotations to the run information.  We ordered the \Rclass{data.frame} \Robject{samplesFull} by the run number and then set all columns as factors.
+
+<<samples2Runs>>=
+conversion <- read.table(system.file("extdata/conversion.txt",
+                                     package="parathyroidSE",mustWork=TRUE))
+samplesFull <- merge(samples, conversion)
+samplesFull <- samplesFull[order(samplesFull$run),]
+samplesFull <- DataFrame(lapply(samplesFull, factor))
+@ 
+
+\section{Adding column data and experiment data}
+
+We combined the information from GEO and SRA to the \Rclass{SummarizedExperiment} 
+object.  First we extracted the run ID, contained in the names of the 
+\Rclass{BamFileList} in the \Robject{fileName} column.  We then ordered 
+the rows of \Robject{samplesFull} to match the order of the run ID in 
+\Robject{parathyroidGenesSE}, and removed the duplicate column of run ID.
+
+<<addSampleColData, eval=FALSE>>=
+colData(parathyroidGenesSE)$run <- sub(".*(SRR.*)_tophat_out.*","\\1",
+                                       colnames(parathyroidGenesSE))
+matchOrder <- match(colData(parathyroidGenesSE)$run, samplesFull$run)
+colData(parathyroidGenesSE) <- cbind(colData(parathyroidGenesSE),
+                                     subset(samplesFull[matchOrder,],select=-run))
+colData(parathyroidExonsSE)$run <- sub(".*(SRR.*)_tophat_out.*","\\1",
+                                       colnames(parathyroidExonsSE))
+matchOrder <- match(colData(parathyroidExonsSE)$run, samplesFull$run)
+colData(parathyroidExonsSE) <- cbind(colData(parathyroidExonsSE),
+                                     subset(samplesFull[matchOrder,],select=-run))
+@ 
+
+We included experiment data and PubMed ID from the NCBI Gene Expression Omnibus.
+
+<<exptData, eval=FALSE>>=
+exptData = new("MIAME",
+  name="Felix Haglund",
+  lab="Science for Life Laboratory Stockholm",
+  contact="Mikael Huss",
+  title="DPN and Tamoxifen treatments of parathyroid adenoma cells",
+  url="http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE37211",
+  abstract="Primary hyperparathyroidism (PHPT) is most frequently present in postmenopausal women. Although the involvement of estrogen has been suggested, current literature indicates that parathyroid tumors are estrogen receptor (ER) alpha negative. Objective: The aim of the study was to evaluate the expression of ERs and their putative function in parathyroid tumors. Design: A panel of 37 parathyroid tumors was analyzed for expression and promoter methylation of the ESR1 and ESR2 genes as well as expression of the ERalpha and ERbeta1/ERbeta2 proteins. Transcriptome changes in primary cultures of parathyroid adenoma cells after treatment with the selective ERbeta1 agonist diarylpropionitrile (DPN) and 4-hydroxytamoxifen were identified using next-generation RNA sequencing. Results: Immunohistochemistry revealed very low expression of ERalpha, whereas all informative tumors expressed ERbeta1 (n = 35) and ERbeta2 (n = 34). Decreased nuclear staining intensity and mosaic pattern of positive and negative nuclei of ERbeta1 were significantly associated with larger tumor size. Tumor ESR2 levels were significantly higher in female vs. male cases. In cultured cells, significantly increased numbers of genes with modified expression were detected after 48 h, compared to 24-h treatments with DPN or 4-hydroxytamoxifen, including the parathyroid-related genes CASR, VDR, JUN, CALR, and ORAI2. Bioinformatic analysis of transcriptome changes after DPN treatment revealed significant enrichment in gene sets coupled to ER activation, and a highly significant similarity to tumor cells undergoing apoptosis. Conclusions: Parathyroid tumors express ERbeta1 and ERbeta2. Transcriptional changes after ERbeta1 activation and correlation to clinical features point to a role of estrogen signaling in parathyroid function and disease.")
+pubMedIds(exptData) <- "23024189"
+exptData(parathyroidGenesSE) <- list(MIAME=exptData)
+exptData(parathyroidExonsSE) <- list(MIAME=exptData)
+@ 
+
+Finally, we saved the object in the data directory of the package.
+
+<<saveData, eval=FALSE>>=
+save(parathyroidGenesSE,file="data/parathyroidGenesSE.RData")
+save(parathyroidExonsSE,file="data/parathyroidExonsSE.RData")
+@
+
+\section{Session information}
+
+<<sessInfo, results=tex, print=TRUE, echo=FALSE>>=
+toLatex(sessionInfo())
+@ 
+
+\bibliography{library}
+
+\end{document}

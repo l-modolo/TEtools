@@ -1,0 +1,35 @@
+Package: AnnotationDbi
+Title: Annotation Database Interface
+Description: Provides user interface and database connection code
+    for annotation data packages using SQLite data storage.
+Version: 1.24.0
+Author: Herve Pages, Marc Carlson, Seth Falcon, Nianhua Li
+Maintainer: Bioconductor Package Maintainer
+        <maintainer@bioconductor.org>
+Depends: R (>= 2.7.0), methods, utils, BiocGenerics (>= 0.5.4), Biobase
+        (>= 1.17.0)
+Imports: methods, utils, DBI, RSQLite, BiocGenerics, Biobase, IRanges
+Suggests: DBI (>= 0.2-4), RSQLite (>= 0.6-4), hgu95av2.db, GO.db,
+        org.Sc.sgd.db, org.At.tair.db, KEGG.db, RUnit,
+        TxDb.Hsapiens.UCSC.hg19.knownGene, hom.Hs.inp.db, org.Hs.eg.db,
+        seqnames.db, reactome.db, AnnotationForge, graph,
+        org.TguttataTestingSubset.eg.db
+Collate: 00RTobjs.R unlist2.R AllGenerics.R AllClasses.R FlatBimap.R
+        SQL.R AnnDbObj-lowAPI.R Bimap.R GOTerms.R BimapFormatting.R
+        Bimap-envirAPI.R flatten.R methods-AnnotationDb.R
+        methods-seqnames.R methods-geneCentricDbs.R
+        methods-ReactomeDb.R methods-Inparanoid.R loadDb.R
+        createAnnObjs-utils.R createAnnObjs.NCBIORG_DBs.R
+        createAnnObjs.NCBICHIP_DBs.R createAnnObjs.ORGANISM_DB.R
+        createAnnObjs.YEASTCHIP_DB.R createAnnObjs.COELICOLOR_DB.R
+        createAnnObjs.ARABIDOPSISCHIP_DB.R createAnnObjs.MALARIA_DB.R
+        createAnnObjs.YEAST_DB.R createAnnObjs.YEASTNCBI_DB.R
+        createAnnObjs.ARABIDOPSIS_DB.R createAnnObjs.GO_DB.R
+        createAnnObjs.KEGG_DB.R createAnnObjs.INPARANOID_DB.R
+        createAnnObjs.PFAM_DB.R AnnDbPkg-templates-common.R
+        AnnDbPkg-checker.R print.probetable.R makeMap.R inpIDMapper.R
+        test_AnnotationDbi_package.R
+License: Artistic-2.0
+biocViews: Annotation, Infrastructure
+Packaged: 2013-10-15 03:36:16 UTC; biocbuild
+Built: R 3.0.2; ; 2015-01-28 15:41:46 UTC; unix

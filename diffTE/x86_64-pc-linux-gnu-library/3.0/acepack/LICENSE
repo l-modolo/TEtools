@@ -1,0 +1,151 @@
+For the AVAS license, see README.avas.
+
+The following, concerning ACE, written by Tom "spot" Callaway, is from
+the Fedora R-acepack RPM.
+
+########################
+The copyright on the ace implementation was clear, but its licensing 
+terms were not. I was able to clarify the terms with the copyright holder:
+
+Copyright 2007 Jerome H. Friedman
+
+Permission to use, copy, modify, distribute, and sell this software and
+its documentation for any purpose is hereby granted without fee,
+provided that the above copyright notice appear in all copies and that
+both that copyright notice and this permission notice appear in
+supporting documentation. No representations are made about the
+suitability of this software for any purpose.  It is provided "as is"
+without express or implied warranty.
+
+=========================================================================
+To remove any hint of impropriety, here are copies of my email 
+communications with the copyright holder.
+
+From: "Jerome H. Friedman" <jhf@stanford.edu>
+To: "Tom \"spot\" Callaway" <tcallawa@redhat.com>
+Subject: Re: license for ace()
+Date: Wed, 31 Oct 2007 11:05:10 -0800
+
+Tom,
+
+>> > We would like to include it in Fedora, but we need to know the 
+>> > licensing
+>> > terms for that code.
+>>
+>> Sorry for my ignorance, but what is Fedora?
+>
+> Fedora is a very popular distribution of Linux. Our previous name was
+> "Red Hat Linux".
+
+Right. I should have remembered that.
+
+You hereby have my permission to distribute my ACE code in Fedora.
+
+Cheers,
+
+Jerry.
+
+From tcallawa@redhat.com Wed Oct 31 15:10:12 2007
+Subject: Re: license for ace()
+From: "Tom \"spot\" Callaway" <tcallawa@redhat.com>
+To: "Jerome H. Friedman" <jhf@stanford.edu>
+Date: Wed, 31 Oct 2007 15:10:12 -0400
+
+On Wed, 2007-10-31 at 11:05 -0800, Jerome H. Friedman wrote:
+> Tom,
+> 
+> >> > We would like to include it in Fedora, but we need to know the 
+> >> > licensing
+> >> > terms for that code.
+> >>
+> >> Sorry for my ignorance, but what is Fedora?
+> >
+> > Fedora is a very popular distribution of Linux. Our previous name was
+> > "Red Hat Linux".
+> 
+> Right. I should have remembered that.
+> 
+> You hereby have my permission to distribute my ACE code in Fedora.
+
+Great! Now, I just need to know under what licensing terms we can
+distribute it under. :)
+
+Here are several common licenses:
+
+MIT
+====
+Copyright 19XX John Doe <jdoe@nowhere.com>
+
+Permission to use, copy, modify, distribute, and sell this software and
+its documentation for any purpose is hereby granted without fee,
+provided that the above copyright notice appear in all copies and that
+both that copyright notice and this permission notice appear in
+supporting documentation. No representations are made about the
+suitability of this software for any purpose.  It is provided "as is"
+without express or implied warranty.
+
+BSD
+====
+Copyright (c) <YEAR>, <OWNER>
+
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+   * Redistributions of source code must retain the above copyright notice, this 
+     list of conditions and the following disclaimer.
+   * Redistributions in binary form must reproduce the above copyright notice, 
+     this list of conditions and the following disclaimer in the documentation 
+     and/or other materials provided with the distribution.
+   * Neither the name of the <ORGANIZATION> nor the names of its contributors 
+     may be used to endorse or promote products derived from this software 
+     without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND ANY 
+EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+DISCLAIMED. IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE FOR ANY 
+DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES 
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON 
+ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT 
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
+GPLv2
+======
+http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+
+If none of those licenses seems correct to you, let me know, and I will
+show you some others.
+
+Thanks,
+
+~Tom
+
+From: "Jerome H. Friedman" <jhf@stanford.edu>
+To: "Tom \"spot\" Callaway" <tcallawa@redhat.com>
+Subject: Re: license for ace()
+Date: Wed, 31 Oct 2007 11:43:34 -0800
+
+Tom,
+
+> MIT
+> ====
+> Copyright 19XX John Doe <jdoe@nowhere.com>
+> 
+> Permission to use, copy, modify, distribute, and sell this software and
+> its documentation for any purpose is hereby granted without fee,
+> provided that the above copyright notice appear in all copies and that
+> both that copyright notice and this permission notice appear in
+> supporting documentation. No representations are made about the
+> suitability of this software for any purpose.  It is provided "as is"
+> without express or implied warranty.
+
+I think this is good enough.
+
+Jerry.
+
+

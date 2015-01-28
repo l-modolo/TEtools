@@ -1,0 +1,458 @@
+%\VignetteIndexEntry{Diagnostics for independent filtering}
+%\VignettePackage{genefilter}
+
+% To compile this document
+% rm(list=ls());library("cacheSweave");Sweave("independent_filtering.Rnw",driver=cacheSweaveDriver());system("pdflatex independent_filtering")
+
+\documentclass[10pt,oneside]{article}
+
+\newcommand{\thetitle}{Diagnostics for independent filtering}
+%\usepackage[pdftitle={thetitle},pdfauthor={Wolfgang Huber}]{whbiocvignette}
+\usepackage{whbiocvignette}
+
+\title{\textsf{\textbf{\thetitle}}}
+\author{Wolfgang Huber\\[1em]European Molecular Biology Laboratory (EMBL)}
+% The following command makes use of SVN's 'Date' keyword substitution
+% To activate this, I used: svn propset svn:keywords Date independent_filtering.Rnw
+\date{\Rpackage{genefilter} version \Sexpr{packageDescription("genefilter")$Version}  (Last revision \StrMid{$Date: 2013-03-30 14:35:59 -0700 (Sat, 30 Mar 2013) $}{8}{18})}
+
+
+\begin{document}
+
+\SweaveOpts{keep.source=TRUE,eps=FALSE,pdf=FALSE,png=TRUE,include=FALSE,width=5.4,height=3.7,resolution=180}
+<<options,results=hide,echo=FALSE>>=
+options(digits=3, width=100)
+library("pasilla") # make sure this is installed, since we need it in the next section
+@
+
+% Make title
+\maketitle
+\tableofcontents
+\vspace{.25in}
+
+\begin{abstract}
+This vignette illustrates the use of some functions in the
+\emph{genefilter} package that provide useful diagnostics
+for independent filtering~\cite{Bourgon:2010:PNAS}. In
+particular, it provides diagnostics that are intended to help with
+\begin{packeditemize}
+\item the choice of filter criterion and
+\item the choice of filter cutoff.
+\end{packeditemize}
+\end{abstract}
+
+%-----------------------------------------------------------
+\section{Introduction}
+%-----------------------------------------------------------
+Multiple testing approaches, with thousands of tests, are often used
+in analyses of genome-scale data. For instance, in analyses of
+differential gene expression based on RNA-Seq or microarray data, a
+common approach is to apply a statistical test, one by one, to each of
+thousands of genes, with the aim of identifying those genes that have
+evidence for a statistical association of their expression
+measurements with the experimental covariate(s) of interest.  Another
+instance is differential binding detection from ChIP-Seq data.  The
+idea of \emph{independent filtering} is to filter out those tests from
+the procedure that have no, or little chance of showing significant
+evidence, without even looking at their test statistic. Typically,
+this results in increased detection power at the same experiment-wide
+type I error, as measured in terms of the false discovery rate.  A
+good choice for a filtering criterion is one that
+\begin{enumerate}
+  \item\label{it:indp} is statistically independent from the test statistic
+    under the null hypothesis,
+  \item\label{it:corr} is correlated with the test statistic under the
+    alternative, and
+  \item\label{it:joint} does not notably change the dependence
+    structure --if there is any-- of the joint test statistics
+    (including those corresponding to true nulls and to true
+    alternatives).
+\end{enumerate}
+The benefit from filtering relies on property~\ref{it:corr}, and we
+will explore it further in Section~\ref{sec:qual}. Its
+statistical validity relies on properties~\ref{it:indp} --which is
+simple to formally prove for many combinations of filter criteria
+with test statistics-- and \ref{it:joint}, which is less easy to theoretically
+derive from first principles, but rarely a problem in practice.  We refer
+to~\cite{Bourgon:2010:PNAS} for further discussion on the mathematical
+and conceptual background.
+
+%-----------------------------------------------------------
+\section{Example data set}
+%-----------------------------------------------------------
+For illustration, we use the \Robject{pasillaGenes} dataset from the
+Bioconductor package \Rpackage{pasilla}; this is an RNA-Seq dataset
+from which we extract gene-level read counts for two replicate samples
+the were measured for each of two biological conditions: normally
+growing cells and cells treated with dsRNA against the \emph{Pasilla}
+mRNA, which led to RNAi interference (RNAi) mediated knockdown of the
+Pasilla gene product.
+%
+<<libraries,results=hide>>=
+library("pasilla")
+data("pasillaGenes")
+@
+%
+We perform a standard analysis with \Rpackage{DESeq} to look for genes
+that are differentially expressed between the normal and
+Pasilla-knockdown conditions, indicated by the factor variable
+\Robject{condition}. In the generalized linear model (GLM) analysis,
+we adjust for an additional experimental covariate \Robject{type},
+which is however not of interest for the differential expression. For
+more details, please see the vignette of the \Rpackage{DESeq} package.
+%
+<<DESeq1,results=hide>>=
+library("DESeq")
+<<DESeq2,cache=TRUE,results=hide>>=
+cds  = estimateSizeFactors( pasillaGenes )
+cds  = estimateDispersions( cds )
+fit1 = fitNbinomGLMs( cds, count ~ type + condition )
+fit0 = fitNbinomGLMs( cds, count ~ type  )
+<<DESeq3,cache=TRUE>>=
+res = data.frame(
+filterstat = rowMeans(counts(cds)),
+pvalue    = nbinomGLMTest( fit1, fit0 ),
+row.names = featureNames(cds) )
+@
+%
+The details of the anove analysis are not important for the purpose of
+this vignette, the essential output is contained in the columns of the
+dataframe \Robject{res}:
+\begin{packeditemize}
+  \item \texttt{filterstat}: the filter statistic, here the average
+    number of counts per gene across all samples, irrespective of
+    sample annoation,
+  \item \texttt{pvalue}: the test $p$-values,
+\end{packeditemize}
+Each row of the dataframe corresponds to one gene:
+<<headres>>=
+dim(res)
+head(res)
+@
+
+%--------------------------------------------------
+\section{Qualitative assessment of the filter statistic}\label{sec:qual}
+%--------------------------------------------------
+<<pass,echo=FALSE,cache=TRUE>>=
+theta = 0.4
+pass = with(res, filterstat > quantile(filterstat, theta))
+@
+%
+First, consider Figure~\ref{figscatterindepfilt}, which shows that
+among the approximately \Sexpr{100*theta}\% of genes with lowest overall counts, \Robject{filterstat},
+there are essentially none that achieved an (unadjusted) $p$-value less than
+\Sexpr{signif(quantile(res$pvalue[!pass], 0.0001, na.rm=TRUE), 1)}
+(this corresponds to about \Sexpr{signif(-log10(quantile(res$pvalue[!pass], 0.0001, na.rm=TRUE)), 2)} on the $-\log_{10}$-scale).
+%
+<<figscatterindepfilt,fig=TRUE>>=
+with(res,
+  plot(rank(filterstat)/length(filterstat), -log10(pvalue), pch=16, cex=0.45))
+@
+<<figecdffilt,fig=TRUE>>=
+trsf = function(n) log10(n+1)
+plot(ecdf(trsf(res$filterstat)), xlab=body(trsf), main="")
+@
+\begin{figure}[ht]
+\centering
+\includegraphics[width=.49\textwidth]{independent_filtering-figscatterindepfilt}
+\includegraphics[width=.49\textwidth]{independent_filtering-figecdffilt}
+\caption{Left: scatterplot of the rank (scaled to $[0,1]$) of the
+  filter criterion \Robject{filterstat} ($x$-axis) versus the negative
+  logarithm of the test \Robject{pvalue} ($y$-axis). Right: the
+  empirical cumulative distribution function (ECDF) shows the
+  relationships between the values of \Robject{filterstat} and its
+  quantiles.}
+\label{figscatterindepfilt}
+\end{figure}
+%
+This means that by dropping the 40\% genes with lowest \Robject{filterstat},
+we do not loose anything substantial from our subsequent
+results.
+
+For comparison, suppose you had chosen a less useful filter statistic,
+say, the gene identifiers interpreted as a decimal number. The
+analogous scatterplot to that of Figure~\ref{figscatterindepfilt} is
+shown in Figure~\ref{figbadfilter}.
+%
+<<badfilter1,cache=TRUE>>=
+badfilter = as.numeric(gsub("[+]*FBgn", "", rownames(res)))
+@
+<<badfilter2,echo=FALSE>>=
+stopifnot(!any(is.na(badfilter)))
+@
+<<figbadfilter,fig=TRUE>>=
+plot(rank(badfilter)/length(badfilter), -log10(res$pvalue), pch=16, cex=0.45)
+@
+\begin{figure}[ht]
+\centering
+\includegraphics[width=.49\textwidth]{independent_filtering-figbadfilter}
+\caption{Scatterplot analogous to Figure~\ref{figscatterindepfilt}, but with \Robject{badfilter}.}
+\label{figbadfilter}
+\end{figure}
+
+%--------------------------------------------------
+\section{How to choose the filter statistic and the cutoff?}\label{sec:indepfilterchoose}
+%--------------------------------------------------
+The \texttt{filtered\_p} function in the \Rpackage{genefilter} package
+calculates adjusted $p$-values over a range of possible filtering
+thresholds. Here, we call this function on our results from above and
+compute adjusted $p$-values using the method of Benjamini and Hochberg (BH)
+for a range of different filter cutoffs.
+%
+\begin{figure}[tb]
+\begin{center}
+\includegraphics[width=0.49\textwidth]{independent_filtering-figrejection}
+\includegraphics[width=0.49\textwidth]{independent_filtering-fignumreject}
+\caption{Left panel: the plot shows the number of rejections (i.\,e.\ genes detected as
+  differentially expressed) as a function of the FDR threshold
+  ($x$-axis) and the filtering cutoff $\theta$ (line colours,
+  specified as quantiles of the distribution of the
+  filter statistic). The plot is produced by the \texttt{rejection\_plot}
+  function. Note that the lines for $\theta=0\%$ and
+  $10\%$ are overplotted by the line for $\theta=20\%$, since for the
+  data shown here, these quantiles correspond all to the same set of
+  filtered genes (cf.~Figure~\ref{figscatterindepfilt}). Right panel:
+  the number of rejections at FDR=10\% as a function of
+  $\theta$.}
+\label{figrej}
+\end{center}
+\end{figure}
+%
+<<genefilter,results=hide>>=
+library("genefilter")
+<<pBH1,cache=TRUE>>=
+theta = seq(from=0, to=0.5, by=0.1)
+pBH = filtered_p(filter=res$filterstat, test=res$pvalue, theta=theta, method="BH")
+<<pBH2>>=
+head(pBH)
+@
+%
+The rows of this matrix correspond to the genes (i.\,e., the rows of \Robject{res}) and
+the columns to the BH-adjusted $p$-values for the different possible
+choices of cutoff \Robject{theta}. A value of \Robject{NA} indicates
+that the gene was filtered out at the corresponding filter cutoff.
+The \Rfunction{rejection\_plot} function takes such a matrix and
+shows how rejection count ($R$) relates to the choice of cutoff for the
+$p$-values. For these data, over a reasonable range of FDR cutoffs, increased
+filtering corresponds to increased rejections.
+%
+<<figrejection,fig=TRUE,width=5.5,height=5.5>>=
+rejection_plot(pBH, at="sample",
+               xlim=c(0, 0.5), ylim=c(0, 2000),
+               xlab="FDR cutoff (Benjamini & Hochberg adjusted p-value)", main="")
+@
+The plot is shown in the left panel of Figure~\ref{figrej}.
+
+
+%------------------------------------------------------------
+\subsection{Choice of filtering cutoff}\label{choose:cutoff}
+%------------------------------------------------------------
+If we select a fixed cutoff for the adjusted $p$-values, we can also look more closely at
+the relationship between the fraction of null hypotheses filtered and the total number of
+discoveries. The \texttt{filtered\_R} function wraps \texttt{filtered\_p} and just returns
+rejection counts. It requires you to choose a particular $p$-value cutoff, specified
+through the argument \Robject{alpha}.
+%
+<<filtered_R1,cache=TRUE>>=
+theta = seq(from=0, to=0.8, by=0.02)
+rejBH = filtered_R(alpha=0.1, filter=res$filterstat, test=res$pvalue, theta=theta, method="BH")
+@
+
+Because overfiltering (or use of a filter which is inappropriate for the
+application domain) discards both false and true null hypotheses, very large
+values of $\theta$ reduce power in this example:
+
+<<fignumreject,fig=TRUE,width=5.5,height=5.5>>=
+plot(theta, rejBH, type="l",
+     xlab=expression(theta), ylab="number of rejections")
+@
+The plot is shown in the right panel of Figure~\ref{figrej}.
+
+%------------------------------------------------------------
+\subsection{Choice of filtering statistic}\label{choose:filterstat}
+%------------------------------------------------------------
+We can use the analysis of the previous section~\ref{choose:cutoff} also to inform
+ourselves about different possible choices of filter statistic. We construct a dataframe
+with a number of different choices.
+
+<<differentstats,cache=TRUE>>=
+filterChoices = data.frame(
+  `mean`   = res$filterstat,
+  `geneID` = badfilter,
+  `min`    = rowMin(counts(cds)),
+  `max`    = rowMax(counts(cds)),
+  `sd`     = rowSds(counts(cds))
+)
+rejChoices = sapply(filterChoices, function(f)
+  filtered_R(alpha=0.1, filter=f, test=res$pvalue, theta=theta, method="BH"))
+<<colours,results=hide>>=
+library("RColorBrewer")
+myColours = brewer.pal(ncol(filterChoices), "Set1")
+<<figdifferentstats,fig=TRUE,width=5.5,height=5.5>>=
+matplot(theta, rejChoices, type="l", lty=1, col=myColours, lwd=2,
+        xlab=expression(theta), ylab="number of rejections")
+legend("bottomleft", legend=colnames(filterChoices), fill=myColours)
+@
+%
+The result is shown in Figure~\ref{figdifferentstats}. It indicates that for the data at
+hand, \Robject{mean}, \Robject{max} and \Robject{sd} provide similar performance, whereas
+the other choices are less effective.
+\begin{figure}[tb]
+\begin{center}
+\includegraphics[width=0.49\textwidth]{independent_filtering-figdifferentstats}
+\caption{The number of rejections at FDR=10\% as a function of
+  $\theta$ (analogous to the right panel in Figure~\ref{figrej}) for a number of different choices of the filter statistic.}
+\label{figdifferentstats}
+\end{center}
+\end{figure}
+
+%--------------------------------------------------
+\section{Some more plots pertinent to multiple testing}
+%--------------------------------------------------
+%--------------------------------------------------
+\subsection{Joint distribution of filter statistic and  $p$-values}\label{sec:pvalhist}
+%--------------------------------------------------
+The left panel of Figure~\ref{figscatterindepfilt} shows the joint distribution of filter
+statistic and $p$-values. An alternative, perhaps simpler view is provided by the
+$p$-value histograms in Figure~\ref{fighistindepfilt}.  It shows how the filtering ameliorates the multiple testing
+problem -- and thus the severity of a multiple testing adjustment -- by removing a
+background set of hypotheses whose $p$-values are distributed more or less uniformly in
+$[0,1]$.
+<<histindepfilt, width=7, height=5>>=
+h1 = hist(res$pvalue[!pass], breaks=50, plot=FALSE)
+h2 = hist(res$pvalue[pass], breaks=50, plot=FALSE)
+colori <- c(`do not pass`="khaki", `pass`="powderblue")
+<<fighistindepfilt, fig=TRUE>>=
+barplot(height = rbind(h1$counts, h2$counts), beside = FALSE,
+        col = colori, space = 0, main = "", ylab="frequency")
+text(x = c(0, length(h1$counts)), y = 0, label = paste(c(0,1)),
+     adj = c(0.5,1.7), xpd=NA)
+legend("topright", fill=rev(colori), legend=rev(names(colori)))
+@
+\begin{figure}[ht]
+\centering
+\includegraphics[width=.5\textwidth]{independent_filtering-fighistindepfilt}
+\caption{Histogram of $p$-values for all tests.
+  The area shaded in blue indicates the subset of those that pass the filtering,
+  the area in khaki those that do not pass.}
+\label{fighistindepfilt}
+\end{figure}
+
+%-----------------------------------------------------
+\subsection{Illustration of the Benjamini-Hochberg method}
+%------------------------------------------------------
+The Benjamini-Hochberg multiple testing adjustment
+procedure \cite{BH:1995} has a simple graphical illustration, which we
+produce in the following code chunk. Its result is shown in the left
+panel of Figure \ref{figmulttest}.
+%
+<<sortP, cache=TRUE>>=
+resFilt = res[pass,]
+orderInPlot = order(resFilt$pvalue)
+showInPlot = (resFilt$pvalue[orderInPlot] <= 0.06)
+alpha = 0.1
+<<sortedP, fig=TRUE, width=4.5, height=4.5>>=
+plot(seq(along=which(showInPlot)), resFilt$pvalue[orderInPlot][showInPlot],
+     pch=".", xlab = expression(rank(p[i])), ylab=expression(p[i]))
+abline(a=0, b=alpha/length(resFilt$pvalue), col="red3", lwd=2)
+@
+<<doBH, echo=FALSE, results=hide>>=
+whichBH = which(resFilt$pvalue[orderInPlot] <= alpha*seq(along=resFilt$pvalue)/length(resFilt$pvalue))
+## Test some assertions:
+## - whichBH is a contiguous set of integers from 1 to length(whichBH)
+## - the genes selected by this graphical method coincide with those
+##   from p.adjust (i.e. padjFilt)
+stopifnot(length(whichBH)>0,
+          identical(whichBH, seq(along=whichBH)),
+          resFilt$FDR[orderInPlot][ whichBH] <= alpha,
+          resFilt$FDR[orderInPlot][-whichBH]  > alpha)
+@
+%
+%-----------------------------------------------------
+\subsection{Schweder and Spj\o{}tvoll plot}
+%------------------------------------------------------
+Schweder and Spj\o{}tvoll \cite{SchwederSpjotvoll1982} suggested a diagnostic plot
+of the observed $p$-values which permits estimation of the fraction of true null
+hypotheses. For a series of hypothesis tests $H_1, \ldots, H_m$ with $p$-values
+$p_i$, they suggested plotting
+%
+\begin{equation}
+  \left( 1-p_i, N(p_i) \right) \mbox{ for } i \in 1, \ldots, m,
+\end{equation}
+%
+where $N(p)$ is the number of $p$-values greater than $p$. An application of
+this diagnostic plot to \Robject{resFilt\$pvalue} is shown in the right panel of
+Figure \ref{figmulttest}.
+When all null hypotheses are true, the $p$-values are each uniformly distributed
+in $[0,1]$, Consequently, the cumulative distribution function of $(p_1, \ldots,
+p_m)$ is expected to be close to the line $F(t)=t$. By symmetry, the same
+applies to $(1 - p_1, \ldots, 1 - p_m)$.
+When (without loss of generality) the first $m_0$ null hypotheses are true and
+the other $m-m_0$ are false, the cumulative distribution function of $(1-p_1,
+\ldots, 1-p_{m_0})$ is again expected to be close to the line $F_0(t)=t$. The
+cumulative distribution function of $(1-p_{m_0+1}, \ldots, 1-p_{m})$, on the
+other hand, is expected to be close to a function $F_1(t)$ which stays below
+$F_0$ but shows a steep increase towards 1 as $t$ approaches $1$.
+In practice, we do not know which of the null hypotheses are true, so we can
+only observe a mixture whose cumulative distribution function is expected to be
+close to
+%
+\begin{equation}
+  F(t) = \frac{m_0}{m} F_0(t) + \frac{m-m_0}{m} F_1(t).
+\end{equation}
+%
+Such a situation is shown in the right panel of
+Figure \ref{figmulttest}. If
+$F_1(t)/F_0(t)$ is small for small $t$, then the mixture fraction
+$\frac{m_0}{m}$ can be estimated by fitting a line to the left-hand portion of
+the plot, and then noting its height on the right. Such a fit is shown by the
+red line in the right panel of Figure \ref{figmulttest}.
+%
+<<SchwSpjot, echo=FALSE, results=hide>>=
+j  = round(length(resFilt$pvalue)*c(1, .66))
+px = (1-resFilt$pvalue[orderInPlot[j]])
+py = ((length(resFilt$pvalue)-1):0)[j]
+slope = diff(py)/diff(px)
+@
+<<SchwederSpjotvoll, fig=TRUE, width=4.5, height=4.5>>=
+plot(1-resFilt$pvalue[orderInPlot],
+     (length(resFilt$pvalue)-1):0, pch=".", xaxs="i", yaxs="i",
+     xlab=expression(1-p[i]), ylab=expression(N(p[i])))
+abline(a=0, slope, col="red3", lwd=2)
+abline(h=slope)
+text(x=0, y=slope, labels=paste(round(slope)), adj=c(-0.1, 1.3))
+@
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=.49\textwidth]{independent_filtering-sortedP}
+\includegraphics[width=.49\textwidth]{independent_filtering-SchwederSpjotvoll}
+\caption{\emph{Left:} illustration of the Benjamini-Hochberg multiple testing
+  adjustment procedure \cite{BH:1995}.  The black line shows the
+  $p$-values ($y$-axis) versus their rank ($x$-axis), starting with
+  the smallest $p$-value from the left, then the second smallest, and
+  so on. Only the first \Sexpr{sum(showInPlot)} $p$-values are shown.
+  The red line is a straight line with slope $\alpha/n$, where
+  $n=\Sexpr{length(resFilt[["pvalue"]])}$ is the number of tests, and
+  $\alpha=\Sexpr{alpha}$ is a target false discovery rate (FDR).  FDR
+  is controlled at the value $\alpha$ if the genes are selected
+  that lie to the left of the rightmost intersection between the red and black
+  lines: here, this results in \Sexpr{length(whichBH)} genes.
+  \emph{Right:} Schweder and Spj\o{}tvoll plot, as described in the text.}
+\label{figmulttest}
+\end{figure}
+
+
+%--------------------------------------------------
+\section*{Session information}
+%--------------------------------------------------
+<<sessionInfo, results=tex, echo=FALSE>>=
+si = as.character( toLatex( sessionInfo() ) )
+cat( si[ -grep( "Locale", si ) ], sep = "\n" )
+@
+
+
+\bibliographystyle{unsrt}
+\bibliography{library}
+
+\end{document}

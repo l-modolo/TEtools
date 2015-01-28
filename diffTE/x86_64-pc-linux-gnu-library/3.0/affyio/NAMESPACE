@@ -1,0 +1,4 @@
+exportPattern("^[^\\.]")
+useDynLib("affyio")
+import(zlibbioc)
+

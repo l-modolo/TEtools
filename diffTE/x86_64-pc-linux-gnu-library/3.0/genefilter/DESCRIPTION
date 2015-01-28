@@ -1,0 +1,22 @@
+Package: genefilter
+Title: genefilter: methods for filtering genes from microarray
+        experiments
+Version: 1.44.0
+Author: R. Gentleman, V. Carey, W. Huber, F. Hahne
+Description: Some basic functions for filtering genes
+biocViews: Bioinformatics, Microarray
+Maintainer: Bioconductor Package Maintainer
+        <maintainer@bioconductor.org>
+Suggests: Biobase (>= 1.99.10), class, hgu95av2.db, methods, tkWidgets,
+        ALL, ROC, DESeq, pasilla
+Imports: AnnotationDbi, annotate (>= 1.13.7), Biobase (>= 1.99.10),
+        graphics, methods, stats, survival
+License: Artistic-2.0
+LazyLoad: yes
+LazyData: yes
+Collate: AllClasses.R AllGenerics.R all.R dist2.R eSetFilter.R fastT.R
+        filter_volcano.R filtered_p.R genefinder.R half.range.mode.R
+        kappa_p.R nsFilter.R rejection_plot.R rowROC-accessors.R
+        rowSds.R rowpAUCs-methods.R rowttests-methods.R shorth.R zzz.R
+Packaged: 2013-10-15 03:18:00 UTC; biocbuild
+Built: R 3.0.2; x86_64-pc-linux-gnu; 2015-01-28 15:52:09 UTC; unix

@@ -1,0 +1,30 @@
+useDynLib("vsn")
+
+import("Biobase")
+
+importFrom("stats", "predict")
+importFrom("methods", "show")
+importFrom("stats", "logLik", "coef", "coefficients")
+importFrom("lattice", "levelplot")
+importFrom("graphics", "smoothScatter")
+
+importFrom("affy", "rma", "normalize.AffyBatch.methods", "upDate.normalize.AffyBatch.methods")
+
+importClassesFrom("limma", "RGList")
+importClassesFrom("affy", "AffyBatch")
+
+exportClasses("vsn", "vsnInput")
+export(
+  ## Deprecated
+  "vsn", "vsnh", "vsnPlotPar",
+
+  ## needs update
+  "normalize.AffyBatch.vsn",
+
+  ## New
+  "vsnMatrix", "justvsn", "vsnrma",
+  "sagmbAssess", "sagmbSimulateData", "plotVsnLogLik", "scalingFactorTransformation")
+
+exportMethods("vsn2", "meanSdPlot", "predict", "logLik", "coef", "coefficients",
+              "show", "exprs", "nrow", "ncol", "dim", "coerce")
+
