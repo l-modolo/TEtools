@@ -10,10 +10,13 @@
 
 args = commandArgs(trailingOnly=FALSE)
 scriptPath <- dirname(sub("--file=","",args[grep("--file",args)]))
+scriptPath = paste0(scriptPath,"/diffTE")
 print(scriptPath)
+.libPaths( c( scriptPath, .libPaths()) )
+
+library(DESeq2, lib.loc = scriptPath)
 
 args = commandArgs(trailingOnly=TRUE)
-.libPaths( c( paste0(scriptPath,"/diffTE"), .libPaths()) )
 
 for(i in 2:length(args))
 {
