@@ -80,26 +80,28 @@ suppressMessages(require(gplots, quietly = TRUE))
 suppressMessages(require(ggplot2, quietly = TRUE))
 suppressMessages(require(RColorBrewer, quietly = TRUE))
 
-TE = DESeqDataSetFromMatrix(countData = counts, colData = variables, design = formula(paste0("~", variable_names[1])) )
+TE = DESeqDataSetFromMatrix(countData = counts, 
+                            colData = variables, 
+                            design = formula(paste0("~", variable_names[1]))
+                            )
 
 print(paste0("formula: ~", variable_names[1]))
 TE = DESeq(TE, betaPrior=TRUE)
 
 # some graphs about the quality of the analysis
-
 pdf("DispEsts.pdf" , height=10,width=10)
     plotDispEsts(TE)
-dev.off()
+x = dev.off()
 
 rld = rlogTransformation(TE, blind=T)
 pdf("PCA.pdf" , height=10,width=10)
-    data_PCA = plotPCA(rld, intgroup=variable_names)
-dev.off()
+    data_PCA = plotPCA(rld, intgroup=variable_names[1])
+x = dev.off()
 print(round(100 * attr(data_PCA, "percentVar")))
 
 pdf("MA.pdf" , height=10,width=10)
     plotMA(results(TE))
-dev.off()
+x = dev.off()
 
 # differential analysis between every pair of variable 1
 main_factor = levels(variables[,1])
@@ -113,7 +115,13 @@ for(i in c(1:n))
     {
         if(main_factor[i] != main_factor[j])
         {
-            res = as.data.frame(results(TE, contrast=c(variable_names[1], main_factor[i], main_factor[j]), independentFiltering=F))
+            res = as.data.frame(results(TE, 
+                                        contrast=c(variable_names[1], 
+                                                    main_factor[i], 
+                                                    main_factor[j]), 
+                                        independentFiltering=F
+                                        )
+                                )
             res[[variable_names[1]]] = paste(main_factor[i],"vs",main_factor[j])
             res$TE = rownames(res)
             res$BH = p.adjust(res$pvalue, method="BH")
@@ -138,11 +146,10 @@ number_diff = number_diff[!is.na(number_diff$baseMean),]
 # significant FDR = 0.05
 significant_TE = number_diff[number_diff$BH < FDR_level & !is.na(number_diff$log2FoldChange),]
 significant_TE = significant_TE[order(significant_TE$TE),]
-write.csv(number_diff, file = paste("all_TE", "~", variable_names[1], ".csv", sep=""))
-write.csv(significant_TE, file = paste("significant_TE", "~", variable_names[1], ".csv", sep=""))
+write.csv(number_diff, file = paste0("all_TE", "~", variable_names[1], ".csv"))
+write.csv(significant_TE, file = paste0("significant_TE", "~", variable_names[1], ".csv"))
 
 TE_vsd = varianceStabilizingTransformation(TE)
-
 TE_row = order(rowMeans(counts(TE,normalized=TRUE)),decreasing=TRUE)
 old_i = 1
 for(i in seq(from=30, to=length(TE_row), by = 30))
@@ -153,4 +160,36 @@ for(i in seq(from=30, to=length(TE_row), by = 30))
     heatmap.2(assay(TE_vsd)[select,], col = hmcol, Rowv = FALSE, Colv = FALSE, scale="none", dendrogram="none", trace="none", margin=c(10, 6))
     old_i = i
 }
+
+# volcanoplot
+ggplot(number_diff, aes(x=log2FoldChange, y=-log2(BH), colour = BH)) +
+        geom_point(size = 1) +
+        facet_wrap(as.formula(paste0("~", variable_names[1]))) +
+         xlab("log2 foldchange") +
+         ylab("log2 p-value adjusted") +
+         scale_colour_gradient(limits=c(0, 1), low="red", high="black")
+ggsave(file=paste0("volcanoplot", "~", variable_names[1], ".pdf") , width = 10, height = 10, units = "cm")
+
 distsRL = dist(t(assay(rld)))
+mat <- as.matrix(distsRL)
+rownames(mat) <- colnames(mat) <- with(colData(TE), paste(variable_names, sep=" : "))
+hc <- hclust(distsRL)
+
+pdf(paste0("Sample-to-sample distances~", variable_names[1], ".pdf") , height=10,width=10)
+heatmap.2(mat, Rowv=as.dendrogram(hc),
+          symm=TRUE, trace="none",
+          col = rev(hmcol), margin=c(13, 13))
+x = dev.off()
+
+
+
+
+
+
+
+
+
+
+
+
+
