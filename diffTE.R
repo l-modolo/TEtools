@@ -14,8 +14,6 @@ scriptPath = paste0(scriptPath,"/diffTE")
 print(scriptPath)
 .libPaths(c(.libPaths(), scriptPath))
 
-library(DESeq2, lib.loc = scriptPath)
-
 args = commandArgs(trailingOnly=TRUE)
 
 for(i in 2:length(args))
