@@ -1,7 +1,7 @@
 #!/usr/bin/Rscript
 
 # sudo apt-get install libxml2-dev
-# yum install libxml2-devel
+# yum install libxml2-devel glibc
 # source("http://bioconductor.org/biocLite.R")
 # biocLite("DESeq2", dep=T)
 # biocLite("gplots", dep=T)
@@ -12,7 +12,7 @@ args = commandArgs(trailingOnly=FALSE)
 scriptPath <- dirname(sub("--file=","",args[grep("--file",args)]))
 scriptPath = paste0(scriptPath,"/diffTE")
 print(scriptPath)
-.libPaths( c( scriptPath, .libPaths()) )
+.libPaths(c(.libPaths(), scriptPath))
 
 library(DESeq2, lib.loc = scriptPath)
 
