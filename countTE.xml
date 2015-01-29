@@ -1,6 +1,6 @@
 <tool id="countTE" name="countTE" version="1.0.0" hidden="false">
     <description>fastq quality trimming</description>
-    <version_command interpreter="python3">countTE.py UrQt -version</version_command>
+    <version_command interpreter="python3">countTE.py -version</version_command>
     <command interpreter="python3">${__root_dir__}/tools/pi_galaxy/countTE.py
         -rosette $rosette_file
         -column $count_column
@@ -42,7 +42,7 @@
                 $fastq['sam_file']
             #end for
         #end if
-        #if $count_sirna == "count":
+        #if $count_sirna == True:
             -count_sirna $output_sirna_file
         #end if
     </command>
@@ -103,7 +103,7 @@
             <discover_datasets pattern="__designation_and_ext__" directory="alignment" visible="true" />
         </data>
         <data format="tabular" name="output_sirna_file" label="${tool.name} on ${on_string}: reads count table for siRNA">
-            <filter>(count_sirna == 'count')</filter>
+            <filter>(count_sirna==True)</filter>
         </data>
     </outputs>
 
@@ -118,9 +118,9 @@ countTE documentation:
 
 Count reads mapping to transposable element (TE) sequences contained in a **fasta file**.
 
-The correspondence between TE copy and TE family is given in a **rosette tabular text file** of the following form:
+The correspondance between TE copy and TE family is given in a **rosette tabular text file** of the following form:
 
-**rosette file** example:
+rosette file example:
 ---------------------------
     ACCORD_I        ACCORD  Gyspy                   LTR-Retrotransposon
     
@@ -139,7 +139,7 @@ The **rosette file** can contain *any number of column* as long as the first col
 The **count column** then define the variable on which to count mapped reads.
 For example, with the default value of 2, and the rosette file example above we are counting mapped reads by TE families and with a value of 3 we are counting mapped reads by TE super-families.
 
-**NGS data-sets**
+NGS data-sets
 -------------------
 
 The NGS data set can be of two types:
@@ -162,7 +162,7 @@ When using RNA sequencing data we recomand to use **bowtie2** and to specify the
 **countTE** can work directly on **sam file** which allows to quickly count mapped reads according to different columns of the rosette file
 
 
-**output file**
+output file
 -----------------
 **countTE** always report a **tabular text count file**.
 
