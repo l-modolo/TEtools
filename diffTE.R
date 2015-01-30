@@ -15,7 +15,6 @@ print(scriptPath)
 .libPaths(c(.libPaths(), scriptPath))
 
 args = commandArgs(trailingOnly=TRUE)
-
 for(i in 2:length(args))
 {
     eval(parse(text=sub("--", "", args[i])))
@@ -75,10 +74,12 @@ print(head(counts))
 print(variables)
 
 # we run DeSeq
+suppressMessages(require(genefilter, quietly = TRUE))
 suppressMessages(require(DESeq2, quietly = TRUE))
 suppressMessages(require(gplots, quietly = TRUE))
 suppressMessages(require(ggplot2, quietly = TRUE))
 suppressMessages(require(RColorBrewer, quietly = TRUE))
+
 
 TE = DESeqDataSetFromMatrix(countData = counts, 
                             colData = variables, 
@@ -93,11 +94,32 @@ pdf("DispEsts.pdf" , height=10,width=10)
     plotDispEsts(TE)
 x = dev.off()
 
+ntop = 500
 rld = rlogTransformation(TE, blind=T)
-pdf("PCA.pdf" , height=10,width=10)
-    data_PCA = plotPCA(rld, intgroup=variable_names[1])
-x = dev.off()
-print(round(100 * attr(data_PCA, "percentVar")))
+rv = rowVars(assay(rld))
+select = order(rv, decreasing = TRUE)[seq_len(min(ntop, length(rv)))]
+pca = prcomp(t(assay(rld)[select, ]))
+
+if(dim(variables)[2] == 2)
+{
+    ggplot(data=as.data.frame(pca$x), aes(PC1, PC2, color=variables[,1], shape=variables[,2] )) + 
+            geom_point(size = 6) + 
+            xlab(paste0("PC1: ",100*summary(pca)[6]$importance[2,][1],"% of variance")) + 
+            ylab(paste0("PC1: ",100*summary(pca)[6]$importance[2,][2],"% of variance")) + 
+            theme_bw() + 
+            guides(color=guide_legend(title=variable_names[1]), shape=guide_legend(title=variable_names[2]))
+    ggsave(file="PCA.pdf", width=20, height=20, units="cm", dpi=1200)
+} else {
+    fac = factor(apply(as.data.frame(colData(rld)[, variable_names, drop = FALSE]),
+        1, paste, collapse = " : "))
+    ggplot(data=as.data.frame(pca$x), aes(PC1, PC2, color=fac)) + 
+            geom_point(size = 6) + 
+            xlab(paste0("PC1: ",100*summary(pca)[6]$importance[2,][1],"% of variance")) + 
+            ylab(paste0("PC1: ",100*summary(pca)[6]$importance[2,][2],"% of variance")) + 
+            theme_bw() + 
+            guides(color=guide_legend(title="factors"))
+    ggsave(file="PCA.pdf", width=20, height=20, units="cm", dpi=1200)
+}
 
 pdf("MA.pdf" , height=10,width=10)
     plotMA(results(TE))
@@ -154,7 +176,7 @@ TE_row = order(rowMeans(counts(TE,normalized=TRUE)),decreasing=TRUE)
 old_i = 1
 for(i in seq(from=30, to=length(TE_row), by = 30))
 {
-    select = order(rowMeans(counts(TE,normalized=TRUE)),decreasing=TRUE)[old_i:i]
+    select = order(rownames(TE),decreasing=FALSE)[old_i:i]
     hmcol = colorRampPalette(brewer.pal(9, "GnBu"))(100)
     pdf(paste0("heatmap_", old_i, "-", i, ".pdf") , height=10,width=10)
     heatmap.2(assay(TE_vsd)[select,], col = hmcol, Rowv = FALSE, Colv = FALSE, scale="none", dendrogram="none", trace="none", margin=c(10, 6))
@@ -167,12 +189,12 @@ ggplot(number_diff, aes(x=log2FoldChange, y=-log2(BH), colour = BH)) +
         facet_wrap(as.formula(paste0("~", variable_names[1]))) +
          xlab("log2 foldchange") +
          ylab("log2 p-value adjusted") +
-         scale_colour_gradient(limits=c(0, 1), low="red", high="black")
-ggsave(file=paste0("volcanoplot", "~", variable_names[1], ".pdf") , width = 10, height = 10, units = "cm")
+         scale_colour_gradient(limits=c(0, 1), low="red", high="black") +
+         theme_bw()
+ggsave(file=paste0("volcanoplot", "~", variable_names[1], ".pdf") , width = 20, height = 20, units = "cm")
 
 distsRL = dist(t(assay(rld)))
 mat <- as.matrix(distsRL)
-rownames(mat) <- colnames(mat) <- with(colData(TE), paste(variable_names, sep=" : "))
 hc <- hclust(distsRL)
 
 pdf(paste0("Sample-to-sample distances~", variable_names[1], ".pdf") , height=10,width=10)
@@ -180,8 +202,6 @@ heatmap.2(mat, Rowv=as.dendrogram(hc),
           symm=TRUE, trace="none",
           col = rev(hmcol), margin=c(13, 13))
 x = dev.off()
-
-
 
 
 
