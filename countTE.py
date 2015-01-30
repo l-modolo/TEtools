@@ -49,7 +49,6 @@ parser.add_argument('-RNApair', action='store', dest='fastq_pair_files', help='R
 parser.add_argument('-sam', action='store', dest='sam_files', help='RNA sam file(s)', nargs='*')
 parser.add_argument('-insert', action='store', dest='insert_size', default=500, help='insert size for paired-end data')
 parser.add_argument('-TE_fasta', action='store', dest='fasta_file', default = None, help='TE sequence fasta file')
-parser.add_argument('-TE_index', action='store', dest='index_file', default = None, help='TE sequence fasta file index')
 parser.add_argument('-bowtie2', action='store_true', default=False, dest='bowtie2', help='use bowtie2 instead of bowtie')
 parser.add_argument('-MAPQ', action='store', default=255, dest='mapq', help='minimal mapping quality (from 0 to 255, 0 the best)')
 parser.add_argument('-QC', action='store_true', default=False, dest='quality_control', help='use UrQt to perfom quality trimming on the fastq files')
