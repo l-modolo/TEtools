@@ -223,7 +223,7 @@ class Rosette:
         else:
             print(str(identifier)+' not found in the Rosette file')
 
-    def count_sirna(self, identifier, count):
+    def count_si(self, identifier, count):
         TE_identifier = self.format_identifier(identifier)
         if TE_identifier in self.TE_identifier.keys():
             keys = self.TE_identifier[TE_identifier]
@@ -509,7 +509,7 @@ class Count:
                             if len(line[9]) != int(self.config['sirna_size']):
                                 self.rosette.count(str(line[2]), 1)
                             else:
-                                self.rosette.count_sirna(str(line[2]), 1)
+                                self.rosette.count_si(str(line[2]), 1)
         else:
             with open(self.sam_file) as sam_file_handle:
                 for line in sam_file_handle:
