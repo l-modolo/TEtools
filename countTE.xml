@@ -42,7 +42,7 @@
                 $fastq['sam_file']
             #end for
         #end if
-        #if $count_sirna==True:
+        #if $type_of_output['count_sirna']=='yes':
             -count_sirna $output_sirna_file
         #end if
     </command>
@@ -93,8 +93,12 @@
             </when>
         </conditional>
         <param name="MAPQ" type="integer" value="255" min="0" max="255" label="maximum MAPQ mapping quality value to count a read as mapped (the lower the number the better the quality)"/>
-       <param name="count_sirna" type="boolean" checked="false" truevalue="count" falsevalue="do_not_count" label="count siRNA (21pb reads) in a different file"/>
-
+        <conditional name="type_of_output">
+            <param name="count_sirna" type="select" label="count siRNA (21pb reads) in a different file">
+                <option value="no">No</option>
+                <option value="yes">Yes</option>
+            </param>
+        </conditional>
 
     </inputs>
 
@@ -103,7 +107,7 @@
             <discover_datasets pattern="__designation_and_ext__" directory="alignment" visible="true" />
         </data>
         <data format="tabular" name="output_sirna_file" label="${tool.name} on ${on_string}: reads count table for siRNA">
-            <filter>(count_sirna==True)</filter>
+            <filter>(type_of_output['count_sirna']=='yes')</filter>
         </data>
     </outputs>
 
