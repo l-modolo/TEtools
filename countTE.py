@@ -200,7 +200,6 @@ class Rosette:
         if self.count_sirna:
             self.sirna_count[count_variable] = [0]*self.sample_number
             self.sirna_count_total[count_variable] = 0
-            self.sirna_count_valid[count_variable] = True
         # print(str(self.TE_count_variable[self.format_variable(line[self.count_column])])+' '+str(self.TE_identifier[TE_identifier]))
 
     def read(self, rosette_file):
