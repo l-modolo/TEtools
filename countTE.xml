@@ -43,7 +43,7 @@
             #end for
         #end if
         #if $type_of_output['count_sirna']=='yes':
-            -count_sirna $output_sirna_file
+            -sirna $output_sirna_file
         #end if
     </command>
 
