@@ -42,7 +42,7 @@
                 $fastq['sam_file']
             #end for
         #end if
-        #if $count_sirna == True:
+        #if $count_sirna==True:
             -count_sirna $output_sirna_file
         #end if
     </command>
