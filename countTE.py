@@ -321,48 +321,42 @@ class Count:
             retVal+=str(proc.stdout.read(1))
         return retVal
 
-    def __init__(self, config, rosette, max_mapq, bowtie2 = False, fasta_file = None, index_file = None):
+    def __init__(self, config, rosette, max_mapq, bowtie2 = False, fasta_file = None):
         self.config = config
         self.rosette = rosette
         self.max_mapq = int(max_mapq)
         self.bowtie2 = bool(bowtie2)
         self.index_build = False
         self.fasta_file = str(fasta_file)
-        self.index_file = str(index_file)
+        self.index_file = None
         self.rosette.purge(str(self.fasta_file))
 
     def __mapping_index(self):
-        if not self.index_build:
-            if self.index_file is None or not path.isfile(self.index_file):
-                print('building index')
-                if path.isfile(self.fasta_file):
-                    self.index_file = self.fasta_file+'.index'
-                    bowtie_cmd = list()
-                    if self.bowtie2:
-                        self.index_file += str(2)
-                        bowtie_cmd.append(self.config['bowtie2']+'-build')
-                    else:
-                        bowtie_cmd.append(self.config['bowtie']+'-build')
-                    bowtie_cmd += ['-f', self.fasta_file, self.index_file]
-                    print(bowtie_cmd)
-                    self.procs.append(Popen(bowtie_cmd, stdout=PIPE, stderr=PIPE))
-                    self.procs[len(self.procs)-1].wait()
-                    if self.procs[len(self.procs)-1].returncode != 0:
-                        for line in self.procs[len(self.procs)-1].stderr:
-                            print(str(line))
-                        self.procs.pop()
-                        exit(1)
-                    for line in self.procs[len(self.procs)-1].stdout:
-                        print(line)
-                    self.procs.pop()
-                else:
-                    print(str(self.fasta_file)+' file not found')
-                    exit(1)
+        print('building index')
+        if path.isfile(self.fasta_file):
+            self.index_file = self.fasta_file+'.index'
+            bowtie_cmd = list()
+            if self.bowtie2:
+                self.index_file += str(2)
+                bowtie_cmd.append(self.config['bowtie2']+'-build')
             else:
-                if not path.isfile(self.index_file):
-                    print(str(self.index_file)+' file not found')
-                    exit(1)
-            self.index_build = True
+                bowtie_cmd.append(self.config['bowtie']+'-build')
+            bowtie_cmd += ['-f', self.fasta_file, self.index_file]
+            print(bowtie_cmd)
+            self.procs.append(Popen(bowtie_cmd, stdout=PIPE, stderr=PIPE))
+            self.procs[len(self.procs)-1].wait()
+            if self.procs[len(self.procs)-1].returncode != 0:
+                for line in self.procs[len(self.procs)-1].stderr:
+                    print(str(line))
+                self.procs.pop()
+                exit(1)
+            for line in self.procs[len(self.procs)-1].stdout:
+                print(line)
+            self.procs.pop()
+        else:
+            print(str(self.fasta_file)+' file not found')
+            exit(1)
+        self.index_build = True
 
     def from_raw_fastq(self, fastq_file, fastq_pair_file = None, insert_size = None):
         self.rosette.reset_count()
@@ -538,7 +532,7 @@ def kill_subprocesses():
     count.kill_subprocesses()
 
 rosette = Rosette(args.rosette_file, args.count_column, args.count_file, sample_number, args.count_sirna_file)
-count = Count(config['programs'], rosette, args.mapq, args.bowtie2, args.fasta_file, args.index_file)
+count = Count(config['programs'], rosette, args.mapq, args.bowtie2, args.fasta_file)
 
 for i in range(sample_number):
     if args.sam_files is not None and path.isfile(args.sam_files[i]):
