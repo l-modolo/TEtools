@@ -142,7 +142,7 @@ class Rosette:
         with open(rosette_file) as rosette_file_handle:
             line = rosette_file_handle.readline()
             self.column_number = len(line.split())
-
+        
         # we add a Double_dict object for each of these variable
         # the first column corresponds to the TE_identifier
         self.TE = list()
@@ -316,8 +316,8 @@ class Count:
                 proc.kill()
 
     @staticmethod
-    def __output_reader(proc, retVal=''):
-        while (select([proc.stdout],[],[],0)[0]!=[]):
+    def __output_reader(proc, retVal=''): 
+        while (select([proc.stdout],[],[],0)[0]!=[]):   
             retVal+=str(proc.stdout.read(1))
         return retVal
 
@@ -342,7 +342,7 @@ class Count:
             else:
                 bowtie_cmd.append(self.config['bowtie']+'-build')
             bowtie_cmd += ['-f', self.fasta_file, self.index_file]
-            print(' '.join(map(str, bowtie_cmd)))
+            print(bowtie_cmd)
             self.procs.append(Popen(bowtie_cmd, stdout=PIPE, stderr=PIPE))
             self.procs[len(self.procs)-1].wait()
             if self.procs[len(self.procs)-1].returncode != 0:
@@ -441,7 +441,7 @@ class Count:
             else:
                 print(str(self.fastq_pair_file)+' file not found')
                 exit(1)
-        print(' '.join(map(str, urqt_cmd)))
+        print(urqt_cmd)
         self.procs.append(Popen(urqt_cmd, stdout=PIPE, stderr=PIPE))
         self.procs[len(self.procs)-1].wait()
         if self.procs[len(self.procs)-1].returncode != 0:
@@ -479,7 +479,7 @@ class Count:
                             str(self.index_file),
                             str(self.fastq_file),
                             str(self.sam_file)]
-        print(' '.join(map(str, bowtie_cmd)))
+        print(bowtie_cmd)
         self.procs.append(Popen(bowtie_cmd, stdout=PIPE, stderr=PIPE))
         self.procs[len(self.procs)-1].wait()
         if self.procs[len(self.procs)-1].returncode != 0:
