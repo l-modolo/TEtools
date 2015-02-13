@@ -100,7 +100,6 @@ rv = rowVars(assay(rld))
 select = order(rv, decreasing = TRUE)[seq_len(min(ntop, length(rv)))]
 pca = prcomp(t(assay(rld)[select, ]))
 
-save.image("test.Rdata")
 
 if(dim(variables)[2] == 2)
 {
@@ -124,7 +123,7 @@ if(dim(variables)[2] == 2)
 }
 
 pdf("MA.pdf" , height=10,width=10)
-    plotMA(results(TE))
+    plotMA(TE)
 x = dev.off()
 
 # differential analysis between every pair of variable 1
