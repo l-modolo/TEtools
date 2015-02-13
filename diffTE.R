@@ -100,6 +100,8 @@ rv = rowVars(assay(rld))
 select = order(rv, decreasing = TRUE)[seq_len(min(ntop, length(rv)))]
 pca = prcomp(t(assay(rld)[select, ]))
 
+save.image("test.Rdata")
+
 if(dim(variables)[2] == 2)
 {
     ggplot(data=as.data.frame(pca$x), aes(PC1, PC2, color=variables[,1], shape=variables[,2] )) +
@@ -120,8 +122,6 @@ if(dim(variables)[2] == 2)
             guides(color=guide_legend(title="factors"))
     ggsave(file="PCA.pdf", width=20, height=20, units="cm", dpi=1200)
 }
-
-save.image("test.Rdata")
 
 pdf("MA.pdf" , height=10,width=10)
     plotMA(results(TE))
