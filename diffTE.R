@@ -81,8 +81,8 @@ suppressMessages(require(ggplot2, quietly = TRUE))
 suppressMessages(require(RColorBrewer, quietly = TRUE))
 
 
-TE = DESeqDataSetFromMatrix(countData = counts, 
-                            colData = variables, 
+TE = DESeqDataSetFromMatrix(countData = counts,
+                            colData = variables,
                             design = formula(paste0("~", variable_names[1]))
                             )
 
@@ -102,24 +102,26 @@ pca = prcomp(t(assay(rld)[select, ]))
 
 if(dim(variables)[2] == 2)
 {
-    ggplot(data=as.data.frame(pca$x), aes(PC1, PC2, color=variables[,1], shape=variables[,2] )) + 
-            geom_point(size = 6) + 
-            xlab(paste0("PC1: ",100*summary(pca)[6]$importance[2,][1],"% of variance")) + 
-            ylab(paste0("PC1: ",100*summary(pca)[6]$importance[2,][2],"% of variance")) + 
-            theme_bw() + 
+    ggplot(data=as.data.frame(pca$x), aes(PC1, PC2, color=variables[,1], shape=variables[,2] )) +
+            geom_point(size = 6) +
+            xlab(paste0("PC1: ",100*summary(pca)[6]$importance[2,][1],"% of variance")) +
+            ylab(paste0("PC1: ",100*summary(pca)[6]$importance[2,][2],"% of variance")) +
+            theme_bw() +
             guides(color=guide_legend(title=variable_names[1]), shape=guide_legend(title=variable_names[2]))
     ggsave(file="PCA.pdf", width=20, height=20, units="cm", dpi=1200)
 } else {
     fac = factor(apply(as.data.frame(colData(rld)[, variable_names, drop = FALSE]),
         1, paste, collapse = " : "))
-    ggplot(data=as.data.frame(pca$x), aes(PC1, PC2, color=fac)) + 
-            geom_point(size = 6) + 
-            xlab(paste0("PC1: ",100*summary(pca)[6]$importance[2,][1],"% of variance")) + 
-            ylab(paste0("PC1: ",100*summary(pca)[6]$importance[2,][2],"% of variance")) + 
-            theme_bw() + 
+    ggplot(data=as.data.frame(pca$x), aes(PC1, PC2, color=fac)) +
+            geom_point(size = 6) +
+            xlab(paste0("PC1: ",100*summary(pca)[6]$importance[2,][1],"% of variance")) +
+            ylab(paste0("PC1: ",100*summary(pca)[6]$importance[2,][2],"% of variance")) +
+            theme_bw() +
             guides(color=guide_legend(title="factors"))
     ggsave(file="PCA.pdf", width=20, height=20, units="cm", dpi=1200)
 }
+
+save.image("test.Rdata")
 
 pdf("MA.pdf" , height=10,width=10)
     plotMA(results(TE))
@@ -137,10 +139,10 @@ for(i in c(1:n))
     {
         if(main_factor[i] != main_factor[j])
         {
-            res = as.data.frame(results(TE, 
-                                        contrast=c(variable_names[1], 
-                                                    main_factor[i], 
-                                                    main_factor[j]), 
+            res = as.data.frame(results(TE,
+                                        contrast=c(variable_names[1],
+                                                    main_factor[i],
+                                                    main_factor[j]),
                                         independentFiltering=F
                                         )
                                 )
