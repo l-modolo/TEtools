@@ -393,14 +393,12 @@ class Count:
             bowtie_cmd += ['-f', self.fasta_file, self.index_file]
             print(' '.join(map(str, bowtie_cmd)))
             self.procs.append(Popen(bowtie_cmd, stdout=PIPE, stderr=PIPE))
+            Thread(target=self.stream_watcher, name='stdout-watcher',
+                   args=('STDOUT', proc.stdout)).start()
+            Thread(target=self.stream_watcher, name='stderr-watcher',
+                   args=('STDERR', proc.stderr)).start()
+            Thread(target=self.printer, name='printer').start()
             self.procs[len(self.procs)-1].wait()
-            if self.procs[len(self.procs)-1].returncode != 0:
-                for line in self.procs[len(self.procs)-1].stderr:
-                    print(str(line))
-                self.procs.pop()
-                exit(1)
-            for line in self.procs[len(self.procs)-1].stdout:
-                print(line)
             self.procs.pop()
         else:
             print(str(self.fasta_file)+' file not found')
