@@ -26,6 +26,7 @@ from subprocess import Popen
 from subprocess import PIPE
 from threading import Thread
 from queue import Queue, Empty
+import shlex
 import atexit
 
 tools_path = path.realpath(__file__)[:-len('countTE.py')]
@@ -61,6 +62,51 @@ if args.version:
     print("1.0.0")
     exit(0)
 
+# subprosses management
+
+
+def read_output(pipe, funcs):
+    for line in iter(pipe.readline, b''):
+        for func in funcs:
+            func(line.decode('utf-8'))
+    pipe.close()
+
+
+def write_output(get):
+    for line in iter(get, None):
+        print(line[:-1])
+
+
+def run_cmd(procs, command, passthrough=True):
+    outs, errs = None, None
+    print(command)
+    procs.append(Popen(shlex.split(command), shell=False, stdout=PIPE, stderr=PIPE, bufsize=1))
+    i = len(procs)-1
+    if passthrough:
+        outs, errs = [], []
+        q = Queue()
+        stdout_thread = Thread(target=read_output,
+                               args=(procs[i].stdout, [q.put, outs.append]))
+        stderr_thread = Thread(target=read_output,
+                               args=(procs[i].stderr, [q.put, errs.append]))
+        writer_thread = Thread(target=write_output,
+                               args=(q.get,))
+        for t in (stdout_thread, stderr_thread, writer_thread):
+            t.daemon = True
+            t.start()
+        procs[i].wait()
+        for t in (stdout_thread, stderr_thread):
+            t.join()
+        q.put(None)
+        outs = ' '.join(outs)
+        errs = ' '.join(errs)
+    else:
+        outs, errs = procs[i].communicate()
+        outs = '' if outs == None else outs.decode('utf-8')
+        errs = '' if errs == None else errs.decode('utf-8')
+    rc = procs[i].returncode
+    procs.pop()
+    return (rc, (outs, errs))
 
 class Double_dict:
     # structure to access item by it's value or key which store
@@ -312,31 +358,6 @@ class Rosette:
 
 class Count:
     procs = list()
-    io_q = Queue()
-
-    def stream_watcher(self, identifier, i):
-        if identifier == 'STDOUT':
-            stream = self.procs[i].stdout
-        else:
-            stream = self.procs[i].stderr
-        for line in stream:
-            self.io_q.put((identifier, line))
-        if not stream.closed:
-            stream.close()
-
-    def printer(self, i):
-        while True:
-            try:
-                # Block for 1 second.
-                item = self.io_q.get(True, 1)
-            except Empty:
-                # No output in either streams for a second. Are we done?
-                if self.procs[int(i)].poll() is not None:
-                    break
-            else:
-                identifier, line = item
-        print(str(identifier)+':'+str(line))
-
     # we want to kill every subprocess if we kill countTE.py
     def kill_subprocesses(self):
         if len(self.procs) > 0:
@@ -358,23 +379,14 @@ class Count:
         print('building index')
         if path.isfile(self.fasta_file):
             self.index_file = self.fasta_file+'.index'
-            bowtie_cmd = list()
+            bowtie_cmd = str()
             if self.bowtie2:
                 self.index_file += str(2)
-                bowtie_cmd.append(self.config['bowtie2']+'-build')
+                bowtie_cmd += self.config['bowtie2']+'-build'
             else:
-                bowtie_cmd.append(self.config['bowtie']+'-build')
-            bowtie_cmd += ['-f', self.fasta_file, self.index_file]
-            print(' '.join(map(str, bowtie_cmd)))
-            self.procs.append(Popen(bowtie_cmd, stdout=PIPE, stderr=PIPE))
-            Thread(target=self.stream_watcher, name='stdout-watcher',
-                   args=('STDOUT', len(self.procs)-1)).start()
-            Thread(target=self.stream_watcher, name='stderr-watcher',
-                   args=('STDERR', len(self.procs)-1)).start()
-            Thread(target=self.printer, name='printer',
-                   args=str(len(self.procs)-1)).start()
-            self.procs[len(self.procs)-1].wait()
-            self.procs.pop()
+                bowtie_cmd += self.config['bowtie']+'-build'
+            bowtie_cmd += ' -f '+self.fasta_file+' '+self.index_file
+            run_cmd(self.procs, bowtie_cmd)
         else:
             print(str(self.fasta_file)+' file not found')
             exit(1)
@@ -448,70 +460,31 @@ class Count:
 
     def __quality_trimming(self):
         print('quality trimming using UrQt')
-        urqt_cmd = list()
-        urqt_cmd.append(str(self.config['urqt']))
-        urqt_cmd += [' --m '+str(self.config['thread']),
-                     '--t 20',
-                     '--in '+str(self.fastq_file),
-                     '--out QC_'+str(self.fastq_file),
-                     '--v']
+        urqt_cmd = str(self.config['urqt'])
+        urqt_cmd += ' --m '+str(self.config['thread'])+' --t 20'+' --in '+str(self.fastq_file)+' --out QC_'+str(self.fastq_file)+' --v'
         self.fastq_file = 'QC_'+self.fastq_file
         if self.paired:
             if path.isfile(self.fastq_pair_file):
-                urqt_cmd += ['--inpair '+str(self.fastq_pair_file),
-                             '--outpair QC_'+str(self.fastq_pair_file)]
+                urqt_cmd += ' --inpair '+str(self.fastq_pair_file)+' --outpair QC_'+str(self.fastq_pair_file)
                 self.fastq_pair_file = 'QC_'+self.fastq_pair_file
             else:
                 print(str(self.fastq_pair_file)+' file not found')
                 exit(1)
-        print(' '.join(map(str, urqt_cmd)))
-        self.procs.append(Popen(urqt_cmd, stdout=PIPE, stderr=PIPE))
-        Thread(target=self.stream_watcher, name='stdout-watcher',
-               args=('STDOUT', len(self.procs)-1)).start()
-        Thread(target=self.stream_watcher, name='stderr-watcher',
-               args=('STDERR', len(self.procs)-1)).start()
-        Thread(target=self.printer, name='printer',
-               args=str(len(self.procs)-1)).start()
-        self.procs[len(self.procs)-1].wait()
-        self.procs.pop()
+        run_cmd(self.procs, urqt_cmd)
 
     def __mapping(self):
         print('mapping reads')
-        bowtie_cmd = list()
+        bowtie_cmd = ''
         if self.bowtie2:
-            bowtie_cmd.append(str(self.config['bowtie2']))
-            bowtie_cmd += [' -p '+str(self.config['thread']),
-                           '--time',
-                           '--very-sensitive',
-                           '-x '+str(self.index_file)]
+            bowtie_cmd = str(self.config['bowtie2'])+' -p '+str(self.config['thread'])+' --time'+' --very-sensitive'+' -x '+str(self.index_file)
             if self.paired:
-                bowtie_cmd += ['--dovetail',
-                               '-X '+str(self.insert_size),
-                               '-1 '+str(self.fastq_file),
-                               '-2 '+str(self.fastq_pair_file)]
+                bowtie_cmd += ' --dovetail'+' -X '+str(self.insert_size)+' -1 '+str(self.fastq_file)+' -2 '+str(self.fastq_pair_file)
             else:
-                bowtie_cmd.append('-U '+str(self.fastq_file))
-            bowtie_cmd.append('-S '+str(self.sam_file))
+                bowtie_cmd += ' -U '+str(self.fastq_file)
+            bowtie_cmd += ' -S '+str(self.sam_file)
         else:
-            bowtie_cmd.append(str(self.config['bowtie']))
-            bowtie_cmd += ['-S',
-                           '-p '+str(self.config['thread']),
-                           '--time',
-                           '--chunkmbs 200',
-                           '--best',
-                           str(self.index_file),
-                           str(self.fastq_file),
-                           str(self.sam_file)]
-        print(' '.join(map(str, bowtie_cmd)))
-        self.procs.append(Popen(bowtie_cmd, stdout=PIPE, stderr=PIPE, bufsize=1))
-        Thread(target=self.stream_watcher, name='stdout-watcher',
-               args=('STDOUT', len(self.procs)-1)).start()
-        Thread(target=self.stream_watcher, name='stderr-watcher',
-               args=('STDERR', len(self.procs)-1)).start()
-        Thread(target=self.printer, name='printer',
-               args=str(len(self.procs)-1)).start()
-        self.procs[len(self.procs)-1].wait()
-        self.procs.pop()
+            bowtie_cmd = str(self.config['bowtie'])+' -S'+' -p '+str(self.config['thread'])+' --time'+' --chunkmbs 200'+' --best'+' '+str(self.index_file)+' '+str(self.fastq_file)+' '+str(self.sam_file)
+        run_cmd(self.procs, bowtie_cmd)
 
     def __count(self):
         # if we want to count separatly the siRNA:
