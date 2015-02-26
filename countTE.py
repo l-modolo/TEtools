@@ -467,8 +467,7 @@ class Count:
             stat(working_directory)
         except:
             mkdir(working_directory)
-        self.sam_file = working_directory+
-                        path.split((path.splitext(self.fastq_file)[0]+'.sam'))[1]
+        self.sam_file = working_directory+path.split((path.splitext(self.fastq_file)[0]+'.sam'))[1]
         print(self.sam_file)
 
     def __quality_trimming(self):
