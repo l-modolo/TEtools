@@ -393,9 +393,9 @@ class Count:
             print(' '.join(map(str, bowtie_cmd)))
             self.procs.append(Popen(bowtie_cmd, stdout=PIPE, stderr=PIPE))
             Thread(target=self.stream_watcher, name='stdout-watcher',
-                   args=('STDOUT', proc.stdout)).start()
+                   args=('STDOUT', self.procs[len(self.procs)-1].stdout)).start()
             Thread(target=self.stream_watcher, name='stderr-watcher',
-                   args=('STDERR', proc.stderr)).start()
+                   args=('STDERR', self.procs[len(self.procs)-1].stderr)).start()
             Thread(target=self.printer, name='printer',
                    args=len(self.procs)-1).start()
             self.procs[len(self.procs)-1].wait()
@@ -492,9 +492,9 @@ class Count:
         print(' '.join(map(str, urqt_cmd)))
         self.procs.append(Popen(urqt_cmd, stdout=PIPE, stderr=PIPE))
         Thread(target=self.stream_watcher, name='stdout-watcher',
-               args=('STDOUT', proc.stdout)).start()
+               args=('STDOUT', self.procs[len(self.procs)-1].stdout)).start()
         Thread(target=self.stream_watcher, name='stderr-watcher',
-               args=('STDERR', proc.stderr)).start()
+               args=('STDERR', self.procs[len(self.procs)-1].stderr)).start()
         Thread(target=self.printer, name='printer',
                args=len(self.procs)-1, ).start()
         self.procs[len(self.procs)-1].wait()
@@ -530,9 +530,9 @@ class Count:
         print(' '.join(map(str, bowtie_cmd)))
         self.procs.append(Popen(bowtie_cmd, stdout=PIPE, stderr=PIPE, bufsize=1))
         Thread(target=self.stream_watcher, name='stdout-watcher',
-               args=('STDOUT', proc.stdout)).start()
+               args=('STDOUT', self.procs[len(self.procs)-1].stdout)).start()
         Thread(target=self.stream_watcher, name='stderr-watcher',
-               args=('STDERR', proc.stderr)).start()
+               args=('STDERR', self.procs[len(self.procs)-1].stderr)).start()
         Thread(target=self.printer, name='printer',
                args=len(self.procs)-1, ).start()
         self.procs[len(self.procs)-1].wait()
