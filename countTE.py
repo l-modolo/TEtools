@@ -346,15 +346,15 @@ class Count:
 
     def stream_watcher(identifier, stream):
         for line in stream:
-            io_q.put((identifier, line))
+            self.io_q.put((identifier, line))
         if not stream.closed:
             stream.close()
-    
+
     def printer():
         while True:
             try:
                 # Block for 1 second.
-                item = io_q.get(True, 1)
+                item = self.io_q.get(True, 1)
             except Empty:
                 # No output in either streams for a second. Are we done?
                 if proc.poll() is not None:
