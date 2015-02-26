@@ -360,7 +360,7 @@ class Count:
                     break
             else:
                 identifier, line = item
-        print(identifier+':'+line)
+        print(str(identifier)+':'+str(line))
 
     # we want to kill every subprocess if we kill countTE.py
     def kill_subprocesses(self):
