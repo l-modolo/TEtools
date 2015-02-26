@@ -301,8 +301,7 @@ class Rosette:
 
     def write(self):
         if self.count_sirna:
-            with open(self.count_file, "w") as output_file_handle,
-            open(self.count_sirna_file, "w") as output_sirna_file_handle:
+            with open(self.count_file, "w") as output_file_handle, open(self.count_sirna_file, "w") as output_sirna_file_handle:
                 for item in sorted(self.TE_count_variable,
                                    key=lambda
                                    key: self.TE_count_variable[key]):
