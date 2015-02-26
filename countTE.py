@@ -349,14 +349,14 @@ class Count:
         if not stream.closed:
             stream.close()
 
-    def printer():
+    def printer(i):
         while True:
             try:
                 # Block for 1 second.
                 item = self.io_q.get(True, 1)
             except Empty:
                 # No output in either streams for a second. Are we done?
-                if proc.poll() is not None:
+                if self.procs[i].poll() is not None:
                     break
             else:
                 identifier, line = item
@@ -396,7 +396,8 @@ class Count:
                    args=('STDOUT', proc.stdout)).start()
             Thread(target=self.stream_watcher, name='stderr-watcher',
                    args=('STDERR', proc.stderr)).start()
-            Thread(target=self.printer, name='printer').start()
+            Thread(target=self.printer, name='printer',
+                   args=len(self.procs)-1).start()
             self.procs[len(self.procs)-1].wait()
             self.procs.pop()
         else:
@@ -494,7 +495,8 @@ class Count:
                args=('STDOUT', proc.stdout)).start()
         Thread(target=self.stream_watcher, name='stderr-watcher',
                args=('STDERR', proc.stderr)).start()
-        Thread(target=self.printer, name='printer').start()
+        Thread(target=self.printer, name='printer',
+               args=len(self.procs)-1, ).start()
         self.procs[len(self.procs)-1].wait()
         self.procs.pop()
 
@@ -531,7 +533,8 @@ class Count:
                args=('STDOUT', proc.stdout)).start()
         Thread(target=self.stream_watcher, name='stderr-watcher',
                args=('STDERR', proc.stderr)).start()
-        Thread(target=self.printer, name='printer').start()
+        Thread(target=self.printer, name='printer',
+               args=len(self.procs)-1, ).start()
         self.procs[len(self.procs)-1].wait()
         self.procs.pop()
 
