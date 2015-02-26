@@ -25,7 +25,7 @@ from os import mkdir
 from subprocess import Popen
 from subprocess import PIPE
 from threading import Thread
-from Queue import Queue, Empty
+from queue import Queue, Empty
 import atexit
 
 tools_path = path.realpath(__file__)[:-len('countTE.py')]
