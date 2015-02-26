@@ -42,44 +42,19 @@ if not path.isfile(tools_path+'countTE.ini'):
 config.read(tools_path+'countTE.ini')
 
 parser = argparse.ArgumentParser(prog='countTE.py')
-parser.add_argument('-RNA', action='store', dest='fastq_files',
-                    help='RNA fastq file(s)', nargs='*')
-parser.add_argument('-RNApair', action='store', dest='fastq_pair_files',
-                    help='RNA fastq file(s)', nargs='*')
-parser.add_argument('-sam', action='store', dest='sam_files',
-                    help='RNA sam file(s)', nargs='*')
-parser.add_argument('-insert', action='store', dest='insert_size',
-                    default=500,
-                    help='insert size for paired-end data')
-parser.add_argument('-TE_fasta', action='store', dest='fasta_file',
-                    default=None,
-                    help='TE sequence fasta file')
-parser.add_argument('-bowtie2', action='store_true', dest='bowtie2',
-                    default=False,
-                    help='use bowtie2 instead of bowtie')
-parser.add_argument('-MAPQ', action='store', dest='mapq',
-                    default=255,
-                    help='minimal mapping quality (from 0 to 255, 0 the best)')
-parser.add_argument('-QC', action='store_true', dest='quality_control',
-                    default=False,
-                    help='use UrQt to perfom quality trimming \
-                    on the fastq files')
-parser.add_argument('-rosette', action='store', dest='rosette_file',
-                    help='Rosette file for TE name')
-parser.add_argument('-column', action='store', dest='count_column',
-                    default=2,
-                    help='Rosette column to group count')
-parser.add_argument('-count', action='store', dest='count_file',
-                    default=None,
-                    help='output count file')
-parser.add_argument('-siRNA', action='store', dest='count_sirna_file',
-                    default=None,
-                    help='ouptput siRNA count file: store siRNA count (21bp) \
-                    in another file than piRNA (other size), \
-                    this option is not compatible with -QC')
-parser.add_argument('-version', action='store_true', dest='version',
-                    default=False,
-                    help='print version')
+parser.add_argument('-RNA', action='store', dest='fastq_files', help='RNA fastq file(s)', nargs='*')
+parser.add_argument('-RNApair', action='store', dest='fastq_pair_files', help='RNA fastq file(s)', nargs='*')
+parser.add_argument('-sam', action='store', dest='sam_files', help='RNA sam file(s)', nargs='*')
+parser.add_argument('-insert', action='store', dest='insert_size', default=500, help='insert size for paired-end data')
+parser.add_argument('-TE_fasta', action='store', dest='fasta_file', default=None, help='TE sequence fasta file')
+parser.add_argument('-bowtie2', action='store_true', dest='bowtie2', default=False, help='use bowtie2 instead of bowtie')
+parser.add_argument('-MAPQ', action='store', dest='mapq', default=255, help='minimal mapping quality (from 0 to 255, 0 the best)')
+parser.add_argument('-QC', action='store_true', dest='quality_control', default=False, help='use UrQt to perfom quality trimming on the fastq files')
+parser.add_argument('-rosette', action='store', dest='rosette_file', help='Rosette file for TE name')
+parser.add_argument('-column', action='store', dest='count_column', default=2, help='Rosette column to group count')
+parser.add_argument('-count', action='store', dest='count_file', default=None, help='output count file')
+parser.add_argument('-siRNA', action='store', dest='count_sirna_file', default=None, help='ouptput siRNA count file: store siRNA count (21bp) in another file than piRNA (other size), this option is not compatible with -QC')
+parser.add_argument('-version', action='store_true', dest='version', default=False, help='print version')
 args = parser.parse_args()
 
 if args.version:
@@ -206,9 +181,7 @@ class Rosette:
         # we add the count column first
         # print(line)
         # print(line[self.count_column])
-        keys.append(self.TE[self.count_column].add(
-                self.format_variable(line[self.count_column]))
-            )
+        keys.append( self.TE[self.count_column].add(self.format_variable(line[self.count_column])) )
         if self.column_number-1 > 1:
             for i in range(self.column_number-1):
                 if i+1 != self.count_column:
@@ -302,9 +275,7 @@ class Rosette:
     def write(self):
         if self.count_sirna:
             with open(self.count_file, "w") as output_file_handle, open(self.count_sirna_file, "w") as output_sirna_file_handle:
-                for item in sorted(self.TE_count_variable,
-                                   key=lambda
-                                   key: self.TE_count_variable[key]):
+                for item in sorted(self.TE_count_variable, key=lambda key: self.TE_count_variable[key]):
                     if self.TE_count_valid[item]:
                         keys = self.TE_count_variable[item]
                         output_file_handle.write(str( self.TE[self.count_column][keys[0]])+' ')
@@ -343,7 +314,11 @@ class Count:
     procs = list()
     io_q = Queue()
 
-    def stream_watcher(self, identifier, stream):
+    def stream_watcher(self, identifier, i):
+        if identifier == 'STDOUT':
+            stream = self.procs[i].stdout
+        else:
+            stream = self.procs[i].stderr
         for line in stream:
             self.io_q.put((identifier, line))
         if not stream.closed:
@@ -356,7 +331,7 @@ class Count:
                 item = self.io_q.get(True, 1)
             except Empty:
                 # No output in either streams for a second. Are we done?
-                if self.procs[i].poll() is not None:
+                if self.procs[int(i)].poll() is not None:
                     break
             else:
                 identifier, line = item
@@ -368,8 +343,8 @@ class Count:
             for proc in self.procs:
                 proc.kill()
 
-    def __init__(self, config, rosette, max_mapq,
-                 bowtie2=False, fasta_file=None):
+    def __init__(self, config, rosette, max_mapq, bowtie2=False,
+                 fasta_file=None):
         self.config = config
         self.rosette = rosette
         self.max_mapq = int(max_mapq)
@@ -393,11 +368,11 @@ class Count:
             print(' '.join(map(str, bowtie_cmd)))
             self.procs.append(Popen(bowtie_cmd, stdout=PIPE, stderr=PIPE))
             Thread(target=self.stream_watcher, name='stdout-watcher',
-                   args=('STDOUT', self.procs[len(self.procs)-1].stdout)).start()
+                   args=('STDOUT', len(self.procs)-1)).start()
             Thread(target=self.stream_watcher, name='stderr-watcher',
-                   args=('STDERR', self.procs[len(self.procs)-1].stderr)).start()
+                   args=('STDERR', len(self.procs)-1)).start()
             Thread(target=self.printer, name='printer',
-                   args=len(self.procs)-1).start()
+                   args=str(len(self.procs)-1)).start()
             self.procs[len(self.procs)-1].wait()
             self.procs.pop()
         else:
@@ -405,8 +380,8 @@ class Count:
             exit(1)
         self.index_build = True
 
-    def from_raw_fastq(self, fastq_file,
-                       fastq_pair_file=None, insert_size=None):
+    def from_raw_fastq(self, fastq_file, fastq_pair_file=None,
+                       insert_size=None):
         self.rosette.reset_count()
         if path.isfile(fastq_file):
             self.fastq_file = str(fastq_file)
@@ -492,11 +467,11 @@ class Count:
         print(' '.join(map(str, urqt_cmd)))
         self.procs.append(Popen(urqt_cmd, stdout=PIPE, stderr=PIPE))
         Thread(target=self.stream_watcher, name='stdout-watcher',
-               args=('STDOUT', self.procs[len(self.procs)-1].stdout)).start()
+               args=('STDOUT', len(self.procs)-1)).start()
         Thread(target=self.stream_watcher, name='stderr-watcher',
-               args=('STDERR', self.procs[len(self.procs)-1].stderr)).start()
+               args=('STDERR', len(self.procs)-1)).start()
         Thread(target=self.printer, name='printer',
-               args=len(self.procs)-1, ).start()
+               args=str(len(self.procs)-1)).start()
         self.procs[len(self.procs)-1].wait()
         self.procs.pop()
 
@@ -530,11 +505,11 @@ class Count:
         print(' '.join(map(str, bowtie_cmd)))
         self.procs.append(Popen(bowtie_cmd, stdout=PIPE, stderr=PIPE, bufsize=1))
         Thread(target=self.stream_watcher, name='stdout-watcher',
-               args=('STDOUT', self.procs[len(self.procs)-1].stdout)).start()
+               args=('STDOUT', len(self.procs)-1)).start()
         Thread(target=self.stream_watcher, name='stderr-watcher',
-               args=('STDERR', self.procs[len(self.procs)-1].stderr)).start()
+               args=('STDERR', len(self.procs)-1)).start()
         Thread(target=self.printer, name='printer',
-               args=len(self.procs)-1, ).start()
+               args=str(len(self.procs)-1)).start()
         self.procs[len(self.procs)-1].wait()
         self.procs.pop()
 
@@ -562,8 +537,7 @@ class Count:
         self.rosette.write()
 
 if args.fastq_files is not None and args.sam_files is not None and len(args.sam_files) < len(args.fastq_files):
-    print('the number of sam files ('+str(len(args.sam_files))+') must be \
-          equal to the number of fastq_files ('+str(len(args.fastq_files))+')')
+    print('the number of sam files ('+str(len(args.sam_files))+') must be equal to the number of fastq_files ('+str(len(args.fastq_files))+')')
     exit(1)
 
 sample_number = 0
