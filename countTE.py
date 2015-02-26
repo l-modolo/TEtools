@@ -343,13 +343,13 @@ class Count:
     procs = list()
     io_q = Queue()
 
-    def stream_watcher(identifier, stream):
+    def stream_watcher(self, identifier, stream):
         for line in stream:
             self.io_q.put((identifier, line))
         if not stream.closed:
             stream.close()
 
-    def printer(i):
+    def printer(self, i):
         while True:
             try:
                 # Block for 1 second.
