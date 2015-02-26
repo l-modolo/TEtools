@@ -524,6 +524,7 @@ class Count:
             bowtie_cmd += ['-S',
                            '-p '+str(self.config['thread']),
                            '--time',
+                           '--chunkmbs 200',
                            '--best',
                            str(self.index_file),
                            str(self.fastq_file),
