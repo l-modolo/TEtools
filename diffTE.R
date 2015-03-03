@@ -27,6 +27,13 @@ if(!exists("count_file")){help = TRUE; print("count_file")}
 if(!exists("experiment_formula")){help = TRUE; print("experiment_formula")}
 if(!exists("sample_names")){help = TRUE; print("sample_names")}
 
+if (!is.null(outdir)) {
+  # Create the directory where we put all the html support files
+  dir.create(outdir,FALSE)
+}
+
+output_figures = list()
+
 if(help==TRUE)
 {
     print("diffTE.R --args --FDR_level=0.05 --count_column=2 --count_file=\\\"count.txt\\\" --experiment_formula=\\\"population:type\\\" --sample_names=\\\"population1:type1,population1:type2,population2:type1,population2:type2\\\"")
@@ -86,11 +93,13 @@ TE = DESeqDataSetFromMatrix(countData = counts,
                             design = formula(paste0("~", variable_names[1]))
                             )
 
-print(paste0("formula: ~", variable_names[1]))
 TE = DESeq(TE, betaPrior=TRUE)
 
 # some graphs about the quality of the analysis
-pdf("DispEsts.pdf" , height=10,width=10)
+pdf(paste0(outdir, "/DispEsts.pdf") , height=10,width=10)
+    plotDispEsts(TE)
+x = dev.off()
+png(paste0(outdir, "/DispEsts.png") , height=10,width=10)
     plotDispEsts(TE)
 x = dev.off()
 
@@ -103,28 +112,36 @@ pca = prcomp(t(assay(rld)[select, ]))
 
 if(dim(variables)[2] == 2)
 {
-    ggplot(data=as.data.frame(pca$x), aes(PC1, PC2, color=variables[,1], shape=variables[,2] )) +
+    x = ggplot(data=as.data.frame(pca$x), aes(PC1, PC2, color=variables[,1], shape=variables[,2] )) +
             geom_point(size = 6) +
             xlab(paste0("PC1: ",100*summary(pca)[6]$importance[2,][1],"% of variance")) +
             ylab(paste0("PC1: ",100*summary(pca)[6]$importance[2,][2],"% of variance")) +
             theme_bw() +
             guides(color=guide_legend(title=variable_names[1]), shape=guide_legend(title=variable_names[2]))
-    ggsave(file="PCA.pdf", width=20, height=20, units="cm", dpi=1200)
 } else {
     fac = factor(apply(as.data.frame(colData(rld)[, variable_names, drop = FALSE]),
         1, paste, collapse = " : "))
-    ggplot(data=as.data.frame(pca$x), aes(PC1, PC2, color=fac)) +
+    x = ggplot(data=as.data.frame(pca$x), aes(PC1, PC2, color=fac)) +
             geom_point(size = 6) +
             xlab(paste0("PC1: ",100*summary(pca)[6]$importance[2,][1],"% of variance")) +
             ylab(paste0("PC1: ",100*summary(pca)[6]$importance[2,][2],"% of variance")) +
             theme_bw() +
             guides(color=guide_legend(title="factors"))
-    ggsave(file="PCA.pdf", width=20, height=20, units="cm", dpi=1200)
 }
+ggsave(file=paste0(outdir, "/PCA.pdf"),x, width=20, height=20, units="cm", dpi=1200)
+ggsave(file=paste0(outdir, "/PCA.png"),x, width=20, height=20, units="cm", dpi=1200)
 
-pdf("MA.pdf" , height=10,width=10)
+pdf(paste0(outdir, "/MA.pdf") , height=10,width=10)
     plotMA(TE)
 x = dev.off()
+
+png(paste0(outdir, "/MA.png") , height=10,width=10)
+    plotMA(TE)
+x = dev.off()
+
+output_figures['fit'] = c(paste0(outdir, "/DispEsts"),
+                          paste0(outdir, "/PCA"),
+                          paste0(outdir, "/MA"))
 
 # differential analysis between every pair of variable 1
 main_factor = levels(variables[,1])
@@ -169,41 +186,84 @@ number_diff = number_diff[!is.na(number_diff$baseMean),]
 # significant FDR = 0.05
 significant_TE = number_diff[number_diff$BH < FDR_level & !is.na(number_diff$log2FoldChange),]
 significant_TE = significant_TE[order(significant_TE$TE),]
-write.csv(number_diff, file = paste0("all_TE", "~", variable_names[1], ".csv"))
-write.csv(significant_TE, file = paste0("significant_TE", "~", variable_names[1], ".csv"))
+write.csv(number_diff, file = paste0(outdir, "/all_TE", "~", variable_names[1], ".csv"))
+write.csv(significant_TE, file = paste0(outdir, "/significant_TE", "~", variable_names[1], ".csv"))
+
+
+output_figures['table'] = c(paste0(outdir, "/all_TE", "~", variable_names[1], ".csv"),
+                          paste0(outdir, "/significant_TE", "~", variable_names[1], ".csv"))
 
 TE_vsd = varianceStabilizingTransformation(TE)
 TE_row = order(rowMeans(counts(TE,normalized=TRUE)),decreasing=TRUE)
 old_i = 1
+output_figures['heatmap'] = c()
 for(i in seq(from=30, to=length(TE_row), by = 30))
 {
     select = order(rownames(TE),decreasing=FALSE)[old_i:i]
     hmcol = colorRampPalette(brewer.pal(9, "GnBu"))(100)
-    pdf(paste0("heatmap_", old_i, "-", i, ".pdf") , height=10,width=10)
+    pdf(paste0(outdir, "/heatmap_", old_i, "-", i, ".pdf") , height=10,width=10)
     heatmap.2(assay(TE_vsd)[select,], col = hmcol, Rowv = FALSE, Colv = FALSE, scale="none", dendrogram="none", trace="none", margin=c(10, 6))
+    x = dev.off()
+    png(paste0(outdir, "/heatmap_", old_i, "-", i, ".png") , height=10,width=10)
+    heatmap.2(assay(TE_vsd)[select,], col = hmcol, Rowv = FALSE, Colv = FALSE, scale="none", dendrogram="none", trace="none", margin=c(10, 6))
+    x = dev.off()
     old_i = i
+    output_figures['heatmap'] = c(output_figures['heatmap'], paste0(outdir, "/heatmap_", old_i, "-", i))
 }
 
 # volcanoplot
-ggplot(number_diff, aes(x=log2FoldChange, y=-log2(BH), colour = BH)) +
+x = ggplot(number_diff, aes(x=log2FoldChange, y=-log2(BH), colour = BH)) +
         geom_point(size = 1) +
         facet_wrap(as.formula(paste0("~", variable_names[1]))) +
          xlab("log2 foldchange") +
          ylab("log2 p-value adjusted") +
          scale_colour_gradient(limits=c(0, 1), low="red", high="black") +
          theme_bw()
-ggsave(file=paste0("volcanoplot", "~", variable_names[1], ".pdf") , width = 20, height = 20, units = "cm")
+ggsave(file=paste0(outdir, "/volcanoplot", "~", variable_names[1], ".pdf"), x , width = 20, height = 20, units = "cm")
+ggsave(file=paste0(outdir, "/volcanoplot", "~", variable_names[1], ".png"), x , width = 20, height = 20, units = "cm")
 
 distsRL = dist(t(assay(rld)))
 mat <- as.matrix(distsRL)
 hc <- hclust(distsRL)
 
-pdf(paste0("Sample-to-sample distances~", variable_names[1], ".pdf") , height=10,width=10)
-heatmap.2(mat, Rowv=as.dendrogram(hc),
-          symm=TRUE, trace="none",
-          col = rev(hmcol), margin=c(13, 13))
+pdf(paste0(outdir, "/Sample-to-sample distances~", variable_names[1], ".pdf") , height=10,width=10)
+heatmap.2(mat, Rowv=as.dendrogram(hc), symm=TRUE, trace="none", col = rev(hmcol), margin=c(13, 13))
+x = dev.off()
+png(paste0(outdir, "/Sample-to-sample distances~", variable_names[1], ".png") , height=10,width=10)
+heatmap.2(mat, Rowv=as.dendrogram(hc), symm=TRUE, trace="none", col = rev(hmcol), margin=c(13, 13))
 x = dev.off()
 
+output_figures['sample'] = c(paste0(outdir, "/volcanoplot", "~", variable_names[1]),
+                          paste0(outdir, "/Sample-to-sample distances~", variable_names[1]))
+
+
+# Produce the HTML file
+htmlfile_handle <- file(htmlfile)
+html_output = c('<html><body>')
+
+html_output = c(html_output, '<h2>Model goodness of fit</h2>')
+for(figure in output_figures['fit'])
+{
+    html_output = c(html_output, paste0('<p><a href="',figure,'.pdf"><img src="',figure,'.png"/></a></p>'))
+}
+html_output = c(html_output, '<h2>Result tables</h2>')
+for(figure in output_figures['table'])
+{
+    html_output = c(html_output, paste0('<p><a href="',figure,'.pdf">',figure,'</a></p>'))
+}
+html_output = c(html_output, '<h2>Heatmaps</h2>')
+for(figure in output_figures['heatmap'])
+{
+    html_output = c(html_output, paste0('<p><a href="',figure,'.pdf"><img src="',figure,'.png"/></a></p>'))
+}
+html_output = c(html_output, '<h2>Sample comparisons</h2>')
+for(figure in output_figures['sample'])
+{
+    html_output = c(html_output, paste0('<p><a href="',figure,'.pdf"><img src="',figure,'.png"/></a></p>'))
+}
+html_output = c(html_output, '</html></body>');
+writeLines(html_output, htmlfile_handle);
+close(htmlfile_handle);
 
 
 
