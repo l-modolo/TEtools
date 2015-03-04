@@ -95,6 +95,8 @@ TE = DESeqDataSetFromMatrix(countData = counts,
 
 TE = DESeq(TE, betaPrior=TRUE)
 
+old_mar = par("mar")
+par(mar=c(1,1,1,1))
 # some graphs about the quality of the analysis
 pdf(paste0(outdir, "/DispEsts.pdf") , height=20,width=20)
     plotDispEsts(TE)
@@ -102,6 +104,7 @@ x = dev.off()
 png(paste0(outdir, "/DispEsts.png") , height=20,width=20)
     plotDispEsts(TE)
 x = dev.off()
+par(mar=old_mar)
 
 ntop = 500
 rld = rlogTransformation(TE, blind=T)
