@@ -36,7 +36,7 @@ output_figures = list()
 
 if(help==TRUE)
 {
-    print("diffTE.R --args --FDR_level=0.05 --count_column=2 --count_file=\\\"count.txt\\\" --experiment_formula=\\\"population:type\\\" --sample_names=\\\"population1:type1,population1:type2,population2:type1,population2:type2\\\"")
+    print("diffTE.R --args --FDR_level=0.05 --count_column=2 --count_file=\\\"count.txt\\\" --experiment_formula=\\\"population:type\\\" --sample_names=\\\"population1:type1,population1:type2,population2:type1,population2:type2\\\"" )
     quit("no")
 }
 if(exists("version"))
@@ -96,10 +96,10 @@ TE = DESeqDataSetFromMatrix(countData = counts,
 TE = DESeq(TE, betaPrior=TRUE)
 
 # some graphs about the quality of the analysis
-pdf(paste0(outdir, "/DispEsts.pdf") , height=10,width=10)
+pdf(paste0(outdir, "/DispEsts.pdf") , height=20,width=20)
     plotDispEsts(TE)
 x = dev.off()
-png(paste0(outdir, "/DispEsts.png") , height=10,width=10)
+png(paste0(outdir, "/DispEsts.png") , height=20,width=20)
     plotDispEsts(TE)
 x = dev.off()
 
@@ -131,11 +131,11 @@ if(dim(variables)[2] == 2)
 ggsave(file=paste0(outdir, "/PCA.pdf"),x, width=20, height=20, units="cm", dpi=1200)
 ggsave(file=paste0(outdir, "/PCA.png"),x, width=20, height=20, units="cm", dpi=1200)
 
-pdf(paste0(outdir, "/MA.pdf") , height=10,width=10)
+pdf(paste0(outdir, "/MA.pdf") , height=20,width=20)
     plotMA(TE)
 x = dev.off()
 
-png(paste0(outdir, "/MA.png") , height=10,width=10)
+png(paste0(outdir, "/MA.png") , height=20,width=20)
     plotMA(TE)
 x = dev.off()
 
@@ -201,10 +201,10 @@ for(i in seq(from=30, to=length(TE_row), by = 30))
 {
     select = order(rownames(TE),decreasing=FALSE)[old_i:i]
     hmcol = colorRampPalette(brewer.pal(9, "GnBu"))(100)
-    pdf(paste0(outdir, "/heatmap_", old_i, "-", i, ".pdf") , height=10,width=10)
+    pdf(paste0(outdir, "/heatmap_", old_i, "-", i, ".pdf") , height=20,width=20)
     heatmap.2(assay(TE_vsd)[select,], col = hmcol, Rowv = FALSE, Colv = FALSE, scale="none", dendrogram="none", trace="none", margin=c(10, 6))
     x = dev.off()
-    png(paste0(outdir, "/heatmap_", old_i, "-", i, ".png") , height=10,width=10)
+    png(paste0(outdir, "/heatmap_", old_i, "-", i, ".png") , height=20,width=20)
     heatmap.2(assay(TE_vsd)[select,], col = hmcol, Rowv = FALSE, Colv = FALSE, scale="none", dendrogram="none", trace="none", margin=c(10, 6))
     x = dev.off()
     old_i = i
@@ -226,10 +226,10 @@ distsRL = dist(t(assay(rld)))
 mat <- as.matrix(distsRL)
 hc <- hclust(distsRL)
 
-pdf(paste0(outdir, "/Sample-to-sample distances~", variable_names[1], ".pdf") , height=10,width=10)
+pdf(paste0(outdir, "/Sample-to-sample distances~", variable_names[1], ".pdf") , height=20,width=20)
 heatmap.2(mat, Rowv=as.dendrogram(hc), symm=TRUE, trace="none", col = rev(hmcol), margin=c(13, 13))
 x = dev.off()
-png(paste0(outdir, "/Sample-to-sample distances~", variable_names[1], ".png") , height=10,width=10)
+png(paste0(outdir, "/Sample-to-sample distances~", variable_names[1], ".png") , height=20,width=20)
 heatmap.2(mat, Rowv=as.dendrogram(hc), symm=TRUE, trace="none", col = rev(hmcol), margin=c(13, 13))
 x = dev.off()
 
