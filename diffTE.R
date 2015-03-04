@@ -95,16 +95,13 @@ TE = DESeqDataSetFromMatrix(countData = counts,
 
 TE = DESeq(TE, betaPrior=TRUE)
 
-old_mar = par("mar")
-par(mar = rep(2, 4))
 # some graphs about the quality of the analysis
 pdf(paste0(outdir, "/DispEsts.pdf") , height=20,width=20)
     plotDispEsts(TE)
 x = dev.off()
-png(paste0(outdir, "/DispEsts.png") , height=20,width=20)
+png(paste0(outdir, "/DispEsts.png") , height=800,width=800)
     plotDispEsts(TE)
 x = dev.off()
-par(mar=old_mar)
 
 ntop = 500
 rld = rlogTransformation(TE, blind=T)
@@ -131,18 +128,18 @@ if(dim(variables)[2] == 2)
             theme_bw() +
             guides(color=guide_legend(title="factors"))
 }
-ggsave(file=paste0(outdir, "/PCA.pdf"),x, width=20, height=20, units="cm", dpi=1200)
-ggsave(file=paste0(outdir, "/PCA.png"),x, width=20, height=20, units="cm", dpi=1200)
+ggsave(file=paste0(outdir, "/PCA.pdf"),x, width=20, height=20, units="in", dpi=1200)
+ggsave(file=paste0(outdir, "/PCA.png"),x , width = 8, height = 8, units="in", dpi=100)
 
 pdf(paste0(outdir, "/MA.pdf") , height=20,width=20)
     plotMA(TE)
 x = dev.off()
 
-png(paste0(outdir, "/MA.png") , height=20,width=20)
+png(paste0(outdir, "/MA.png") , height=800,width=800)
     plotMA(TE)
 x = dev.off()
 
-output_figures['fit'] = c(paste0(outdir, "/DispEsts"),
+output_figures_fit = c(paste0(outdir, "/DispEsts"),
                           paste0(outdir, "/PCA"),
                           paste0(outdir, "/MA"))
 
@@ -193,25 +190,25 @@ write.csv(number_diff, file = paste0(outdir, "/all_TE", "~", variable_names[1], 
 write.csv(significant_TE, file = paste0(outdir, "/significant_TE", "~", variable_names[1], ".csv"))
 
 
-output_figures['table'] = c(paste0(outdir, "/all_TE", "~", variable_names[1], ".csv"),
+output_figures_table = c(paste0(outdir, "/all_TE", "~", variable_names[1], ".csv"),
                           paste0(outdir, "/significant_TE", "~", variable_names[1], ".csv"))
 
 TE_vsd = varianceStabilizingTransformation(TE)
 TE_row = order(rowMeans(counts(TE,normalized=TRUE)),decreasing=TRUE)
 old_i = 1
-output_figures['heatmap'] = c()
+output_figures_heatmap = c()
 for(i in seq(from=30, to=length(TE_row), by = 30))
 {
     select = order(rownames(TE),decreasing=FALSE)[old_i:i]
     hmcol = colorRampPalette(brewer.pal(9, "GnBu"))(100)
     pdf(paste0(outdir, "/heatmap_", old_i, "-", i, ".pdf") , height=20,width=20)
-    heatmap.2(assay(TE_vsd)[select,], col = hmcol, Rowv = FALSE, Colv = FALSE, scale="none", dendrogram="none", trace="none", margin=c(10, 6))
+    print(heatmap.2(assay(TE_vsd)[select,], col = hmcol, Rowv = FALSE, Colv = FALSE, scale="none", dendrogram="none", trace="none", margin=c(10, 6)))
     x = dev.off()
-    png(paste0(outdir, "/heatmap_", old_i, "-", i, ".png") , height=20,width=20)
-    heatmap.2(assay(TE_vsd)[select,], col = hmcol, Rowv = FALSE, Colv = FALSE, scale="none", dendrogram="none", trace="none", margin=c(10, 6))
+    png(paste0(outdir, "/heatmap_", old_i, "-", i, ".png") , height=800,width=800, units='px')
+    print(heatmap.2(assay(TE_vsd)[select,], col = hmcol, Rowv = FALSE, Colv = FALSE, scale="none", dendrogram="none", trace="none", margin=c(10, 6)))
     x = dev.off()
+    output_figures_heatmap = c(output_figures_heatmap, paste0(outdir, "/heatmap_", old_i, "-", i))
     old_i = i
-    output_figures['heatmap'] = c(output_figures['heatmap'], paste0(outdir, "/heatmap_", old_i, "-", i))
 }
 
 # volcanoplot
@@ -222,8 +219,8 @@ x = ggplot(number_diff, aes(x=log2FoldChange, y=-log2(BH), colour = BH)) +
          ylab("log2 p-value adjusted") +
          scale_colour_gradient(limits=c(0, 1), low="red", high="black") +
          theme_bw()
-ggsave(file=paste0(outdir, "/volcanoplot", "~", variable_names[1], ".pdf"), x , width = 20, height = 20, units = "cm")
-ggsave(file=paste0(outdir, "/volcanoplot", "~", variable_names[1], ".png"), x , width = 20, height = 20, units = "cm")
+ggsave(file=paste0(outdir, "/volcanoplot", "~", variable_names[1], ".pdf"), x , width = 20, height = 20)
+ggsave(file=paste0(outdir, "/volcanoplot", "~", variable_names[1], ".png"), x , width = 8, height = 8, units="in", dpi=100)
 
 distsRL = dist(t(assay(rld)))
 mat <- as.matrix(distsRL)
@@ -232,11 +229,11 @@ hc <- hclust(distsRL)
 pdf(paste0(outdir, "/Sample-to-sample distances~", variable_names[1], ".pdf") , height=20,width=20)
 heatmap.2(mat, Rowv=as.dendrogram(hc), symm=TRUE, trace="none", col = rev(hmcol), margin=c(13, 13))
 x = dev.off()
-png(paste0(outdir, "/Sample-to-sample distances~", variable_names[1], ".png") , height=20,width=20)
+png(paste0(outdir, "/Sample-to-sample distances~", variable_names[1], ".png") , height=800,width=800)
 heatmap.2(mat, Rowv=as.dendrogram(hc), symm=TRUE, trace="none", col = rev(hmcol), margin=c(13, 13))
 x = dev.off()
 
-output_figures['sample'] = c(paste0(outdir, "/volcanoplot", "~", variable_names[1]),
+output_figures_sample = c(paste0(outdir, "/volcanoplot", "~", variable_names[1]),
                           paste0(outdir, "/Sample-to-sample distances~", variable_names[1]))
 
 
@@ -245,22 +242,22 @@ htmlfile_handle <- file(htmlfile)
 html_output = c('<html><body>')
 
 html_output = c(html_output, '<h2>Model goodness of fit</h2>')
-for(figure in output_figures['fit'])
+for(figure in output_figures_fit)
 {
     html_output = c(html_output, paste0('<p><a href="',figure,'.pdf"><img src="',figure,'.png"/></a></p>'))
 }
 html_output = c(html_output, '<h2>Result tables</h2>')
-for(figure in output_figures['table'])
+for(figure in output_figures_table)
 {
     html_output = c(html_output, paste0('<p><a href="',figure,'.pdf">',figure,'</a></p>'))
 }
 html_output = c(html_output, '<h2>Heatmaps</h2>')
-for(figure in output_figures['heatmap'])
+for(figure in output_figures_heatmap)
 {
     html_output = c(html_output, paste0('<p><a href="',figure,'.pdf"><img src="',figure,'.png"/></a></p>'))
 }
 html_output = c(html_output, '<h2>Sample comparisons</h2>')
-for(figure in output_figures['sample'])
+for(figure in output_figures_sample)
 {
     html_output = c(html_output, paste0('<p><a href="',figure,'.pdf"><img src="',figure,'.png"/></a></p>'))
 }
