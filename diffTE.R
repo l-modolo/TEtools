@@ -249,7 +249,7 @@ for(figure in output_figures_fit)
 html_output = c(html_output, '<h2>Result tables</h2>')
 for(figure in output_figures_table)
 {
-    html_output = c(html_output, paste0('<p><a href="',figure,'.pdf">',figure,'</a></p>'))
+    html_output = c(html_output, paste0('<p><a href="',figure,">',figure,'</a></p>'))
 }
 html_output = c(html_output, '<h2>Heatmaps</h2>')
 for(figure in output_figures_heatmap)
