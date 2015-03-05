@@ -87,6 +87,9 @@ countTE reports a space delimited tabular text file of the counts.
 The first columns correspond to the columns of the rosette file without the first one and with the `count_column in first position.
 The following column(s) corresponds to the mapping reads counts for each fastq file or sam file and the last column corresponds to the total of these counts.
 
+### counTE.ini file
+Some options for countTE are not available through the command line options. Those are defined in a counTE.ini file . This file contains option like the size of an siRNA, the number of threads to use or the path of the differents programs called by counTE. By defaut this countTE.ini file is created with default options, if not found in the same directory as the file countTE.py.
+
 ## diffTE
 
 diffTE performs a differential expression analysis on the counTE output file using [DESeq2](http://bioconductor.org/packages/release/bioc/html/DESeq2.html).
