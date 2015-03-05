@@ -14,7 +14,7 @@
     </inputs>
 
     <outputs>
-        <data format="html" name="htmlfile" label="diffTE_${tool_name}.html" />
+        <data format="html" name="htmlfile" label="diffTE_results.html" />
     </outputs>
 
     <requirements>
