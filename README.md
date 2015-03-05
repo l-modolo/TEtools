@@ -66,7 +66,7 @@ And the rosette fasta file can contain copies not present in the rosette file, b
 The rosette file can contain as many variable column as necessary.
 countTE will group together the count of reads mapping on TE copies according to the variable column defined by `count_column`.
 
-### NGS Data file
+### NGS data file
 
 The NGS data set can be of two types: fastq sequence files or sam alignement files
 
@@ -87,6 +87,13 @@ countTE reports a space delimited tabular text file of the counts.
 The first columns correspond to the columns of the rosette file without the first one and with the `count_column in first position.
 The following column(s) corresponds to the mapping reads counts for each fastq file or sam file and the last column corresponds to the total of these counts.
 
+## diffTE
+
+diffTE performs a differential expression analysis on the counTE output file using [DESeq2](http://bioconductor.org/packages/release/bioc/html/DESeq2.html).
+
+This tool produces an HTML output with clickable images, that leads to a download of the PDF file and link to table of differencially expressed elements.
 
 
+## PingPong
+in development
 
