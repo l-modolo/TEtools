@@ -1,7 +1,7 @@
 #!/usr/bin/Rscript
 
 # Copyright (C) 2015 Laurent Modolo
-
+#
 # This file is part of TEtools suite for galaxy.
 #
 # TEtools is free software: you can redistribute it and/or modify
@@ -253,7 +253,14 @@ html_output = c('<html><body>')
 # we want the html to link to the file directory not working direectory of galaxy
 fix_path = function(path)
 {
-    return(gsub(".*/", "", path))
+    if(grep("job_working_directory", path) == 1)
+    {
+        return(gsub(".*/", "", path))
+    }
+    else
+    {
+        return(path)
+    }
 }
 
 html_output = c(html_output, '<h2>Model goodness of fit</h2>')
