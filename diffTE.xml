@@ -1,7 +1,7 @@
 <tool id="diffTE" name="diffTE" version="1.0.0" hidden="false">
     <description>fastq quality trimming</description>
     <version_command interpreter="Rscript">diffTE.R -version=TRUE</version_command>
-    <command interpreter="Rscript">${__root_dir__}/tools/pi_galaxy/diffTE.R --args --FDR_level=$FDR_level --count_column=$count_column --count_file=\"$count_file\" experiment_formula=\"$experiment_formula\" --sample_names=\"$sample_names\" --outdir="$htmlfile.files_path" --htmlfile=$htmlfile 2> \dev\null
+    <command interpreter="Rscript">${__root_dir__}/tools/TEtools/diffTE.R --args --FDR_level=$FDR_level --count_column=$count_column --count_file=\"$count_file\" experiment_formula=\"$experiment_formula\" --sample_names=\"$sample_names\" --outdir="$htmlfile.files_path" --htmlfile=$htmlfile 2> \dev\null
     </command>
 
     <inputs>
