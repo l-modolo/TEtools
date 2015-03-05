@@ -1,6 +1,0 @@
-<section id="pi_galaxy" name="piRNA tools">
-    <tool file="pi_galaxy/UrQt.xml" />
-    <tool file="pi_galaxy/countTE.xml" />
-    <tool file="pi_galaxy/diffTE.xml" />
-    <tool file="pi_galaxy/PingPong.xml" />
-</section>
