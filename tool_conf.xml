@@ -1,5 +1,5 @@
 <section id="TEtools" name="piRNA tools">
     <tool file="TEtools/countTE.xml" />
     <tool file="TEtools/diffTE.xml" />
-    <tool file="TEtools/PingPong.xml" />
+    <!-- <tool file="TEtools/PingPong.xml" /> -->
 </section>

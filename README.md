@@ -16,7 +16,7 @@ Then you have to edit the file `galaxy-dist/config/tool_conf.xml` to add the TEt
 <section id="TEtools" name="TEtools">
     <tool file="TEtools/countTE.xml" />
     <tool file="TEtools/diffTE.xml" />
-    <tool file="TEtools/PingPong.xml" />
+    <!-- <tool file="TEtools/PingPong.xml" /> -->
 </section>
 ```
 At least you need to make sure that all the R dependecy for the `diffTE` tool are installed on yout system:

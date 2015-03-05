@@ -1,12 +1,21 @@
 #!/usr/bin/Rscript
 
-# sudo apt-get install libxml2-dev
-# yum install libxml2-devel glibc
-# source("http://bioconductor.org/biocLite.R")
-# biocLite("DESeq2", dep=T)
-# biocLite("gplots", dep=T)
-# biocLite("ggplot2", dep=T)
-# biocLite("RColorBrewer", dep=T)
+# Copyright (C) 2015 Laurent Modolo
+
+# This file is part of TEtools suite for galaxy.
+#
+# TEtools is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# TEtools is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with TEtools.  If not, see <http://www.gnu.org/licenses/>.
 
 args = commandArgs(trailingOnly=FALSE)
 scriptPath <- dirname(sub("--file=","",args[grep("--file",args)]))
