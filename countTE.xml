@@ -117,61 +117,50 @@
     </requirements>
 
     <help>
-countTE documentation:
-======================
+## countTE
 
-Count reads mapping to transposable element (TE) sequences contained in a **fasta file**.
+Compute a count table file from NGS data file(s), a fasta file containing a list of TE copie sequences and a rosette file.
 
-The correspondance between TE copy and TE family is given in a **rosette tabular text file** of the following form:
+### rosette file
+The rosette file contains at least 2 columns. The first column corresponds to the list of TE copie names from the fasta file, and the second column corresponds to an variable associated to these TE copie names on which we want to compute the counts.
 
-rosette file example:
----------------------------
-    ACCORD_I        ACCORD  Gyspy                   LTR-Retrotransposon
-    
-    ACCORD_LTR      ACCORD  Gyspy                   LTR-Retrotransposon
-    
-    ACCORD2         ACCORD2 Gypsy                   LTR-Retrotransposon
-    
-    ACCORD2_I       ACCORD2 Gyspy                   LTR-Retrotransposon
-    
-    ACCORD2_LTR     ACCORD2 Gypsy                   LTR-Retrotransposon
-    
-    ARS406_DM       ARS406  Origin-of-replication   Repetitive-sequence
+For example, we can write the following rosette file:
+```
+2L|(3071416..3071503,3071708..3071841)|DNA/P|PROTOP   PROTOP
+2L|(5363113..5363154,5363819..5363952)|DNA/P|PROTOP   PROTOP
+2L|c(9889960..9890093,9890313..9890400)|DNA/P|PROTOP  PROTOP
+2L|(20948958..20949699)|DNA/RC|DNAREP1_DM             DNAREP1_DM
+2L|c(20958914..20959207)|DNA/RC|DNAREP1_DM            DNAREP1_DM
+2L|c(20966385..20966456)|DNA/RC|DNAREP1_DM            DNAREP1_DM
+2L|(20976274..20976387)|DNA/RC|DNAREP1_DM             DNAREP1_DM
+```
 
-The **rosette file** can contain *any number of column* as long as the first column correspond to the **name** of the TE sequences in the fasta file (>**name** some other information).
+which will allow us to count reads mapping on the `PROTOP` and the `DNAREP1_DM` elements.
+The rosette file can contain more TE copie name than the fasta file, but we cannot map a read on a TE copie not present in the fasta file.
+And the rosette fasta file can contain copies not present in the rosette file, but reads mapping on these copies will be ignored.
 
-The **count column** then define the variable on which to count mapped reads.
-For example, with the default value of 2, and the rosette file example above we are counting mapped reads by TE families and with a value of 3 we are counting mapped reads by TE super-families.
+The rosette file can contain as many variable column as necessary.
+countTE will group together the count of reads mapping on TE copies according to the variable column defined by `count_column`.
 
-NGS data-sets
--------------------
+### NGS Data file
 
-The NGS data set can be of two types:
-1. fastq sequence files
-2. sam alignement files
+The NGS data set can be of two types: fastq sequence files or sam alignement files
 
-1. **fastq files**
+#### fastq files
+You can add any number of **fastq files** to be mapped on the fasta file, for paired-end data you must add the same number of paired fastq files.
 
-You can add any number of **fastq files** to map on the **fasta file**
-In the case of paired-end data you must add the same number of paired **fastq files**.
+When fastq files are provided countTE compte an index the fasta file and then map the reads using [bowtie](http://bowtie-bio.sourceforge.net/index.shtml) or [bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml).
+For smallRNA sequencing data we recommand to use [bowtie](http://bowtie-bio.sourceforge.net/index.shtml) which seems to perform beter than [bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml).
+When using RNA sequencing data we recomand to use [bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml) and to specify the correct insert size used to build the library.
 
-When **fastq files** are provided **countTE** index the **fasta file** then map the reads using **bowtie** or **bowtie2**.
-For smallRNA sequencing data **bowtie** seems to perform beter than bowtie2.
-When using RNA sequencing data we recomand to use **bowtie2** and to specify the correct insert site used to build the library.
+#### sam file
+counTE output the sam alignment files corresponding to each fastq file or pair of fastq files in the case of paired-end data.
+You can also directly use sam alignement files instead of fastq files to skip the mapping step of countTE.
+This is particallarly usefull to compute a count table according to another column in the rosette file for example.
 
-**counTE** output the **sam alignment files** corresponding to each **fastq file** or pair of **fastq files** in the case of paired-end data.
-
-2. **sam files**
-
-**countTE** can work directly on **sam file** which allows to quickly count mapped reads according to different columns of the rosette file
-
-
-output file
------------------
-**countTE** always report a **tabular text count file**.
-
-The first columns correspond to the columns of the **rosette file** without the column corresponding to the **name** of the TE sequences and with the **count column** in first position.
-
-The following columns correspond to the mapping reads counts for each **fastq file** or **sam file** and the last column corresponds to the total of these counts.
+### output file
+countTE reports a space delimited tabular text file of the counts.
+The first columns correspond to the columns of the rosette file without the first one and with the `count_column` in first position.
+The following column(s) corresponds to the mapping reads counts for each fastq file or sam file and the last column corresponds to the total of these counts.
     </help>
 </tool>
