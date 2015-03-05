@@ -244,7 +244,7 @@ html_output = c('<html><body>')
 # we want the html to link to the file directory not working direectory of galaxy
 fix_path = function(path)
 {
-    return(gsub("job_working_directory/000/\\d+/dataset", "files/000/dataset", path))
+    return(gsub(".*/", "", path))
 }
 
 html_output = c(html_output, '<h2>Model goodness of fit</h2>')
