@@ -241,25 +241,29 @@ output_figures_sample = c(paste0(outdir, "/volcanoplot", "~", variable_names[1])
 htmlfile_handle <- file(htmlfile)
 html_output = c('<html><body>')
 
+# we want the html to link to the file directory not working direectory of galaxy
+fix_path = function(path)
+{
+    return(gsub("job_working_directory/000/\\d+/dataset", "files/000/dataset", path))
+}
+
 html_output = c(html_output, '<h2>Model goodness of fit</h2>')
 for(figure in output_figures_fit)
 {
-    html_output = c(html_output, paste0('<p><a href="',figure,'.pdf"><img src="',figure,'.png"/></a></p>'))
+    html_output = c(html_output, paste0('<p><a href="',fix_path(figure),'.pdf"><img src="',fix_path(figure),'.png"/></a></p>'))
 }
 html_output = c(html_output, '<h2>Result tables</h2>')
-for(figure in output_figures_table)
-{
-    html_output = c(html_output, paste0('<p><a href="',figure,'">',figure,'</a></p>'))
-}
+html_output = c(html_output, paste0('<p><a href="',fix_path(output_figures_table[1]),'">all_TE~', variable_names[1],'.csv</a></p>'))
+html_output = c(html_output, paste0('<p><a href="',fix_path(output_figures_table[2]),'">significant_TE~', variable_names[1],'.csv</a></p>'))
 html_output = c(html_output, '<h2>Heatmaps</h2>')
 for(figure in output_figures_heatmap)
 {
-    html_output = c(html_output, paste0('<p><a href="',figure,'.pdf"><img src="',figure,'.png"/></a></p>'))
+    html_output = c(html_output, paste0('<p><a href="',fix_path(figure),'.pdf"><img src="',fix_path(figure),'.png"/></a></p>'))
 }
 html_output = c(html_output, '<h2>Sample comparisons</h2>')
 for(figure in output_figures_sample)
 {
-    html_output = c(html_output, paste0('<p><a href="',figure,'.pdf"><img src="',figure,'.png"/></a></p>'))
+    html_output = c(html_output, paste0('<p><a href="',fix_path(figure),'.pdf"><img src="',fix_path(figure),'.png"/></a></p>'))
 }
 html_output = c(html_output, '</html></body>');
 writeLines(html_output, htmlfile_handle);
