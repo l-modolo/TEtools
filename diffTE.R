@@ -253,7 +253,7 @@ html_output = c('<html><body>')
 # we want the html to link to the file directory not working direectory of galaxy
 fix_path = function(path)
 {
-    if(grep("job_working_directory", path) == 1)
+    if(length(grep("job_working_directory", path)) > 0)
     {
         return(gsub(".*/", "", path))
     }
