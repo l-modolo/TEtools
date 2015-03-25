@@ -19,7 +19,7 @@
 <tool id="countTE" name="countTE" version="1.0.0" hidden="false">
     <description>fastq quality trimming</description>
     <version_command interpreter="python3">countTE.py -version</version_command>
-    <command interpreter="python3">${__root_dir__}/tools/TEtools/countTE.py
+    <command interpreter="python3">countTE.py
         -rosette $rosette_file
         -column $count_column
         -TE_fasta $fasta_file
