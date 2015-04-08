@@ -43,10 +43,10 @@ Restart your galaxy server and enjoy TEtools !
 
 ## countTE
 
-Compute a count table file from NGS data file(s), a fasta file containing a list of TE copie sequences and a rosette file.
+This program computes a count table file using NGS data file(s), a fasta file containing TE copy sequences and a rosette file.
 
 ### rosette file
-The rosette file contains at least 2 columns. The first column corresponds to the list of TE copie names from the fasta file, and the second column corresponds to an variable associated to these TE copie names on which we want to compute the counts.
+The rosette file contains at least 2 columns. The first column corresponds to the names of the TE copies as in the fasta file, and the second column corresponds to a variable associated to these TE copy names on which we want to compute the counts (for example TE familly).
 
 For example, we can write the following rosette file:
 ```
@@ -59,12 +59,12 @@ For example, we can write the following rosette file:
 2L|(20976274..20976387)|DNA/RC|DNAREP1_DM             DNAREP1_DM
 ```
 
-which will allow us to count reads mapping on the `PROTOP` and the `DNAREP1_DM` elements.
-The rosette file can contain more TE copie name than the fasta file, but we cannot map a read on a TE copie not present in the fasta file.
-And the rosette fasta file can contain copies not present in the rosette file, but reads mapping on these copies will be ignored.
+This will allow to count reads mapping on the `PROTOP` and the `DNAREP1_DM` elements.
+The rosette file can contain more TE copy names than there is sequences in the fasta file, but we cannot map a read on a TE copy not present in the fasta file.
+The fasta file can contain copies not present in the rosette file, but reads mapping on these copies will be ignored.
 
-The rosette file can contain as many variable column as necessary.
-countTE will group together the count of reads mapping on TE copies according to the variable column defined by `count_column`.
+The rosette file can contain as many variable columns as necessary.
+countTE will group together the count of reads mapping on TE copies according to the column number defined in the second field.
 
 ### NGS data file
 
@@ -73,28 +73,31 @@ The NGS data set can be of two types: fastq sequence files or sam alignement fil
 #### fastq files
 You can add any number of **fastq files** to be mapped on the fasta file, for paired-end data you must add the same number of paired fastq files.
 
-When fastq files are provided countTE compte an index the fasta file and then map the reads using [bowtie](http://bowtie-bio.sourceforge.net/index.shtml) or [bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml).
-For smallRNA sequencing data we recommand to use [bowtie](http://bowtie-bio.sourceforge.net/index.shtml) which seems to perform beter than [bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml).
-When using RNA sequencing data we recomand to use [bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml) and to specify the correct insert size used to build the library.
+When fastq files are provided, countTE computes an index of the fasta file and then maps the reads using [bowtie](http://bowtie-bio.sourceforge.net/index.shtml) or [bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml).
+For smallRNA sequencing data we recommend to use [bowtie](http://bowtie-bio.sourceforge.net/index.shtml), which seems to perform better than [bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml).
+When using RNA sequencing data we recommend to use [bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml) and to specify the correct insert size used to build the library.
 
 #### sam file
-counTE output the sam alignment files corresponding to each fastq file or pair of fastq files in the case of paired-end data.
+counTE outputs the sam alignment files corresponding to each fastq file (or pair of fastq files in the case of paired-end data) in the same order than these fastq files.
 You can also directly use sam alignement files instead of fastq files to skip the mapping step of countTE.
-This is particallarly usefull to compute a count table according to another column in the rosette file for example.
+This is useful when you want to compute a count table according to another column in the rosette file for example.
 
 ### output file
-countTE reports a space delimited tabular text file of the counts.
-The first columns correspond to the columns of the rosette file without the first one and with the `count_column in first position.
-The following column(s) corresponds to the mapping reads counts for each fastq file or sam file and the last column corresponds to the total of these counts.
+countTE reports a space delimited tabular text file of the read counts.
+
+    - The first column corresponds to the rosette file column on which the read count was performed.
+    - If more than one variable column was provided in the rosette file, they will be put after the first column.
+    - The next following column(s), but the last, correspond to the number of mapping reads for each sample (fastq/sam files).
+    - The last column corresponds to the total of these counts.
 
 ### counTE.ini file
-Some options for countTE are not available through the command line options. Those are defined in a counTE.ini file . This file contains option like the size of an siRNA, the number of threads to use or the path of the differents programs called by counTE. By defaut this countTE.ini file is created with default options, if not found in the same directory as the file countTE.py.
+Some options for countTE are not available through the command line options. They are defined in a counTE.ini file. This file contains options like the size of a siRNA, the number of threads to use or the path of the different programs called by counTE. By defaut, this countTE.ini file is created with default options, if not found in the same directory as the file countTE.py.
 
 ## diffTE
 
 diffTE performs a differential expression analysis on the counTE output file using [DESeq2](http://bioconductor.org/packages/release/bioc/html/DESeq2.html).
 
-This tool produces an HTML output with clickable images, that leads to a download of the PDF file and link to table of differencially expressed elements.
+This tool produces an HTML output with clickable images, allowing to download PDF files and link to a table of differentially expressed TEs.
 
 
 ## PingPong
