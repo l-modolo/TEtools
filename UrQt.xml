@@ -87,8 +87,8 @@
     </outputs>
 
     <help>
-        Trim fastq reads according to a quality threasold using the UrQt software
-        In the case of polyN trimming UrQt remove homopolymer of A/T/C/G at the end of the reads
+        Trim fastq reads according to a quality threshold using the UrQt software
+        In the case of polyN trimming UrQt removes homopolymer of A/T/C/G at the end of the reads
 
         More information about UrQt available at: https://lbbe.univ-lyon1.fr/-UrQt-.html
     </help>
