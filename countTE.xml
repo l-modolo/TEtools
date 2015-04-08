@@ -139,12 +139,12 @@
 countTE
 =======
 
-Compute a count table file from NGS data file(s), a fasta file containing TE copy sequences and a rosette file.
+This program computes a count table file using NGS data file(s), a fasta file containing TE copy sequences and a rosette file.
 
 rosette file
 ------------
 
-The rosette file contains at least 2 columns. The first column corresponds to the names of the TE copies in the fasta file, and the second column corresponds to a variable associated to these TE copy names on which we want to compute the counts (for example TE familly).
+The rosette file contains at least 2 columns. The first column corresponds to the names of the TE copies as in the fasta file, and the second column corresponds to a variable associated to these TE copy names on which we want to compute the counts (for example TE familly).
 
 For example, we can write the following rosette file:
 
@@ -159,8 +159,8 @@ For example, we can write the following rosette file:
     2L|(20976274..20976387)|DNA/RC|DNAREP1_DM             DNAREP1_DM
 
 This will allow to count reads mapping on the `PROTOP` and the `DNAREP1_DM` elements.
-The rosette file can contain more TE copy names than the copies in the fasta file, but we cannot map a read on a TE copy not present in the fasta file.
-The rosette fasta file can contain copies not present in the rosette file, but reads mapping on these copies will be ignored.
+The rosette file can contain more TE copy names than there is sequences in the fasta file, but we cannot map a read on a TE copy not present in the fasta file.
+The fasta file can contain copies not present in the rosette file, but reads mapping on these copies will be ignored.
 
 The rosette file can contain as many variable columns as necessary.
 countTE will group together the count of reads mapping on TE copies according to the column number defined in the second field.
@@ -174,9 +174,9 @@ The NGS data set can be of two types: *fastq sequence files* or *sam alignment f
 
 You can add any number of **fastq files** to be mapped on the fasta file.
 
-When fastq files are provided, countTE compute an index of the fasta file and then maps the reads using bowtie_ or bowtie2_.
-For smallRNA sequencing data we recommand to use bowtie_ which seems to perform better than bowtie2_.
-When using RNA sequencing data we recommand to use bowtie2_ and to specify the correct insert size used to build the library.
+When fastq files are provided, countTE computes an index of the fasta file and then maps the reads using bowtie_ or bowtie2_.
+For smallRNA sequencing data we recommend to use bowtie_, which seems to perform better than bowtie2_.
+When using RNA sequencing data we recommend to use bowtie2_ and to specify the correct insert size used to build the library.
 
 .. _bowtie: http://bowtie-bio.sourceforge.net/index.shtml
 .. _bowtie2: http://bowtie-bio.sourceforge.net/bowtie2/index.shtml
@@ -185,15 +185,15 @@ When using RNA sequencing data we recommand to use bowtie2_ and to specify the c
 
 counTE outputs the sam alignment files corresponding to each fastq file (or pair of fastq files in the case of paired-end data), in the same order than these fastq files.
 You can also directly use sam alignement files instead of fastq files to skip the mapping step of countTE.
-This is useful when we want to compute a count table according to another column in the rosette file for example.
+This is useful when you want to compute a count table according to another column in the rosette file for example.
 
 **output file**
 
 countTE reports a space delimited tabular text file of the read counts.
 
-    - The first column corresponds to the resette file columns on which the count was performed.
-    - If more than one variable column was provided in the rosette file they will be put after the first columns.
-    - The next following column(s) but the last correspond to the number of mapping reads for each sample (fastq/sam files).
+    - The first column corresponds to the rosette file column on which the read count was performed.
+    - If more than one variable column was provided in the rosette file, they will be put after the first column.
+    - The next following column(s), but the last, correspond to the number of mapping reads for each sample (fastq/sam files).
     - The last column corresponds to the total of these counts.
     </help>
 </tool>
