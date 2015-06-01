@@ -108,13 +108,25 @@ in development
 As TEtools was developed for a galaxy interface, the different parts of the pipeline can be manually called from a command line interface.
 The installation procedure without a galaxy instance for an exclusive command line usage is exactly the same, you just can clone the TEtools repository in a place of your choosing instead of the `galaxy-dist/tools` folder.
 
+## countTE
 ```sh
 countTE.py -rosette [$]ROSETTE_FILE] -column [$]COUNT_COLUMN] -TE_fasta [FASTA_FILE] -count [OUTPUT_FILE] -RNA [FASTQ_FILE1 FASTQ_FILE2 ... FASTQ_FILEN]
 ```
-
 For RNASeq data you can add the option `-bowtie2` and to run the UrQt quality trimming software before the mapping, you can add the option `-QC`.
 For paired-end data the second list of fastq files must be entered after the option `-RNApair [FASTQ_FILE1 FASTQ_FILE2 ... FASTQ_FILEN]` and the insert size must be specified with the option `-insert [SIZE]`.
 Like with galaxy you can directly use sam files instead of fastq files by replacing the option `-RNA` by `-sam [SAM_FILE1 SAM_FILE2 ... SAM_FILEN]`.
 An alternative count file for reads of size 21pb can be computed with the option `-siRNA [OUTPUT_SIRNA_FILE]`
+
+## diffTE
+```sh
+Rscript diffTE.R --args --FDR_level=[FDR_LEVEL] --count_column=[COUNT_COLUMN] --count_file=\"[COUNT_FILE]\" experiment_formula=\"[EXPERIMENT_FORMULA]\" --sample_names=\"[SAMPLE_NAMES]\" --outdir=\"[OUTPUT_HTML_FOLDER]\" --htmlfile=\"[OUTPUT_HTML_FILE]\"
+```
+
+With:
++ `[FDR_LEVEL]` the FDR threshold for the analysis
++ `[COUNT_FILE]` the count file computed with countTE
++ `[COUNT_COLUMN]` the number of the first column with read counts (ex: 2 if the rosette file as only one variable)
++ `[EXPERIMENT_FORMULA]` the formula corresponding to the names (example: `sample_name:replicat:condition)
++ `[SAMPLE_NAMES]` a comma separated list of names of the different samples in the same order as in the count file (example for n samples with 2 replicats: `sample_name_1:replicat_1,sample_name_1:replicat_2,...,sample_name_n:replicat_1,sample_name_n:replicat_2)`
 
 
