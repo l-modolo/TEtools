@@ -103,3 +103,18 @@ This tool produces an HTML output with clickable images, allowing to download PD
 ## PingPong
 in development
 
+
+# TEtools command line usage
+As TEtools was developed for a galaxy interface, the different parts of the pipeline can be manually called from a command line interface.
+The installation procedure without a galaxy instance for an exclusive command line usage is exactly the same, you just can clone the TEtools repository in a place of your choosing instead of the `galaxy-dist/tools` folder.
+
+```sh
+countTE.py -rosette [$]ROSETTE_FILE] -column [$]COUNT_COLUMN] -TE_fasta [FASTA_FILE] -count [OUTPUT_FILE] -RNA [FASTQ_FILE1 FASTQ_FILE2 ... FASTQ_FILEN]
+```
+
+For RNASeq data you can add the option `-bowtie2` and to run the UrQt quality trimming software before the mapping, you can add the option `-QC`.
+For paired-end data the second list of fastq files must be entered after the option `-RNApair [FASTQ_FILE1 FASTQ_FILE2 ... FASTQ_FILEN]` and the insert size must be specified with the option `-insert [SIZE]`.
+Like with galaxy you can directly use sam files instead of fastq files by replacing the option `-RNA` by `-sam [SAM_FILE1 SAM_FILE2 ... SAM_FILEN]`.
+An alternative count file for reads of size 21pb can be computed with the option `-siRNA [OUTPUT_SIRNA_FILE]`
+
+
