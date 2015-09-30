@@ -23,7 +23,7 @@ At least you need to make sure that all the R dependecy for the `diffTE` tool ar
 
 for `.deb` systems:
 ```sh
-sudo apt-get install libxml2-dev python-configparser python3-queue
+sudo apt-get install libxml2-dev python-configparser
 ```
 for `.rpm`systems:
 ```sh
@@ -78,7 +78,7 @@ For smallRNA sequencing data we recommend to use [bowtie](http://bowtie-bio.sour
 When using RNA sequencing data we recommend to use [bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml) and to specify the correct insert size used to build the library.
 
 #### sam file
-counTE outputs the sam alignment files corresponding to each fastq file (or pair of fastq files in the case of paired-end data) in the same order than these fastq files.
+countTE outputs the sam alignment files corresponding to each fastq file (or pair of fastq files in the case of paired-end data) in the same order than these fastq files.
 You can also directly use sam alignement files instead of fastq files to skip the mapping step of countTE.
 This is useful when you want to compute a count table according to another column in the rosette file for example.
 
@@ -90,12 +90,12 @@ countTE reports a space delimited tabular text file of the read counts.
     - The next following column(s), but the last, correspond to the number of mapping reads for each sample (fastq/sam files).
     - The last column corresponds to the total of these counts.
 
-### counTE.ini file
-Some options for countTE are not available through the command line options. They are defined in a counTE.ini file. This file contains options like the size of a siRNA, the number of threads to use or the path of the different programs called by counTE. By defaut, this countTE.ini file is created with default options, if not found in the same directory as the file countTE.py.
+### countTE.ini file
+Some options for countTE are not available through the command line options. They are defined in a countTE.ini file. This file contains options like the size of a siRNA, the number of threads to use or the path of the different programs called by countTE. By defaut, this countTE.ini file is created with default options, if not found in the same directory as the file countTE.py.
 
 ## diffTE
 
-diffTE performs a differential expression analysis on the counTE output file using [DESeq2](http://bioconductor.org/packages/release/bioc/html/DESeq2.html).
+diffTE performs a differential expression analysis on the countTE output file using [DESeq2](http://bioconductor.org/packages/release/bioc/html/DESeq2.html).
 
 This tool produces an HTML output with clickable images, allowing to download PDF files and link to a table of differentially expressed TEs.
 
