@@ -18,6 +18,11 @@
 # You should have received a copy of the GNU General Public License
 # along with TEtools.  If not, see <http://www.gnu.org/licenses/>.
 
+import sys
+if sys.version_info[0] == 2:
+    print("contTE.py is only compatible with python3. Please run countTE.py as an executable or with the command 'python3 countTE.py'")
+    exit(0)
+
 import argparse
 import configparser
 from os import path
