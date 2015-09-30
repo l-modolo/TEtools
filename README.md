@@ -23,7 +23,7 @@ At least you need to make sure that all the R dependecy for the `diffTE` tool ar
 
 for `.deb` systems:
 ```sh
-sudo apt-get install libxml2-dev python-configparser
+sudo apt-get install libxml2-dev python-configparser python3-queue
 ```
 for `.rpm`systems:
 ```sh
