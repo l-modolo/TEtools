@@ -16,10 +16,10 @@
     You should have received a copy of the GNU General Public License
     along with TEtools.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<tool id="countTE" name="countTE" version="1.0.0" hidden="false">
+<tool id="TEcount" name="TEcount" version="1.0.0" hidden="false">
     <description>fastq quality trimming</description>
-    <version_command interpreter="python3">countTE.py -version</version_command>
-    <command interpreter="python3">countTE.py
+    <version_command interpreter="python3">TEcount.py -version</version_command>
+    <command interpreter="python3">TEcount.py
         -rosette $rosette_file
         -column $count_column
         -TE_fasta $fasta_file
@@ -136,7 +136,7 @@
 
     <help>
 =======
-countTE
+TEcount
 =======
 
 This program computes a count table file using NGS data file(s), a fasta file containing TE copy sequences and a rosette file.
@@ -163,7 +163,7 @@ The rosette file can contain more TE copy names than there is sequences in the f
 The fasta file can contain copies not present in the rosette file, but reads mapping on these copies will be ignored.
 
 The rosette file can contain as many variable columns as necessary.
-countTE will group together the count of reads mapping on TE copies according to the column number defined in the second field.
+TEcount will group together the count of reads mapping on TE copies according to the column number defined in the second field.
 
 NGS Data file
 -------------
@@ -174,7 +174,7 @@ The NGS data set can be of two types: *fastq sequence files* or *sam alignment f
 
 You can add any number of **fastq files** to be mapped on the fasta file.
 
-When fastq files are provided, countTE computes an index of the fasta file and then maps the reads using bowtie_ or bowtie2_.
+When fastq files are provided, TEcount computes an index of the fasta file and then maps the reads using bowtie_ or bowtie2_.
 For smallRNA sequencing data we recommend to use bowtie_, which seems to perform better than bowtie2_.
 When using RNA sequencing data we recommend to use bowtie2_ and to specify the correct insert size used to build the library.
 
@@ -184,12 +184,12 @@ When using RNA sequencing data we recommend to use bowtie2_ and to specify the c
 **sam files**
 
 counTE outputs the sam alignment files corresponding to each fastq file (or pair of fastq files in the case of paired-end data), in the same order than these fastq files.
-You can also directly use sam alignement files instead of fastq files to skip the mapping step of countTE.
+You can also directly use sam alignement files instead of fastq files to skip the mapping step of TEcount.
 This is useful when you want to compute a count table according to another column in the rosette file for example.
 
 **output file**
 
-countTE reports a space delimited tabular text file of the read counts.
+TEcount reports a space delimited tabular text file of the read counts.
 
     - The first column corresponds to the rosette file column on which the read count was performed.
     - If more than one variable column was provided in the rosette file, they will be put after the first column.

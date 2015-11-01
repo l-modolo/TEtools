@@ -61,7 +61,7 @@ if args.version:
 class Pingpong:
     procs = list()
 
-    # we want to kill every subprocess if we kill countTE.py
+    # we want to kill every subprocess if we kill TEcount.py
     def kill_subprocesses(self):
         if len(self.procs) > 0:
             for proc in self.procs:

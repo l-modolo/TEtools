@@ -20,7 +20,7 @@
 
 import sys
 if sys.version_info[0] == 2:
-    print("contTE.py is only compatible with python3. Please run countTE.py as an executable or with the command 'python3 countTE.py'")
+    print("contTE.py is only compatible with python3. Please run TEcount.py as an executable or with the command 'python3 TEcount.py'")
     exit(0)
 
 import argparse
@@ -35,20 +35,20 @@ from queue import Queue, Empty
 import shlex
 import atexit
 
-tools_path = path.realpath(__file__)[:-len('countTE.py')]
+tools_path = path.realpath(__file__)[:-len('TEcount.py')]
 config = configparser.ConfigParser()
-if not path.isfile(tools_path+'countTE.ini'):
-    print("'countTE.ini' file not found, writing default one.")
+if not path.isfile(tools_path+'TEcount.ini'):
+    print("'TEcount.ini' file not found, writing default one.")
     config['programs'] = {'urqt': tools_path+'UrQt',
                           'bowtie': tools_path+'bowtie/bowtie',
                           'bowtie2': tools_path+'bowtie2/bowtie2',
                           'sirna_size': '21',
                           'thread': '4'}
-    with open(tools_path+'countTE.ini', 'w') as configfile:
+    with open(tools_path+'TEcount.ini', 'w') as configfile:
         config.write(configfile)
-config.read(tools_path+'countTE.ini')
+config.read(tools_path+'TEcount.ini')
 
-parser = argparse.ArgumentParser(prog='countTE.py')
+parser = argparse.ArgumentParser(prog='TEcount.py')
 parser.add_argument('-RNA', action='store', dest='fastq_files', help='RNA fastq file(s)', nargs='*')
 parser.add_argument('-RNApair', action='store', dest='fastq_pair_files', help='RNA fastq file(s)', nargs='*')
 parser.add_argument('-sam', action='store', dest='sam_files', help='RNA sam file(s)', nargs='*')
@@ -364,7 +364,7 @@ class Rosette:
 
 class Count:
     procs = list()
-    # we want to kill every subprocess if we kill countTE.py
+    # we want to kill every subprocess if we kill TEcount.py
     def kill_subprocesses(self):
         if len(self.procs) > 0:
             for proc in self.procs:

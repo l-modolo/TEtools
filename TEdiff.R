@@ -19,7 +19,7 @@
 
 args = commandArgs(trailingOnly=FALSE)
 scriptPath <- dirname(sub("--file=","",args[grep("--file",args)]))
-scriptPath = paste0(scriptPath,"/diffTE")
+scriptPath = paste0(scriptPath,"/TEdiff")
 print(scriptPath)
 .libPaths(c(.libPaths(), scriptPath))
 
@@ -45,7 +45,7 @@ output_figures = list()
 
 if(help==TRUE)
 {
-    print("diffTE.R --args --FDR_level=0.05 --count_column=2 --count_file=\\\"count.txt\\\" --experiment_formula=\\\"population:type\\\" --sample_names=\\\"population1:type1,population1:type2,population2:type1,population2:type2\\\"" )
+    print("TEdiff.R --args --FDR_level=0.05 --count_column=2 --count_file=\\\"count.txt\\\" --experiment_formula=\\\"population:type\\\" --sample_names=\\\"population1:type1,population1:type2,population2:type1,population2:type2\\\"" )
     quit("no")
 }
 if(exists("version"))
