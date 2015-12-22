@@ -533,18 +533,22 @@ if sample_number == 0:
 def kill_subprocesses():
     count.kill_subprocesses()
 
+print("loading rosette file...")
 rosette = Rosette(args.rosette_file, args.count_column, args.count_file,
                   sample_number, args.count_sirna_file)
+print("loading rosette fasta file...")
 count = Count(config['programs'], rosette, args.mapq, args.bowtie2,
               args.fasta_file)
-
 for i in range(sample_number):
     if args.sam_files is not None and path.isfile(args.sam_files[i]):
+        print("counting " + str(args.sam_files[i]) + "...")
         count.from_sam(args.sam_files[i])
     else:
         paired_file = None
+        print("counting " + str(args.fastq_files[i]) + "...")
         if args.fastq_pair_files is not None and len(args.fastq_files) == len(args.fastq_pair_files):
             paired_file = args.fastq_pair_files[i]
+            print("counting " + str(args.fastq_pair_files[i]) + "...")
         if args.quality_control and not rosette.sirna():
             count.from_raw_fastq(args.fastq_files[i], paired_file,
                                  args.insert_size)
