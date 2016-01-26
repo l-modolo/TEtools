@@ -17,7 +17,7 @@
     along with TEtools.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <tool id="TEcount" name="TEcount" version="1.0.0" hidden="false">
-    <description>fastq quality trimming</description>
+    <description>compute RNA read count for transposable elements</description>
     <version_command interpreter="python3">TEcount.py -version</version_command>
     <command interpreter="python3">TEcount.py
         -rosette $rosette_file
