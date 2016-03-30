@@ -20,7 +20,7 @@
 
 import sys
 if sys.version_info[0] == 2:
-    print("contTE.py is only compatible with python3. Please run TEcount.py as an executable or with the command 'python3 TEcount.py'")
+    print("TEcount.py is only compatible with python3. Please run TEcount.py as an executable or with the command 'python3 TEcount.py'")
     exit(0)
 
 import argparse
