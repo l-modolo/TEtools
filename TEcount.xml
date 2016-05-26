@@ -36,6 +36,9 @@
             #if $type_of_input['mapper'] == "bowtie2":
                 -bowtie2
             #end if
+            #if $type_of_input['mapper'] == "salmon":
+                -salmon
+            #end if
         #end if
         #if $type_of_input['condition'] == "fastq_pair":
             -RNA
@@ -83,6 +86,7 @@
                 <param name="mapper" type="select" label="Mapper to use: bowtie (smallRNASeq) or bowtie2 (RNASeq)">
                     <option value="bowtie">bowtie</option>
                     <option value="bowtie2">bowtie2</option>
+                    <option value="salmon">salmon</option>
                 </param>
             </when>
             <when value="fastq_pair">
@@ -97,6 +101,7 @@
                     <param name="mapper" type="select" label="Mapper to use: bowtie (smallRNASeq) or bowtie2 (RNASeq)">
                         <option value="bowtie">bowtie</option>
                         <option value="bowtie2">bowtie2</option>
+                        <option value="salmon">salmon</option>
                     </param>
                     <when value="bowtie"/>
                     <when value="bowtie2">
