@@ -458,11 +458,18 @@ class Count:
 
     def from_sam(self, sam_file):
         self.rosette.reset_count()
-        if path.isfile(sam_file):
-            self.sam_file = str(sam_file)
+        if self.salmon:
+            if path.isfile(sam_file+'/quant.sf'):
+                self.sam_file = str(sam_file)
+            else:
+                print(str(sam_file)+'/quant.sf'+' file not found')
+                exit(1)
         else:
-            print(str(sam_file)+' file not found')
-            exit(1)
+            if path.isfile(sam_file):
+                self.sam_file = str(sam_file)
+            else:
+                print(str(sam_file)+' file not found')
+                exit(1)
         self.__count()
 
     def __sam_file(self):
@@ -513,23 +520,33 @@ class Count:
 
     def __count(self):
         # if we want to count separatly the siRNA:
-        if self.rosette.sirna():
-            with open(self.sam_file) as sam_file_handle:
+        if self.salmon:
+            with open(self.sam_file+'/quant.sf') as sam_file_handle:
+                line_nb = 0
                 for line in sam_file_handle:
-                    if line[0] != '@':
+                    if line_nb != 0:
                         line = line.split()
-                        if len(line) > 4 and line[2][0] != '*' and int(line[4]) <= self.max_mapq:
-                            if len(line[9]) != int(self.config['sirna_size']):
-                                self.rosette.count(str(line[2]), 1)
-                            else:
-                                self.rosette.count_si(str(line[2]), 1)
+                        if len(line) > 4:
+                            self.rosette.count(str(line[0]), int(round(float(line[4]))))
+                    line_nb += 1
         else:
-            with open(self.sam_file) as sam_file_handle:
-                for line in sam_file_handle:
-                    if line[0] != '@':
-                        line = line.split()
-                        if len(line) > 4 and line[2][0] != '*' and int(line[4]) <= self.max_mapq:
-                            self.rosette.count(str(line[2]), 1)
+            if self.rosette.sirna():
+                with open(self.sam_file) as sam_file_handle:
+                    for line in sam_file_handle:
+                        if line[0] != '@':
+                            line = line.split()
+                            if len(line) > 4 and line[2][0] != '*' and int(line[4]) <= self.max_mapq:
+                                if len(line[9]) != int(self.config['sirna_size']):
+                                    self.rosette.count(str(line[2]), 1)
+                                else:
+                                    self.rosette.count_si(str(line[2]), 1)
+            else:
+                with open(self.sam_file) as sam_file_handle:
+                    for line in sam_file_handle:
+                        if line[0] != '@':
+                            line = line.split()
+                            if len(line) > 4 and line[2][0] != '*' and int(line[4]) <= self.max_mapq:
+                                self.rosette.count(str(line[2]), 1)
 
     def write(self):
         self.rosette.write()
@@ -558,8 +575,13 @@ rosette = Rosette(args.rosette_file, args.count_column, args.count_file,
 print("loading rosette fasta file...")
 count = Count(config['programs'], rosette, args.mapq, args.bowtie2, args.salmon,
               args.fasta_file)
+print("processing "+str(sample_number)+" samples...")
 for i in range(sample_number):
-    if args.sam_files is not None and path.isfile(args.sam_files[i]):
+    if args.salmon:
+        sam_file_test = path.isfile(args.sam_files[i]+'/quant.sf')
+    else:
+        sam_file_test = path.isfile(args.sam_files[i])
+    if args.sam_files is not None and sam_file_test:
         print("counting " + str(args.sam_files[i]) + "...")
         count.from_sam(args.sam_files[i])
     else:
