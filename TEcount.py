@@ -42,6 +42,7 @@ if not path.isfile(tools_path+'TEcount.ini'):
     config['programs'] = {'urqt': tools_path+'UrQt',
                           'bowtie': tools_path+'bowtie/bowtie',
                           'bowtie2': tools_path+'bowtie2/bowtie2',
+                          'salmon': tools_path+'salmon/salmon',
                           'sirna_size': '21',
                           'thread': '4'}
     with open(tools_path+'TEcount.ini', 'w') as configfile:
@@ -55,6 +56,7 @@ parser.add_argument('-sam', action='store', dest='sam_files', help='RNA sam file
 parser.add_argument('-insert', action='store', dest='insert_size', default=500, help='insert size for paired-end data')
 parser.add_argument('-TE_fasta', action='store', dest='fasta_file', default=None, help='TE sequence fasta file')
 parser.add_argument('-bowtie2', action='store_true', dest='bowtie2', default=False, help='use bowtie2 instead of bowtie')
+parser.add_argument('-salmon', action='store_true', dest='salmon', default=False, help='use salmon instead of bowtie')
 parser.add_argument('-MAPQ', action='store', dest='mapq', default=255, help='minimal mapping quality (from 0 to 255, 0 the best)')
 parser.add_argument('-QC', action='store_true', dest='quality_control', default=False, help='use UrQt to perfom quality trimming on the fastq files')
 parser.add_argument('-rosette', action='store', dest='rosette_file', help='Rosette file for TE name')
@@ -370,12 +372,13 @@ class Count:
             for proc in self.procs:
                 proc.kill()
 
-    def __init__(self, config, rosette, max_mapq, bowtie2=False,
+    def __init__(self, config, rosette, max_mapq, bowtie2=False, salmon=False,
                  fasta_file=None):
         self.config = config
         self.rosette = rosette
         self.max_mapq = int(max_mapq)
         self.bowtie2 = bool(bowtie2)
+        self.salmon = bool(salmon)
         self.index_build = False
         self.fasta_file = str(fasta_file)
         self.index_file = None
@@ -385,14 +388,21 @@ class Count:
         print('building index')
         if path.isfile(self.fasta_file):
             self.index_file = self.fasta_file+'.index'
-            bowtie_cmd = str()
-            if self.bowtie2:
-                self.index_file += str(2)
-                bowtie_cmd += self.config['bowtie2']+'-build'
+            if self.salmon:
+                print('with salmon')
+                salmon_cmd = self.config['salmon']+' index -k 21 -t '+str(self.fasta_file)+' -i '+str(self.index_file)+' -p '+str(self.config['thread'])
+                run_cmd(self.procs, salmon_cmd)
             else:
-                bowtie_cmd += self.config['bowtie']+'-build'
-            bowtie_cmd += ' -f '+self.fasta_file+' '+self.index_file
-            run_cmd(self.procs, bowtie_cmd)
+                bowtie_cmd = str()
+                if self.bowtie2:
+                    print('with bowtie2')
+                    self.index_file += str(2)
+                    bowtie_cmd += self.config['bowtie2']+'-build'
+                else:
+                    print('with bowtie')
+                    bowtie_cmd += self.config['bowtie']+'-build'
+                bowtie_cmd += ' -f '+self.fasta_file+' '+self.index_file
+                run_cmd(self.procs, bowtie_cmd)
         else:
             print(str(self.fasta_file)+' file not found')
             exit(1)
@@ -480,17 +490,26 @@ class Count:
 
     def __mapping(self):
         print('mapping reads')
-        bowtie_cmd = ''
-        if self.bowtie2:
-            bowtie_cmd = str(self.config['bowtie2'])+' -p '+str(self.config['thread'])+' --time'+' --very-sensitive'+' -x '+str(self.index_file)
+        if self.salmon:
+            salmon_cmd = str(self.config['salmon'])+' quant -i '+str(self.index_file)+' -p '+str(self.config['thread'])+' -m 100000 -w 100000 --extraSensitive -k 19'
             if self.paired:
-                bowtie_cmd += ' --dovetail'+' -X '+str(self.insert_size)+' -1 '+str(self.fastq_file)+' -2 '+str(self.fastq_pair_file)
+                salmon_cmd += ' -l MSF -1 '+str(self.fastq_file)+' -2 '+str(self.fastq_pair_file)
             else:
-                bowtie_cmd += ' -U '+str(self.fastq_file)
-            bowtie_cmd += ' -S '+str(self.sam_file)
+                salmon_cmd += ' -l SF -r '+str(self.fastq_file)
+            salmon_cmd += ' -o '+str(self.sam_file)
+            run_cmd(self.procs, salmon_cmd)
         else:
-            bowtie_cmd = str(self.config['bowtie'])+' -S'+' -p '+str(self.config['thread'])+' --time'+' --chunkmbs 200'+' --best'+' '+str(self.index_file)+' '+str(self.fastq_file)+' '+str(self.sam_file)
-        run_cmd(self.procs, bowtie_cmd)
+            bowtie_cmd = ''
+            if self.bowtie2:
+                bowtie_cmd = str(self.config['bowtie2'])+' -p '+str(self.config['thread'])+' --time'+' --very-sensitive'+' -x '+str(self.index_file)
+                if self.paired:
+                    bowtie_cmd += ' --dovetail'+' -X '+str(self.insert_size)+' -1 '+str(self.fastq_file)+' -2 '+str(self.fastq_pair_file)
+                else:
+                    bowtie_cmd += ' -U '+str(self.fastq_file)
+                bowtie_cmd += ' -S '+str(self.sam_file)
+            else:
+                bowtie_cmd = str(self.config['bowtie'])+' -S'+' -p '+str(self.config['thread'])+' --time'+' --chunkmbs 200'+' --best'+' '+str(self.index_file)+' '+str(self.fastq_file)+' '+str(self.sam_file)
+            run_cmd(self.procs, bowtie_cmd)
 
     def __count(self):
         # if we want to count separatly the siRNA:
@@ -537,7 +556,7 @@ print("loading rosette file...")
 rosette = Rosette(args.rosette_file, args.count_column, args.count_file,
                   sample_number, args.count_sirna_file)
 print("loading rosette fasta file...")
-count = Count(config['programs'], rosette, args.mapq, args.bowtie2,
+count = Count(config['programs'], rosette, args.mapq, args.bowtie2, args.salmon,
               args.fasta_file)
 for i in range(sample_number):
     if args.sam_files is not None and path.isfile(args.sam_files[i]):
