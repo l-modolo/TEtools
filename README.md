@@ -81,6 +81,7 @@ When using RNA sequencing data we recommend to use [bowtie2](http://bowtie-bio.s
 TEcount outputs the sam alignment files corresponding to each fastq file (or pair of fastq files in the case of paired-end data) in the same order than these fastq files.
 You can also directly use sam alignement files instead of fastq files to skip the mapping step of TEcount.
 This is useful when you want to compute a count table according to another column in the rosette file for example.
+When using sam file as imput, TEcount make the hypothesis that reads mapping at multiple position appear only once in the count by choosing a position at random.
 
 ### output file
 TEcount reports a space delimited tabular text file of the read counts.
