@@ -206,7 +206,8 @@ TE_vsd = varianceStabilizingTransformation(TE)
 TE_row = order(rowMeans(counts(TE,normalized=TRUE)),decreasing=TRUE)
 old_i = 1
 output_figures_heatmap = c()
-for(i in seq(from=30, to=length(TE_row), by = 30))
+TE_step = min(length(TE_row), 30)
+for(i in seq(from=TE_step, to=length(TE_row), by = TE_step))
 {
     select = order(rownames(TE),decreasing=FALSE)[old_i:i]
     hmcol = colorRampPalette(brewer.pal(9, "GnBu"))(100)
