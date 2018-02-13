@@ -59,6 +59,8 @@ For example, we can write the following rosette file:
 2L|(20976274..20976387)|DNA/RC|DNAREP1_DM             DNAREP1_DM
 ```
 
+[You can download a full example for D. melanogaster here.](https://github.com/l-modolo/TEtools/files/1719889/dmel_rosette_new.txt)
+
 This will allow to count reads mapping on the `PROTOP` and the `DNAREP1_DM` elements.
 The rosette file can contain more TE copy names than there is sequences in the fasta file, but we cannot map a read on a TE copy not present in the fasta file.
 The fasta file can contain copies not present in the rosette file, but reads mapping on these copies will be ignored.
