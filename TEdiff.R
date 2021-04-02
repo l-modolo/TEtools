@@ -153,7 +153,7 @@ output_figures_fit = c(paste0(outdir, "/DispEsts"),
                           paste0(outdir, "/MA"))
 
 # differential analysis between every pair of variable 1
-main_factor = levels(variables[,1])
+main_factor = levels(as.factor(variables[,1]))
 i = 1
 j = 1
 n = length(main_factor)
